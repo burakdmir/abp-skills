@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run content validation
-        shell: bash
+        shell: bash --noprofile --norc {0}
         run: |
           set -uo pipefail
           ERR="$(mktemp)"
