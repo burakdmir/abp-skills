@@ -5,6 +5,9 @@ on:
     paths:
       - "claude/**"
       - "opencode/**"
+      - ".claude-plugin/**"
+      - "agents/**"
+      - "commands/**"
       - "README.md"
       - ".github/workflows/validate.yml"
   push:
@@ -105,3 +108,63 @@ jobs:
           echo "✅ All skill files valid ($total files, $topics topics, both trees in sync)"
           echo "## ✅ Skill validation passed" >> "$GITHUB_STEP_SUMMARY"
           echo "$total SKILL.md files · $topics topics · trees in sync" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate Claude Code plugin
+        shell: bash --noprofile --norc {0}
+        run: |
+          set -uo pipefail
+          ERR="$(mktemp)"
+          fail() { echo "$1" >> "$ERR"; }
+
+          # ---- plugin.json ----
+          PJ=".claude-plugin/plugin.json"
+          if [ ! -f "$PJ" ]; then
+            fail "$PJ: missing"
+          else
+            jq empty "$PJ" 2>/dev/null || fail "$PJ: invalid JSON"
+            [ "$(jq -r '.name // empty' "$PJ")" = "abp-sensei" ] || fail "$PJ: name must be 'abp-sensei'"
+            skills_path="$(jq -r '.skills // empty' "$PJ")"
+            [ -n "$skills_path" ] && [ -d "${skills_path#./}" ] || fail "$PJ: skills path '$skills_path' does not resolve to a directory"
+          fi
+
+          # ---- marketplace.json ----
+          MJ=".claude-plugin/marketplace.json"
+          if [ ! -f "$MJ" ]; then
+            fail "$MJ: missing"
+          else
+            jq empty "$MJ" 2>/dev/null || fail "$MJ: invalid JSON"
+            jq -e '.name and .owner.name and (.plugins | type == "array")' "$MJ" >/dev/null 2>&1 \
+              || fail "$MJ: must define name, owner.name, and a plugins array"
+            jq -e '.plugins[] | select(.name == "abp-sensei")' "$MJ" >/dev/null 2>&1 \
+              || fail "$MJ: plugins array must list 'abp-sensei'"
+          fi
+
+          # ---- agents: frontmatter with name + description ----
+          if [ -d agents ]; then
+            for a in agents/*.md; do
+              [ -f "$a" ] || continue
+              [ "$(head -n1 "$a" | tr -d '\r')" = "---" ] || { fail "$a: missing frontmatter"; continue; }
+              fm="$(awk 'NR==1 && /^---/ {inb=1; next} inb && /^---/ {exit} inb {print}' "$a" | tr -d '\r')"
+              echo "$fm" | grep -q '^name:'        || fail "$a: agent frontmatter missing 'name:'"
+              echo "$fm" | grep -q '^description:' || fail "$a: agent frontmatter missing 'description:'"
+            done
+          fi
+
+          # ---- commands: frontmatter with description ----
+          if [ -d commands ]; then
+            for c in commands/*.md; do
+              [ -f "$c" ] || continue
+              [ "$(head -n1 "$c" | tr -d '\r')" = "---" ] || { fail "$c: missing frontmatter"; continue; }
+              fm="$(awk 'NR==1 && /^---/ {inb=1; next} inb && /^---/ {exit} inb {print}' "$c" | tr -d '\r')"
+              echo "$fm" | grep -q '^description:' || fail "$c: command frontmatter missing 'description:'"
+            done
+          fi
+
+          if [ -s "$ERR" ]; then
+            { echo "## ❌ Plugin validation failed"; echo ""; sed 's/^/- /' "$ERR"; } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Plugin validation failed — see job summary"
+            cat "$ERR"
+            exit 1
+          fi
+          echo "✅ Claude Code plugin (abp-sensei) is valid"
+          echo "## ✅ Plugin validation passed" >> "$GITHUB_STEP_SUMMARY"
