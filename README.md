@@ -13,7 +13,7 @@
   <a href="https://github.com/burakdmir/abp-skills/stargazers"><img src="https://img.shields.io/github/stars/burakdmir/abp-skills?style=for-the-badge&logo=github" alt="Stars"></a>
   <a href="https://github.com/burakdmir/abp-skills/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"></a>
   <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4"></a>
-  <a href="https://github.com/burakdmir/abp-skills/pulse"><img src="https://img.shields.io/github/last-commit/burakdmir/abp-skills?style=for-the-badge&logo=git" alt="Last Commit"></a>
+  <a href="https://github.com/burakdmir/abp-skills/pulse"><img src="https://img.shields.io/github/last-commit/burakdmir/abp-skills/main?style=for-the-badge&logo=git&cacheSeconds=3600" alt="Last Commit"></a>
 </p>
 
 ---
