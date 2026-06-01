@@ -1,20 +1,24 @@
+---
+name: abp-modularity
+description: "ABP Framework v10.4 modularity: AbpModule, [DependsOn], module lifecycle, plugin modules, modular monolith. Use when creating a module, defining module dependencies, or building a modular architecture in ABP."
+---
+
 # ABP Framework — Modularity
 
-ABP Framework v10.4 modüler uygulama geliştirme rehberi. Module sistemi, dependency management, plugin modüller ve best practices.
+A guide to modular application development in ABP Framework v10.4. The module system, dependency management, plugin modules, and best practices.
 
 ## Trigger
 
 - "ABP modularity"
-- "ABP module oluştur"
+- "create an ABP module"
 - "ABP DependsOn"
 - "ABP plugin module"
 - "ABP modular monolith"
 - "ABP module dependency"
-- "ABP modül bağımlılığı"
 
-## Modularity Nedir
+## What Is Modularity
 
-ABP tam modüler uygulamalar ve sistemler oluşturmayı destekler. Her modül kendi entity'lerini, servislerini, database entegrasyonunu, API'lerini ve UI component'lerini içerebilir.
+ABP supports building fully modular applications and systems. Each module can contain its own entities, services, database integration, APIs, and UI components.
 
 ## Module Class
 
@@ -51,17 +55,17 @@ public class BlogModule : AbpModule
 }
 ```
 
-### Lifecycle Metodları
+### Lifecycle Methods
 
-| Metot | Ne Zaman Çalışır | Kullanım |
+| Method | When It Runs | Usage |
 |---|---|---|
-| `PreConfigureServices` | Tüm `ConfigureServices`'lerden önce | Erken konfigürasyon |
-| `ConfigureServices` | Service registration | DI kayıt, modül ayarları |
-| `PostConfigureServices` | Tüm `ConfigureServices`'lerden sonra | Geç konfigürasyon |
-| `OnPreApplicationInitialization` | Init öncesi | Pre-init logic |
-| `OnApplicationInitialization` | Uygulama başlatma | Middleware pipeline |
-| `OnPostApplicationInitialization` | Init sonrası | Post-init logic |
-| `OnApplicationShutdown` | Uygulama kapanışı | Cleanup logic |
+| `PreConfigureServices` | Before all `ConfigureServices` | Early configuration |
+| `ConfigureServices` | Service registration | DI registration, module settings |
+| `PostConfigureServices` | After all `ConfigureServices` | Late configuration |
+| `OnPreApplicationInitialization` | Before init | Pre-init logic |
+| `OnApplicationInitialization` | Application startup | Middleware pipeline |
+| `OnPostApplicationInitialization` | After init | Post-init logic |
+| `OnApplicationShutdown` | Application shutdown | Cleanup logic |
 
 ## Module Dependencies
 
@@ -70,9 +74,9 @@ public class BlogModule : AbpModule
 public class BlogModule : AbpModule { }
 ```
 
-ABP startup'ta dependency graph'i inceler ve modülleri doğru sırayla başlatır/kapatır.
+At startup, ABP inspects the dependency graph and starts/shuts down modules in the correct order.
 
-## CLI ile Module Oluşturma
+## Creating a Module with the CLI
 
 ```bash
 abp new-module Acme.Blog -t module:ddd
@@ -81,7 +85,7 @@ abp new-module Acme.Blog -t module:ddd -ts Acme.Crm.sln
 abp new-module Acme.Blog -t module:ddd -d ef -u mvc
 ```
 
-## Modül Yükleme
+## Installing a Module
 
 ```bash
 abp install-module Volo.Blogging
@@ -107,3 +111,7 @@ ObjectExtensionManager.Instance
 ```bash
 abp new Acme.Crm --template app-nolayers --modern --modular
 ```
+
+## Related
+
+[Framework](../abp-framework/SKILL.md) · [Dependency Injection](../abp-dependency-injection/SKILL.md) · [Dependency Rules](../abp-dependency-rules/SKILL.md) · [Microservices](../abp-microservices/SKILL.md) · Docs: https://abp.io/docs/latest/framework/architecture/modularity/basics

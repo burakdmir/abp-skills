@@ -1,6 +1,11 @@
+---
+name: abp-efcore
+description: "ABP Framework v10.4 Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
+---
+
 # ABP Framework — Entity Framework Core
 
-ABP Framework v10.4 EF Core entegrasyon rehberi. DbContext, repository, migration, eager/lazy loading ve ileri konular.
+A guide to EF Core integration in ABP Framework v10.4. DbContext, repository, migration, eager/lazy loading, and advanced topics.
 
 ## Trigger
 
@@ -13,13 +18,13 @@ ABP Framework v10.4 EF Core entegrasyon rehberi. DbContext, repository, migratio
 - "ABP DbSet"
 - "ABP entity mapping"
 
-## Kurulum
+## Installation
 
 ```bash
 abp add-package Volo.Abp.EntityFrameworkCore
 ```
 
-## DbContext Oluşturma
+## Creating a DbContext
 
 ```csharp
 using Microsoft.EntityFrameworkCore;
@@ -48,16 +53,16 @@ protected override void OnModelCreating(ModelBuilder builder)
     builder.Entity<Book>(b =>
     {
         b.ToTable("Books");
-        b.ConfigureByConvention();  // Base properties için ZORUNLU
+        b.ConfigureByConvention();  // REQUIRED for base properties
         b.Property(x => x.Name).IsRequired().HasMaxLength(128);
         b.HasIndex(x => x.Name);
     });
 }
 ```
 
-**`ConfigureByConvention()` her zaman çağrılmalı** — Base class property'lerini (Id, CreationTime, vb.) otomatik konfigüre eder.
+**`ConfigureByConvention()` must always be called** — it automatically configures base class properties (Id, CreationTime, etc.).
 
-## DbContext Kaydı
+## DbContext Registration
 
 ```csharp
 [DependsOn(typeof(AbpEntityFrameworkCoreModule))]
@@ -67,16 +72,16 @@ public class MyModule : AbpModule
     {
         context.Services.AddAbpDbContext<MyDbContext>(options =>
         {
-            options.AddDefaultRepositories();  // AggregateRoot'lar için otomatik repository
-            // options.AddDefaultRepositories(includeAllEntities: true);  // Tüm entity'ler için
+            options.AddDefaultRepositories();  // Automatic repository for AggregateRoots
+            // options.AddDefaultRepositories(includeAllEntities: true);  // For all entities
         });
     }
 }
 ```
 
-## DBMS Konfigürasyonu
+## DBMS Configuration
 
-### CLI ile DBMS Seçimi
+### Choosing a DBMS with the CLI
 
 ```bash
 abp new Acme.BookStore -dbms PostgreSQL
@@ -85,24 +90,24 @@ abp new Acme.BookStore -dbms SQLite
 abp new Acme.BookStore -dbms Oracle
 ```
 
-### Manuel DBMS Değiştirme
+### Manually Changing the DBMS
 
 **PostgreSQL:**
 ```bash
-# 1. Volo.Abp.EntityFrameworkCore.SqlServer paketini kaldır
-# 2. Volo.Abp.EntityFrameworkCore.PostgreSql paketini ekle
+# 1. Remove the Volo.Abp.EntityFrameworkCore.SqlServer package
+# 2. Add the Volo.Abp.EntityFrameworkCore.PostgreSql package
 ```
 
 ```csharp
-// Module dependency değiştir
-[DependsOn(typeof(AbpEntityFrameworkCorePostgreSqlModule))]  // SqlServer yerine
+// Change the module dependency
+[DependsOn(typeof(AbpEntityFrameworkCorePostgreSqlModule))]  // instead of SqlServer
 
-// UseNpgsql() kullan
+// Use UseNpgsql()
 Configure<AbpDbContextOptions>(options => options.UseNpgsql());
 
-// DbContextFactory'da da UseNpgsql() kullan
+// Also use UseNpgsql() in the DbContextFactory
 
-// Legacy timestamp behavior enable et (Npgsql 6.0+)
+// Enable legacy timestamp behavior (Npgsql 6.0+)
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 ```
 
@@ -119,8 +124,8 @@ Configure<AbpDbContextOptions>(options =>
     });
 });
 
-// IdentityServer gibi modüller için DBMS provider ayarla
-builder.ConfigureIdentityServer(options =>
+// Set the DBMS provider for modules like OpenIddict (default auth server in ABP v6.0+: OpenIddict)
+builder.ConfigureOpenIddict(options =>
 {
     options.DatabaseProvider = EfCoreDatabaseProvider.MySql;
 });
@@ -131,7 +136,7 @@ builder.ConfigureIdentityServer(options =>
 Configure<AbpDbContextOptions>(options => options.UseSqlite());
 ```
 
-### Desteklenen DBMS'ler
+### Supported DBMSs
 
 | DBMS | Package |
 |---|---|
@@ -141,16 +146,16 @@ Configure<AbpDbContextOptions>(options => options.UseSqlite());
 | SQLite | `Volo.Abp.EntityFrameworkCore.Sqlite` |
 | Oracle | `Volo.Abp.EntityFrameworkCore.Oracle` |
 
-## Connection String Seçimi
+## Choosing a Connection String
 
 ```csharp
 [ConnectionStringName("MySecondConnString")]
 public class MyDbContext : AbpDbContext<MyDbContext> { }
 ```
 
-Belirtilmezse `Default` connection string kullanılır.
+If not specified, the `Default` connection string is used.
 
-## Default Repository Kullanımı
+## Using the Default Repository
 
 ```csharp
 public class BookManager : DomainService
@@ -196,13 +201,13 @@ public class BookRepository : EfCoreRepository<BookStoreDbContext, Book, Guid>, 
 }
 ```
 
-### Default Repository'yi Override Etme
+### Overriding the Default Repository
 
 ```csharp
 context.Services.AddAbpDbContext<BookStoreDbContext>(options =>
 {
     options.AddDefaultRepositories();
-    options.AddRepository<Book, BookRepository>();  // IRepository<Book, Guid> yerine BookRepository kullanılır
+    options.AddRepository<Book, BookRepository>();  // BookRepository is used instead of IRepository<Book, Guid>
 });
 ```
 
@@ -213,7 +218,7 @@ context.Services.AddAbpDbContext<BookStoreDbContext>(options =>
 var queryable = await _orderRepository.WithDetailsAsync(x => x.Lines);
 var orders = await AsyncExecuter.ToListAsync(queryable);
 
-// DefaultWithDetailsFunc konfigürasyonu
+// DefaultWithDetailsFunc configuration
 Configure<AbpEntityOptions>(options =>
 {
     options.Entity<Order>(orderOptions =>
@@ -222,14 +227,14 @@ Configure<AbpEntityOptions>(options =>
     });
 });
 
-// Sonra parametresiz kullanılabilir
+// It can then be used without a parameter
 var queryable = await _orderRepository.WithDetailsAsync();
 ```
 
-### Get/Find Metodlarında includeDetails
+### includeDetails on Get/Find Methods
 
 ```csharp
-var order = await _orderRepository.GetAsync(id);  // includeDetails: true (varsayılan)
+var order = await _orderRepository.GetAsync(id);  // includeDetails: true (default)
 var order = await _orderRepository.GetAsync(id, includeDetails: false);
 var orders = await _orderRepository.GetListAsync(includeDetails: true);
 ```
@@ -239,14 +244,14 @@ var orders = await _orderRepository.GetListAsync(includeDetails: true);
 ```csharp
 var order = await _orderRepository.GetAsync(id, includeDetails: false);
 await _orderRepository.EnsureCollectionLoadedAsync(order, x => x.Lines);
-// order.Lines artık dolu
+// order.Lines is now populated
 ```
 
 ## Lazy Loading
 
 ```csharp
-// 1. Microsoft.EntityFrameworkCore.Proxies paketini yükle
-// 2. Konfigürasyon
+// 1. Install the Microsoft.EntityFrameworkCore.Proxies package
+// 2. Configuration
 Configure<AbpDbContextOptions>(options =>
 {
     options.PreConfigure<MyDbContext>(opts =>
@@ -256,7 +261,7 @@ Configure<AbpDbContextOptions>(options =>
     options.UseSqlServer();
 });
 
-// 3. Navigation property'leri virtual yap
+// 3. Make navigation properties virtual
 public virtual ICollection<OrderLine> Lines { get; set; }
 public virtual Order Order { get; set; }
 ```
@@ -264,12 +269,12 @@ public virtual Order Order { get; set; }
 ## Read-Only Repositories
 
 ```csharp
-// No-Tracking otomatik uygulanır
+// No-Tracking is applied automatically
 public class MyService : ApplicationService
 {
     private readonly IReadOnlyRepository<Book, Guid> _bookRepository;
     
-    // Tracking gerektiğinde
+    // When tracking is needed
     var query = (await _bookRepository.GetQueryableAsync()).AsTracking();
 }
 ```
@@ -287,7 +292,7 @@ ObjectExtensionManager.Instance
     );
 ```
 
-> `MapEfCoreProperty` DbContext kullanılmadan önce çağrılmalı. Startup template'lerde `EfCoreEntityExtensionMappings` class'ı güvenli noktadır.
+> `MapEfCoreProperty` must be called before the DbContext is used. In startup templates, the `EfCoreEntityExtensionMappings` class is the safe spot.
 
 ## Split Queries
 
@@ -301,10 +306,10 @@ Configure<AbpDbContextOptions>(options =>
 });
 ```
 
-## Multi-Tenancy ile EF Core
+## EF Core with Multi-Tenancy
 
 ```csharp
-[IgnoreMultiTenancy]  // Her zaman host connection string kullan
+[IgnoreMultiTenancy]  // Always use the host connection string
 public class TenantManagementDbContext : AbpDbContext<TenantManagementDbContext> { }
 ```
 
@@ -318,7 +323,7 @@ public class MyRepositoryBase<TEntity> : EfCoreRepository<BookStoreDbContext, TE
         : base(dbContextProvider) { }
 }
 
-// Kayıt
+// Registration
 context.Services.AddAbpDbContext<BookStoreDbContext>(options =>
 {
     options.SetDefaultRepositoryClasses(
@@ -330,40 +335,40 @@ context.Services.AddAbpDbContext<BookStoreDbContext>(options =>
 
 ## Best Practices
 
-1. **Her zaman `ConfigureByConvention()` çağır** — Base property mapping için
-2. **Fluent API tercih et** — Data annotation yerine
-3. **Domain layer'ı EF Core'dan izole tut** — `IAsyncQueryableExecuter` kullan
-4. **`WithDetailsAsync` ile eager loading yap** — N+1 sorununu önle
-5. **Read-only sorgular için `IReadOnlyRepository` kullan** — No-Tracking otomatik
-6. **Custom repository'leri EF Core layer'da tanımla** — Domain layer'da sadece interface
-7. **Migration'ları EF Core project'ında yönet** — `Add-Migration`, `Update-Database`
+1. **Always call `ConfigureByConvention()`** — for base property mapping
+2. **Prefer the Fluent API** — over data annotations
+3. **Keep the domain layer isolated from EF Core** — use `IAsyncQueryableExecuter`
+4. **Do eager loading with `WithDetailsAsync`** — to avoid the N+1 problem
+5. **Use `IReadOnlyRepository` for read-only queries** — No-Tracking is automatic
+6. **Define custom repositories in the EF Core layer** — only the interface in the domain layer
+7. **Manage migrations in the EF Core project** — `Add-Migration`, `Update-Database`
 
 ---
 
 ## Migrations
 
 ```bash
-# Migration oluştur
+# Create a migration
 dotnet ef migrations add InitialCreate --project Acme.BookStore.EntityFrameworkCore --startup-project Acme.BookStore.DbMigrator
 
-# Migration uygula
+# Apply the migration
 dotnet ef database update --project Acme.BookStore.EntityFrameworkCore --startup-project Acme.BookStore.DbMigrator
 
-# veya DbMigrator'ı çalıştır
+# or run the DbMigrator
 dotnet run --project Acme.BookStore.DbMigrator
 ```
 
 ### Multiple DbContext Migrations
 
 ```csharp
-// Her DbContext için ayrı migration klasörü
+// A separate migration folder for each DbContext
 builder.Entity<Book>(b => { ... });  // BookStoreDbContext
 
-// Migration tasarımı
+// Migration design
 public class BookStoreDbContextModelSnapshot : ModelSnapshot { }
 ```
 
-### Migration ile Seed Data
+### Seed Data via Migration
 
 ```csharp
 protected override void Up(MigrationBuilder migrationBuilder)
@@ -380,28 +385,28 @@ protected override void Up(MigrationBuilder migrationBuilder)
 
 ## ReplaceDbContext Pattern
 
-Birden fazla DbContext'i tek DbContext'te birleştirme:
+Combining multiple DbContexts into a single DbContext:
 
 ```csharp
-// Interface tanımla
+// Define an interface
 public interface IBookStoreDbContext : IEfCoreDbContext
 {
     DbSet<Book> Books { get; }
 }
 
-// DbContext interface'i implement et
+// Have the DbContext implement the interface
 public class BookStoreDbContext : AbpDbContext<BookStoreDbContext>, IBookStoreDbContext
 {
     public DbSet<Book> Books { get; set; }
 }
 
-// Default repository'leri interface ile kaydet
+// Register the default repositories with the interface
 context.Services.AddAbpDbContext<BookStoreDbContext>(options =>
 {
     options.AddDefaultRepositories<IBookStoreDbContext>();
 });
 
-// Başka bir DbContext bu interface'i replace edebilir
+// Another DbContext can replace this interface
 [ReplaceDbContext(typeof(IBookStoreDbContext))]
 public class UnifiedDbContext : AbpDbContext<UnifiedDbContext>, IBookStoreDbContext
 {
@@ -422,10 +427,21 @@ public class MyCustomEfCoreBulkOperationProvider : IEfCoreBulkOperationProvider,
         bool autoSave,
         CancellationToken cancellationToken)
     {
-        // Custom bulk insert logic (örn. EFCore.BulkExtensions)
+        // Custom bulk insert logic (e.g. EFCore.BulkExtensions)
     }
 
     public async Task UpdateManyAsync<TDbContext, TEntity>(...) { }
     public async Task DeleteManyAsync<TDbContext, TEntity>(...) { }
 }
 ```
+
+---
+
+## Related
+
+- [DDD](../abp-ddd/SKILL.md) — entity, aggregate, repository pattern
+- [MongoDB](../abp-mongodb/SKILL.md) — MongoDB alternative
+- [Dependency Rules](../abp-dependency-rules/SKILL.md) — repository interface in Domain, impl in the Data layer
+- [Multi-Tenancy](../abp-multitenancy/SKILL.md) — IgnoreMultiTenancy, tenant connection string
+- [Development Flow](../abp-development-flow/SKILL.md) — migration and DbMigrator flow
+- ABP Docs: https://abp.io/docs/latest/framework/data/entity-framework-core

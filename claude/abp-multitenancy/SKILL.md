@@ -1,6 +1,11 @@
+---
+name: abp-multitenancy
+description: "ABP Framework v10.4 multi-tenancy: tenant resolver, ICurrentTenant, IMultiTenant, database isolation, tenant-based data filtering. Use when working with SaaS, multi-tenancy, or tenant management in ABP."
+---
+
 # ABP Framework — Multi-Tenancy
 
-ABP Framework v10.4 multi-tenancy (SaaS) uygulama rehberi. Tenant resolver, IMultiTenant, ICurrentTenant, database isolation.
+ABP Framework v10.4 multi-tenancy (SaaS) implementation guide. Tenant resolver, IMultiTenant, ICurrentTenant, database isolation.
 
 ## Trigger
 
@@ -13,13 +18,13 @@ ABP Framework v10.4 multi-tenancy (SaaS) uygulama rehberi. Tenant resolver, IMul
 - "ABP subdomain tenant"
 - "ABP database per tenant"
 
-## Terminoloji
+## Terminology
 
-- **Tenant:** SaaS uygulamasının müşterisi
-- **Host:** Uygulamayı yöneten şirket
-- **Multi-Tenancy:** Tek instance, birden fazla müşteri
+- **Tenant:** A customer of the SaaS application
+- **Host:** The company that manages the application
+- **Multi-Tenancy:** A single instance, multiple customers
 
-## Konfigürasyon
+## Configuration
 
 ```csharp
 Configure<AbpMultiTenancyOptions>(options =>
@@ -28,55 +33,55 @@ Configure<AbpMultiTenancyOptions>(options =>
 });
 ```
 
-> Startup template'lerde `MultiTenancyConsts` class'ı ile tek noktadan kontrol edilir.
+> In the startup templates this is controlled from a single point via the `MultiTenancyConsts` class.
 
-## Database Mimarileri
+## Database Architectures
 
-| Yaklaşım | Açıklama |
+| Approach | Description |
 |---|---|
-| **Single Database** | Tüm tenant'lar aynı DB'de, `TenantId` ile ayrılır |
-| **Database per Tenant** | Her tenant'ın kendi DB'si |
-| **Hybrid** | Bazı tenant'lar paylaşır, bazıları ayrı DB'ye sahip |
+| **Single Database** | All tenants in the same DB, separated by `TenantId` |
+| **Database per Tenant** | Each tenant has its own DB |
+| **Hybrid** | Some tenants share a DB, others have a separate DB |
 
 ## IMultiTenant Interface
 
 ```csharp
 public class Product : AggregateRoot<Guid>, IMultiTenant
 {
-    public Guid? TenantId { get; set; }  // IMultiTenant interface'den
+    public Guid? TenantId { get; set; }  // From the IMultiTenant interface
     public string Name { get; set; }
     public float Price { get; set; }
 }
 ```
 
-**Önemli:**
-- `TenantId` nullable — `null` ise entity **Host**'a ait
-- ABP otomatik olarak current tenant için **data filtering** uygular
-- `TenantId` otomatik set edilir (`ICurrentTenant.Id`'den)
+**Important:**
+- `TenantId` is nullable — if `null`, the entity belongs to the **Host**
+- ABP automatically applies **data filtering** for the current tenant
+- `TenantId` is set automatically (from `ICurrentTenant.Id`)
 
 ## ICurrentTenant
 
 ```csharp
 // Properties
-CurrentTenant.Id        // Guid? — Mevcut tenant ID
-CurrentTenant.Name      // string — Mevcut tenant adı
-CurrentTenant.IsAvailable  // bool — ID null değilse true
+CurrentTenant.Id        // Guid? — Current tenant ID
+CurrentTenant.Name      // string — Current tenant name
+CurrentTenant.IsAvailable  // bool — true if ID is not null
 
-// Tenant değiştirme (scoped)
+// Changing the tenant (scoped)
 using (CurrentTenant.Change(tenantId))
 {
-    // Bu scope'ta işlemler belirtilen tenant adına yapılır
+    // Within this scope, operations are performed on behalf of the specified tenant
     var count = await _productRepository.GetCountAsync();
 }
 
-// Host context'e geç
+// Switch to the host context
 using (CurrentTenant.Change(null))
 {
-    // Host contextinde işlem
+    // Operation in the host context
 }
 ```
 
-## Data Filtering — Multi-Tenancy Filter'ı Devre Dışı Bırakma
+## Data Filtering — Disabling the Multi-Tenancy Filter
 
 ```csharp
 public class ProductManager : DomainService
@@ -100,17 +105,17 @@ public class ProductManager : DomainService
 }
 ```
 
-## Tenant Resolver'lar
+## Tenant Resolvers
 
-### Varsayılan Resolver'lar (Sırayla)
+### Default Resolvers (In Order)
 
-1. **CurrentUserTenantResolveContributor** — User claim'lerinden (her zaman ilk olmalı)
+1. **CurrentUserTenantResolveContributor** — From user claims (must always be first)
 2. **QueryStringTenantResolveContributor** — `?__tenant=xxx`
-3. **RouteTenantResolveContributor** — URL path'ten
-4. **HeaderTenantResolveContributor** — HTTP header'dan (`__tenant`)
-5. **CookieTenantResolveContributor** — Cookie'den (`__tenant`)
+3. **RouteTenantResolveContributor** — From the URL path
+4. **HeaderTenantResolveContributor** — From the HTTP header (`__tenant`)
+5. **CookieTenantResolveContributor** — From the cookie (`__tenant`)
 
-### Tenant Key Değiştirme
+### Changing the Tenant Key
 
 ```csharp
 Configure<AbpAspNetCoreMultiTenancyOptions>(options =>
@@ -128,7 +133,7 @@ Configure<AbpTenantResolveOptions>(options =>
     options.AddDomainTenantResolver("{0}.mydomain.com");
 });
 
-// OpenIddict wildcard domain (ayrı Auth Server kullanılıyorsa)
+// OpenIddict wildcard domain (if a separate Auth Server is used)
 PreConfigure<AbpOpenIddictWildcardDomainOptions>(options =>
 {
     options.EnableWildcardDomainSupport = true;
@@ -145,13 +150,13 @@ public class MyCustomTenantResolveContributor : TenantResolveContributorBase
 
     public override Task ResolveAsync(ITenantResolveContext context)
     {
-        // context.TenantIdOrName set et
-        // context.ServiceProvider ile DI kullan
+        // Set context.TenantIdOrName
+        // Use DI via context.ServiceProvider
         return Task.CompletedTask;
     }
 }
 
-// Kayıt
+// Registration
 Configure<AbpTenantResolveOptions>(options =>
 {
     options.TenantResolvers.Add(new MyCustomTenantResolveContributor());
@@ -163,7 +168,7 @@ Configure<AbpTenantResolveOptions>(options =>
 ```csharp
 Configure<AbpTenantResolveOptions>(options =>
 {
-    options.FallbackTenant = "acme";  // Tenant bulunamazsa bu kullanılır
+    options.FallbackTenant = "acme";  // Used when no tenant is found
 });
 ```
 
@@ -171,18 +176,18 @@ Configure<AbpTenantResolveOptions>(options =>
 
 ```csharp
 app.UseAuthentication();
-app.UseMultiTenancy();  // Auth'dan hemen sonra
+app.UseMultiTenancy();  // Immediately after authentication
 ```
 
-> Startup template'lerde zaten yapılandırılmıştır.
+> Already configured in the startup templates.
 
 ## Tenant Store
 
-### Tenant Management Module (Önerilen)
+### Tenant Management Module (Recommended)
 
-Startup template'lerde dahil. `ITenantStore` implementasyonu DB'den tenant bilgilerini çeker.
+Included in the startup templates. The `ITenantStore` implementation fetches tenant information from the DB.
 
-### Configuration Data Store (Alternatif)
+### Configuration Data Store (Alternative)
 
 ```json
 // appsettings.json
@@ -206,13 +211,13 @@ Startup template'lerde dahil. `ITenantStore` implementasyonu DB'den tenant bilgi
 ## Host vs Tenant DbContext
 
 ```csharp
-[IgnoreMultiTenancy]  // Her zaman host DB kullanır
+[IgnoreMultiTenancy]  // Always uses the host DB
 public class TenantManagementDbContext : AbpDbContext<TenantManagementDbContext> { }
 ```
 
-## Diğer Multi-Tenancy Infrastructure
+## Other Multi-Tenancy Infrastructure
 
-ABP'de aşağıdaki servisler multi-tenancy-aware tasarlanmıştır:
+In ABP, the following services are designed to be multi-tenancy-aware:
 - BLOB Storing
 - Caching
 - Data Filtering
@@ -222,9 +227,19 @@ ABP'de aşağıdaki servisler multi-tenancy-aware tasarlanmıştır:
 
 ## Best Practices
 
-1. **Her zaman `IMultiTenant` implement et** — Tenant-specific entity'ler için
-2. **`CurrentTenant.Change` ile `using` kullan** — Scope dışında eski değer geri yüklenir
-3. **Tenant resolver sırası önemli** — `CurrentUserTenantResolveContributor` her zaman ilk olmalı
-4. **Host-side işlemler için `CurrentTenant.Change(null)` kullan**
-5. **Tenant Management module kullan** — `appsettings.json` yaklaşımı sadece basit senaryolar için
-6. **Separate DB yaklaşımında cross-tenant query kendi başına implement edilmeli**
+1. **Always implement `IMultiTenant`** — For tenant-specific entities
+2. **Use `CurrentTenant.Change` with `using`** — The previous value is restored outside the scope
+3. **Tenant resolver order matters** — `CurrentUserTenantResolveContributor` must always be first
+4. **Use `CurrentTenant.Change(null)` for host-side operations**
+5. **Use the Tenant Management module** — The `appsettings.json` approach is only for simple scenarios
+6. **In the separate DB approach, cross-tenant queries must be implemented yourself**
+
+---
+
+## Related
+
+- [EF Core](../abp-efcore/SKILL.md) — tenant connection string, IgnoreMultiTenancy
+- [MongoDB](../abp-mongodb/SKILL.md) — tenant isolation with MongoDB
+- [Authorization](../abp-authorization/SKILL.md) — permissions with MultiTenancySides
+- [Settings & Features](../abp-settings-features/SKILL.md) — tenant-based feature/setting
+- ABP Docs: https://abp.io/docs/latest/framework/architecture/multi-tenancy

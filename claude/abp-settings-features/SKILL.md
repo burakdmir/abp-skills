@@ -1,3 +1,8 @@
+---
+name: abp-settings-features
+description: "ABP Framework v10.4 settings and features: ISettingProvider/ISettingManager, SettingDefinitionProvider, IFeatureChecker, feature toggle. Use for configuration management, settings, or feature flags in ABP."
+---
+
 # ABP Settings & Features Skill
 
 ## Trigger

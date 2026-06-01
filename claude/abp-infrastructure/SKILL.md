@@ -1,6 +1,11 @@
+---
+name: abp-infrastructure
+description: "ABP Framework v10.4 infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+---
+
 # ABP Framework — Infrastructure
 
-ABP Framework v10.4 altyapı bileşenleri rehberi. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
+Guide to ABP Framework v10.4 infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
 
 ## Trigger
 
@@ -25,12 +30,12 @@ ABP Framework v10.4 altyapı bileşenleri rehberi. Event Bus, Background Jobs, C
 
 ## Event Bus
 
-ABP iki tür event bus sağlar:
+ABP provides two types of event bus:
 
-| Tip | Kullanım | Interface |
+| Type | Usage | Interface |
 |---|---|---|
-| **Local Event Bus** | Aynı process içinde | `ILocalEventBus`, `ILocalEventHandler<TEvent>` |
-| **Distributed Event Bus** | Process'ler arası (microservice) | `IDistributedEventBus`, `IDistributedEventHandler<TEvent>` |
+| **Local Event Bus** | Within the same process | `ILocalEventBus`, `ILocalEventHandler<TEvent>` |
+| **Distributed Event Bus** | Across processes (microservice) | `IDistributedEventBus`, `IDistributedEventHandler<TEvent>` |
 
 ### Local Event Bus
 
@@ -42,7 +47,7 @@ public class StockCountChangedEvent
     public int NewCount { get; set; }
 }
 
-// Publish (service içinden)
+// Publish (from a service)
 public class MyService : ITransientDependency
 {
     private readonly ILocalEventBus _localEventBus;
@@ -58,7 +63,7 @@ public class MyService : ITransientDependency
     }
 }
 
-// Publish (Entity/Aggregate Root içinden)
+// Publish (from an Entity/Aggregate Root)
 public class Product : AggregateRoot<Guid>
 {
     public void ChangeStockCount(int newCount)
@@ -74,21 +79,21 @@ public class StockChangeHandler : ILocalEventHandler<StockCountChangedEvent>, IT
     [UnitOfWork]
     public virtual async Task HandleEventAsync(StockCountChangedEvent eventData)
     {
-        // Event işleme logic'i
+        // Event handling logic
     }
 }
 ```
 
-**Özellikler:**
-- Event handler'lar aynı UOW/transaction içinde çalışır
-- Handler exception atarsa transaction rollback olur
-- `LocalEventHandlerOrder` ile execution order kontrolü
-- Entity'den publish edilen event'ler SaveChanges'ta tetiklenir (EF Core)
+**Features:**
+- Event handlers run within the same UOW/transaction
+- If a handler throws an exception, the transaction is rolled back
+- Control execution order with `LocalEventHandlerOrder`
+- Events published from an entity are triggered on SaveChanges (EF Core)
 
 ### Distributed Event Bus
 
 ```csharp
-// ETO (Event Transfer Object) — serialize edilebilir olmalı
+// ETO (Event Transfer Object) — must be serializable
 [EventName("MyApp.Product.StockChange")]
 public class StockCountChangedEto
 {
@@ -112,7 +117,7 @@ public class MyService : ITransientDependency
     }
 }
 
-// Entity'den publish
+// Publish from an entity
 public class Product : AggregateRoot<Guid>
 {
     public void ChangeStockCount(int newCount)
@@ -128,24 +133,24 @@ public class StockChangeHandler : IDistributedEventHandler<StockCountChangedEto>
     [UnitOfWork]
     public virtual async Task HandleEventAsync(StockCountChangedEto eventData)
     {
-        // Event işleme logic'i
+        // Event handling logic
     }
 }
 ```
 
-**Distributed Event Bus Provider'ları:**
+**Distributed Event Bus Providers:**
 
-| Provider | Package | Açıklama |
+| Provider | Package | Description |
 |---|---|---|
-| `LocalDistributedEventBus` | Varsayılan | In-process (monolith için) |
+| `LocalDistributedEventBus` | Default | In-process (for monolith) |
 | `RabbitMqDistributedEventBus` | Volo.Abp.EventBus.RabbitMQ | RabbitMQ |
 | `KafkaDistributedEventBus` | Volo.Abp.EventBus.Kafka | Apache Kafka |
 | `AzureDistributedEventBus` | Volo.Abp.EventBus.AzureServiceBus | Azure Service Bus |
 | `RebusDistributedEventBus` | Volo.Abp.EventBus.Rebus | Rebus |
 
-**Hangi Event Bus Kullanılmalı?**
+**Which Event Bus Should You Use?**
 
-| Senaryo | Öneri |
+| Scenario | Recommendation |
 |---|---|
 | Monolith (non-modular) | Local Event Bus |
 | Modular Monolith | Distributed Event Bus (inter-module), Local (intra-module) |
@@ -153,7 +158,7 @@ public class StockChangeHandler : IDistributedEventHandler<StockCountChangedEto>
 
 ### Inbox/Outbox Pattern (Distributed Event Bus)
 
-Distributed event bus ile data consistency için inbox/outbox pattern:
+Inbox/outbox pattern for data consistency with the distributed event bus:
 
 ```csharp
 Configure<AbpDistributedEventBusOptions>(options =>
@@ -167,9 +172,9 @@ Configure<AbpDistributedEventBusOptions>(options =>
 
 ## Background Jobs
 
-Background job'lar uzun süren işlemleri kuyruğa alıp arka planda çalıştırmak için kullanılır.
+Background jobs are used to queue long-running operations and execute them in the background.
 
-### Job Tanımlama
+### Defining a Job
 
 ```csharp
 // Args class
@@ -193,7 +198,7 @@ public class EmailSendingJob : AsyncBackgroundJob<EmailSendingArgs>, ITransientD
 }
 ```
 
-### Job Kuyruğa Ekleme
+### Enqueuing a Job
 
 ```csharp
 public class RegistrationService : ApplicationService
@@ -206,34 +211,34 @@ public class RegistrationService : ApplicationService
         await _backgroundJobManager.EnqueueAsync(
             new EmailSendingArgs { EmailAddress = email, Subject = "Welcome!", Body = "..." },
             priority: BackgroundJobPriority.Normal,
-            delay: TimeSpan.FromMinutes(5)  // Opsiyonel gecikme
+            delay: TimeSpan.FromMinutes(5)  // Optional delay
         );
     }
 }
 ```
 
-### Job İsimlendirme
+### Job Naming
 
 ```csharp
 [BackgroundJobName("emails")]
 public class EmailSendingArgs { }
 ```
 
-### Background Job Provider'ları
+### Background Job Providers
 
-| Provider | Package | Açıklama |
+| Provider | Package | Description |
 |---|---|---|
 | Default | Volo.Abp.BackgroundJobs | In-memory, persistent (DB) |
 | Hangfire | Volo.Abp.BackgroundJobs.Hangfire | Hangfire dashboard, retry |
 | Quartz | Volo.Abp.BackgroundJobs.Quartz | Cron scheduling |
 | RabbitMQ | Volo.Abp.BackgroundJobs.RabbitMQ | RabbitMQ queue |
 
-### Job Execution Disable
+### Disabling Job Execution
 
 ```csharp
 Configure<AbpBackgroundJobOptions>(options =>
 {
-    options.IsJobExecutionEnabled = false;  // Job'ları çalıştırma, sadece enqueue et
+    options.IsJobExecutionEnabled = false;  // Don't run jobs, only enqueue them
 });
 ```
 
@@ -252,7 +257,7 @@ public class BookCacheItem
     public float Price { get; set; }
 }
 
-// Kullanım
+// Usage
 public class BookService : ITransientDependency
 {
     private readonly IDistributedCache<BookCacheItem, Guid> _cache;
@@ -272,12 +277,12 @@ public class BookService : ITransientDependency
 }
 ```
 
-### Konfigürasyon
+### Configuration
 
 ```csharp
 Configure<AbpDistributedCacheOptions>(options =>
 {
-    options.KeyPrefix = "MyApp1";  // Paylaşılan cache server'da prefix
+    options.KeyPrefix = "MyApp1";  // Prefix on a shared cache server
     options.GlobalCacheEntryOptions = new DistributedCacheEntryOptions
     {
         SlidingExpiration = TimeSpan.FromMinutes(20)
@@ -297,7 +302,7 @@ await _cache.RemoveManyAsync(keys);
 ### UOW-Level Cache
 
 ```csharp
-// UOW başarılı olana kadar cache'e yazılmaz
+// Not written to the cache until the UOW succeeds
 await _cache.SetAsync(key, value, considerUow: true);
 ```
 
@@ -315,16 +320,16 @@ abp add-package Volo.Abp.Caching.StackExchangeRedis
 }
 ```
 
-Veya kod ile:
+Or via code:
 
 ```csharp
 Configure<RedisCacheOptions>(options => { /* ... */ });
 ```
 
-**Neden `Volo.Abp.Caching.StackExchangeRedis` kullanmalı?**
-1. `SetManyAsync` ve `GetManyAsync` implementasyonu (Microsoft paketi yok)
-2. Redis konfigürasyonu basitleştirilmiş
-3. `Microsoft.Extensions.Caching.StackExchangeRedis` üzerine inşa edilmiş
+**Why use `Volo.Abp.Caching.StackExchangeRedis`?**
+1. `SetManyAsync` and `GetManyAsync` implementations (the Microsoft package lacks them)
+2. Simplified Redis configuration
+3. Built on top of `Microsoft.Extensions.Caching.StackExchangeRedis`
 
 ### Entity Cache
 
@@ -335,13 +340,13 @@ public class BookEntityCache : EntityCache<Book, BookCacheItem>, ITransientDepen
 }
 ```
 
-Entity cache read-only'dir ve entity update/delete'de otomatik invalidate olur.
+Entity cache is read-only and is automatically invalidated on entity update/delete.
 
 ---
 
 ## BLOB Storing
 
-Dosya depolama için soyutlama. Çeşitli provider'lar desteklenir:
+An abstraction for file storage. Various providers are supported:
 
 | Provider | Package |
 |---|---|
@@ -355,13 +360,13 @@ Dosya depolama için soyutlama. Çeşitli provider'lar desteklenir:
 | Bunny CDN | Volo.Abp.BlobStoring.Bunny |
 | Memory | Volo.Abp.BlobStoring.Memory |
 
-### Kullanım
+### Usage
 
 ```csharp
 [BlobContainerName("product-images")]
 public class ProductImageBlobContainer : AbpBlobContainer { }
 
-// Konfigürasyon
+// Configuration
 Configure<AbpBlobStoringOptions>(options =>
 {
     options.Containers.ConfigureDefault(configuring =>
@@ -373,7 +378,7 @@ Configure<AbpBlobStoringOptions>(options =>
     });
 });
 
-// Kullanım
+// Usage
 public class ProductImageService : ITransientDependency
 {
     private readonly IBlobContainer<ProductImageBlobContainer> _blobContainer;
@@ -443,7 +448,7 @@ await _emailSender.QueueAsync(
 ```
 Emails sent via background job queue — tolerates errors with retry mechanism.
 
-### Konfigürasyon
+### Configuration
 
 ```json
 "Settings": {
@@ -545,7 +550,7 @@ public class MyService : ITransientDependency
         _productRepository = productRepository;
     }
 
-    // Soft-delete filter'ı devre dışı bırak
+    // Disable the soft-delete filter
     public async Task<List<Product>> GetAllIncludingDeletedAsync()
     {
         using (_dataFilter.Disable<ISoftDelete>())
@@ -554,7 +559,7 @@ public class MyService : ITransientDependency
         }
     }
 
-    // Multi-tenancy filter'ı devre dışı bırak
+    // Disable the multi-tenancy filter
     public async Task<long> GetAllTenantProductCountAsync()
     {
         using (_dataFilter.Disable<IMultiTenant>())
@@ -609,7 +614,7 @@ public class MyAppSettings : SettingDefinitionProvider
     }
 }
 
-// Kullanım
+// Usage
 public class MyService : ITransientDependency
 {
     private readonly ISettingProvider _settingProvider;
@@ -621,7 +626,7 @@ public class MyService : ITransientDependency
     }
 }
 
-// Değiştirme
+// Changing
 await SettingManager.SetAsync("MyApp.MaxProductPrice", "2000");
 ```
 
@@ -646,7 +651,7 @@ public class MyAppFeatures : FeatureDefinitionProvider
     }
 }
 
-// Kullanım
+// Usage
 public class MyService : ITransientDependency
 {
     private readonly IFeatureChecker _featureChecker;
@@ -664,16 +669,16 @@ public class MyService : ITransientDependency
 ## Virtual File System
 
 ```csharp
-// Embedded dosyaları virtual file system'e ekle
+// Add embedded files to the virtual file system
 Configure<AbpVirtualFileSystemOptions>(options =>
 {
     options.FileSets.AddEmbedded<MyModule>();
 });
 
-// Kullanım (Razor view'da)
+// Usage (in a Razor view)
 <link href="/MyModule/styles.css" rel="stylesheet" />
 
-// Veya IVirtualFileProvider ile
+// Or with IVirtualFileProvider
 public class MyService : ITransientDependency
 {
     private readonly IVirtualFileProvider _virtualFileProvider;
@@ -695,7 +700,7 @@ public class MyService : ITransientDependency
 ```csharp
 public class MyService : ApplicationService
 {
-    // ApplicationService/DomainService'de pre-injected
+    // Pre-injected in ApplicationService/DomainService
     public async Task DoSomethingAsync()
     {
         var userId = CurrentUser.Id;
@@ -726,7 +731,7 @@ public class MyService : ITransientDependency
         await using var handle = await _distributedLock.TryAcquireAsync("my-lock-key");
         if (handle != null)
         {
-            // Lock alındı, kritik işlem
+            // Lock acquired, critical operation
         }
     }
 }
@@ -814,15 +819,15 @@ public class MyService : ITransientDependency
 
     public void DoSomething()
     {
-        var now = _clock.Now;        // UTC (varsayılan)
+        var now = _clock.Now;        // UTC (default)
         var localNow = _clock.Now.ToLocalTime();
     }
 }
 
-// Timezone konfigürasyonu
+// Timezone configuration
 Configure<AbpClockOptions>(options =>
 {
-    options.Kind = DateTimeKind.Utc;  // veya DateTimeKind.Local
+    options.Kind = DateTimeKind.Utc;  // or DateTimeKind.Local
 });
 ```
 
@@ -830,11 +835,21 @@ Configure<AbpClockOptions>(options =>
 
 ## Best Practices
 
-1. **Event Bus:** Entity'den event publish et, service'den handle et
-2. **Background Jobs:** Uzun süren işlemleri job'a al, kullanıcıyı bekletme
-3. **Caching:** `GetOrAddAsync` kullan, expiration sürelerini ayarla
-4. **BLOB Storing:** Provider abstraction kullan, direkt storage API'sine bağımlı olma
-5. **Data Filtering:** `using` bloğu içinde disable et, scope dışında otomatik geri yüklenir
-6. **Settings:** Runtime'da değiştirilebilir ayarlar için kullan
-7. **Features:** Tenant bazlı feature toggle için kullan
-8. **Distributed Lock:** Concurrent execution gerektiren işlemlerde kullan
+1. **Event Bus:** Publish events from the entity, handle them in the service
+2. **Background Jobs:** Move long-running operations to a job, don't keep the user waiting
+3. **Caching:** Use `GetOrAddAsync`, set expiration durations
+4. **BLOB Storing:** Use the provider abstraction, don't depend directly on the storage API
+5. **Data Filtering:** Disable inside a `using` block; it is automatically restored outside the scope
+6. **Settings:** Use for runtime-changeable settings
+7. **Features:** Use for per-tenant feature toggles
+8. **Distributed Lock:** Use for operations requiring concurrent execution control
+
+---
+
+## Related
+
+- [DDD](../abp-ddd/SKILL.md) — domain event publish (AddLocalEvent/AddDistributedEvent)
+- [Microservices](../abp-microservices/SKILL.md) — distributed event bus (RabbitMQ), Entity Cache
+- [Deployment](../abp-deployment/SKILL.md) — clustered cache/lock, Redis backplane
+- [Settings & Features](../abp-settings-features/SKILL.md) — settings/feature infrastructure
+- ABP Docs: https://abp.io/docs/latest/framework/infrastructure

@@ -3,7 +3,7 @@
 > Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.4.
 
 <p align="center">
-  <a href="#available-skills"><strong>17 Skills</strong></a> ·
+  <a href="#available-skills"><strong>23 Skills</strong></a> ·
   <a href="#quick-start"><strong>Quick Start</strong></a> ·
   <a href="#skill-matrix"><strong>Skill Matrix</strong></a> ·
   <a href="#contributing"><strong>Contributing</strong></a>
@@ -20,8 +20,9 @@
 
 ## What is This?
 
-This repository contains **34 skill files** (17 Claude Code + 17 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.4**. Each skill covers a specific ABP topic with:
+This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.4** (.NET 10). Each skill covers a specific ABP topic with:
 
+- **YAML frontmatter** — `name` + `description` for agent auto-activation (Claude Code / OpenCode skill format)
 - **Trigger keywords** — when the AI should activate the skill
 - **Core concepts** — concise explanations of ABP patterns
 - **Code examples** — production-ready, copy-paste ready snippets
@@ -33,7 +34,7 @@ This repository contains **34 skill files** (17 Claude Code + 17 OpenCode) that 
 | | Claude Code | OpenCode |
 |---|---|---|
 | **Style** | Detailed, comprehensive | Compact, quick-reference |
-| **Lines** | 200–840 per file | 53–587 per file |
+| **Lines** | ~210–850 per file | ~55–230 per file |
 | **Best for** | Deep understanding, complex scenarios | Fast lookup, inline reference |
 | **Format** | Full explanations + patterns | Quick reference + snippets |
 
@@ -100,16 +101,23 @@ your-project/
 | 14 | **Localization** | [SKILL.md](claude/abp-localization/SKILL.md) | [SKILL.md](opencode/abp-localization/SKILL.md) | Localization resources, JSON files, culture fallback, L[] helper |
 | 15 | **Settings & Features** | [SKILL.md](claude/abp-settings-features/SKILL.md) | [SKILL.md](opencode/abp-settings-features/SKILL.md) | ISettingProvider, ISettingManager, IFeatureChecker, feature toggles |
 | 16 | **Audit Logging** | [SKILL.md](claude/abp-audit-logging/SKILL.md) | [SKILL.md](opencode/abp-audit-logging/SKILL.md) | Audit logging, entity history, AbpAuditingOptions, IAuditingStore |
-| 17 | **Dependency Injection** | [SKILL.md](claude/abp-dependency-injection/SKILL.md) | [SKILL.md](opencode/abp-dependency-injection/SKILL.md) | DI, ITransientDependency, [Dependency], [ExposeServices], Autofac |
+| 17 | **Dependency Injection** | [SKILL.md](claude/abp-dependency-injection/SKILL.md) | [SKILL.md](opencode/abp-dependency-injection/SKILL.md) | DI, ITransientDependency, [Dependency], [ExposeServices], LazyServiceProvider, Autofac |
+| 18 | **Testing** | [SKILL.md](claude/abp-testing/SKILL.md) | [SKILL.md](opencode/abp-testing/SKILL.md) | Integration tests, *TestBase, SQLite in-memory, Shouldly, NSubstitute, data seeding |
+| 19 | **Microservices** | [SKILL.md](claude/abp-microservices/SKILL.md) | [SKILL.md](opencode/abp-microservices/SKILL.md) | Solution structure, Integration Services, distributed events (RabbitMQ), YARP gateway, OpenIddict |
+| 20 | **Object Mapping** | [SKILL.md](claude/abp-object-mapping/SKILL.md) | [SKILL.md](opencode/abp-object-mapping/SKILL.md) | IObjectMapper, Mapperly (default), AutoMapper profiles, entity↔DTO mapping |
+| 21 | **Development Flow** | [SKILL.md](claude/abp-development-flow/SKILL.md) | [SKILL.md](opencode/abp-development-flow/SKILL.md) | End-to-end entity flow: domain → migration → contracts → service → permission → test |
+| 22 | **Dependency Rules** | [SKILL.md](claude/abp-dependency-rules/SKILL.md) | [SKILL.md](opencode/abp-dependency-rules/SKILL.md) | Layer dependency direction, project reference matrix, architecture anti-patterns |
+| 23 | **Deployment** | [SKILL.md](claude/abp-deployment/SKILL.md) | [SKILL.md](opencode/abp-deployment/SKILL.md) | Clustered/stateless, distributed cache/lock, forwarded headers, SSL, OpenIddict prod, Docker/Helm |
 
 ---
 
 ## Stats
 
-- **34 SKILL.md files** (17 Claude + 17 OpenCode)
-- **~8,551 total lines** of skill content
-- **ABP Framework v10.4** documentation based
-- **All examples** production-ready and tested
+- **46 SKILL.md files** (23 Claude + 23 OpenCode)
+- **~9,960 total lines** of skill content
+- **ABP Framework v10.4** (.NET 10) documentation based — cross-checked against the official `ai-rules` and `docs`
+- **YAML frontmatter** on every skill for agent auto-activation
+- **All examples** production-ready
 
 ---
 

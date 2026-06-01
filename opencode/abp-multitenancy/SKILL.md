@@ -1,6 +1,11 @@
+---
+name: abp-multitenancy
+description: "ABP Framework v10.4 multi-tenancy: tenant resolver, ICurrentTenant, IMultiTenant, database isolation, tenant-based data filtering. Use when working with SaaS, multi-tenancy, or tenant management in ABP."
+---
+
 # ABP Framework — Multi-Tenancy
 
-ABP Framework v10.4 multi-tenancy (SaaS) rehberi. Tenant resolver, IMultiTenant, ICurrentTenant.
+ABP Framework v10.4 multi-tenancy (SaaS) guide. Tenant resolver, IMultiTenant, ICurrentTenant.
 
 ## Trigger
 
@@ -11,7 +16,7 @@ ABP Framework v10.4 multi-tenancy (SaaS) rehberi. Tenant resolver, IMultiTenant,
 - "ABP ICurrentTenant"
 - "ABP tenant resolver"
 
-## Konfigürasyon
+## Configuration
 
 ```csharp
 Configure<AbpMultiTenancyOptions>(options => options.IsEnabled = true);
@@ -27,8 +32,8 @@ public class Product : AggregateRoot<Guid>, IMultiTenant
 }
 ```
 
-- `TenantId` nullable — `null` = Host'a ait
-- ABP otomatik data filtering uygular
+- `TenantId` is nullable — `null` = belongs to the Host
+- ABP automatically applies data filtering
 
 ## ICurrentTenant
 
@@ -37,7 +42,7 @@ CurrentTenant.Id           // Guid?
 CurrentTenant.Name         // string
 CurrentTenant.IsAvailable  // bool
 
-// Tenant değiştirme (scoped)
+// Changing the tenant (scoped)
 using (CurrentTenant.Change(tenantId))
 {
     var count = await _productRepository.GetCountAsync();
@@ -52,13 +57,13 @@ using (CurrentTenant.Change(null)) { }
 ```csharp
 using (_dataFilter.Disable<IMultiTenant>())
 {
-    return await _productRepository.GetCountAsync();  // Tüm tenant'lar
+    return await _productRepository.GetCountAsync();  // All tenants
 }
 ```
 
-## Tenant Resolver'lar
+## Tenant Resolvers
 
-Varsayılan sıra: CurrentUser → QueryString → Route → Header → Cookie
+Default order: CurrentUser → QueryString → Route → Header → Cookie
 
 ### Subdomain Resolver
 
@@ -80,7 +85,11 @@ Configure<AbpTenantResolveOptions>(options =>
 
 ## Best Practices
 
-1. `IMultiTenant` implement et tenant-specific entity'ler için
-2. `CurrentTenant.Change` ile `using` kullan
-3. `CurrentUserTenantResolveContributor` her zaman ilk olmalı
-4. Tenant Management module kullan
+1. Implement `IMultiTenant` for tenant-specific entities
+2. Use `CurrentTenant.Change` with `using`
+3. `CurrentUserTenantResolveContributor` must always be first
+4. Use the Tenant Management module
+
+## Related
+
+[EF Core](../abp-efcore/SKILL.md) · [MongoDB](../abp-mongodb/SKILL.md) · [Authorization](../abp-authorization/SKILL.md) · [Settings & Features](../abp-settings-features/SKILL.md) · Docs: https://abp.io/docs/latest/framework/architecture/multi-tenancy

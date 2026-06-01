@@ -1,6 +1,11 @@
+---
+name: abp-mongodb
+description: "ABP Framework v10.4 MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
+---
+
 # ABP Framework — MongoDB
 
-ABP Framework v10.4 MongoDB entegrasyon rehberi. MongoDbContext, collection mapping, repository, indexes, transactions.
+ABP Framework v10.4 MongoDB integration guide. MongoDbContext, collection mapping, repository, indexes, transactions.
 
 ## Trigger
 
@@ -11,7 +16,7 @@ ABP Framework v10.4 MongoDB entegrasyon rehberi. MongoDbContext, collection mapp
 - "ABP Mongo index"
 - "ABP Mongo transaction"
 
-## Kurulum
+## Installation
 
 ```bash
 abp add-package Volo.Abp.MongoDB
@@ -33,7 +38,7 @@ public class MyDbContext : AbpMongoDbContext
     protected override void CreateModel(IMongoModelBuilder modelBuilder)
     {
         base.CreateModel(modelBuilder);
-        // Collection konfigürasyonu
+        // Collection configuration
     }
 }
 ```
@@ -48,19 +53,19 @@ protected override void CreateModel(IMongoModelBuilder modelBuilder)
     modelBuilder.Entity<Question>(b =>
     {
         b.CollectionName = "MyQuestions";
-        b.BsonMap.UnmapProperty(x => x.MyProperty);  // Property ignore
+        b.BsonMap.UnmapProperty(x => x.MyProperty);  // Ignore property
     });
 }
 ```
 
-Veya attribute ile:
+Or via attribute:
 
 ```csharp
 [MongoCollection("MyQuestions")]
 public IMongoCollection<Question> Questions => Collection<Question>();
 ```
 
-### Index Konfigürasyonu
+### Index Configuration
 
 ```csharp
 protected override void CreateModel(IMongoModelBuilder modelBuilder)
@@ -83,7 +88,7 @@ protected override void CreateModel(IMongoModelBuilder modelBuilder)
 }
 ```
 
-## DbContext Kaydı
+## DbContext Registration
 
 ```csharp
 context.Services.AddMongoDbContext<MyDbContext>(options =>
@@ -93,7 +98,7 @@ context.Services.AddMongoDbContext<MyDbContext>(options =>
 });
 ```
 
-## Default Repository Kullanımı
+## Using the Default Repository
 
 ```csharp
 public class BookManager : DomainService
@@ -147,7 +152,7 @@ context.Services.AddMongoDbContext<MyMongoDbContext>(options =>
 });
 ```
 
-## MongoDB API Erişimi
+## MongoDB API Access
 
 ```csharp
 public class BookService
@@ -164,16 +169,16 @@ public class BookService
 }
 ```
 
-> `Volo.Abp.MongoDB` package referansı gerekli.
+> A reference to the `Volo.Abp.MongoDB` package is required.
 
 ## Transactions
 
-MongoDB 4.0+ multi-document transaction destekler. Startup template'lerde transaction **varsayılan olarak kapalıdır**.
+MongoDB 4.0+ supports multi-document transactions. In the startup templates, transactions are **disabled by default**.
 
-### Transaction Enable Etme
+### Enabling Transactions
 
 ```csharp
-// YourProjectMongoDbModule class'ında şu kodları KALDIR:
+// REMOVE the following code from the YourProjectMongoDbModule class:
 // context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 // Configure<AbpUnitOfWorkDefaultOptions>(options =>
 // {
@@ -181,7 +186,7 @@ MongoDB 4.0+ multi-document transaction destekler. Startup template'lerde transa
 // });
 ```
 
-### Docker Replica Set (Transaction için)
+### Docker Replica Set (for Transactions)
 
 ```yaml
 version: "3.8"
@@ -202,7 +207,7 @@ services:
 
 Connection string: `mongodb://localhost:27017/YourProjectName?replicaSet=rs0`
 
-## Connection String Seçimi
+## Connection String Selection
 
 ```csharp
 [ConnectionStringName("MySecondConnString")]
@@ -212,7 +217,7 @@ public class MyDbContext : AbpMongoDbContext { }
 ## Multi-Tenancy
 
 ```csharp
-[IgnoreMultiTenancy]  // Her zaman host connection string kullan
+[IgnoreMultiTenancy]  // Always use the host connection string
 public class TenantManagementMongoDbContext : AbpMongoDbContext { }
 ```
 
@@ -243,7 +248,7 @@ public interface IBookStoreMongoDbContext : IAbpMongoDbContext
 [ReplaceDbContext(typeof(IBookStoreMongoDbContext))]
 public class OtherMongoDbContext : AbpMongoDbContext, IBookStoreMongoDbContext { }
 
-// veya
+// or
 context.Services.AddMongoDbContext<OtherMongoDbContext>(options =>
 {
     options.ReplaceDbContext<IBookStoreMongoDbContext>();
@@ -270,24 +275,34 @@ public class MyCustomMongoDbBulkOperationProvider : IMongoDbBulkOperationProvide
 }
 ```
 
-## EF Core vs MongoDB Karşılaştırma
+## EF Core vs MongoDB Comparison
 
-| Özellik | EF Core | MongoDB |
+| Feature | EF Core | MongoDB |
 |---|---|---|
 | DbContext | `AbpDbContext<T>` | `AbpMongoDbContext` |
 | Collection | `DbSet<T>` | `IMongoCollection<T>` |
 | Mapping | Fluent API / Data Annotations | `IMongoModelBuilder` |
 | Repository Base | `EfCoreRepository` | `MongoDbRepository` |
 | Query | `IQueryable` (LINQ) | MongoDB Filter/Aggregate |
-| Transaction | Varsayılan açık | Varsayılan kapalı |
-| Change Tracking | Var | Yok |
+| Transaction | Enabled by default | Disabled by default |
+| Change Tracking | Yes | No |
 
 ## Best Practices
 
-1. **`AbpMongoDbContext` kullan** — Direkt `IMongoDatabase` yerine
-2. **Collection name'leri attribute ile tanımla** — `[MongoCollection("name")]`
-3. **Index'leri `CreateModel`'da tanımla** — Migration benzeri yaklaşım
-4. **Transaction gerekiyorsa replica set kur** — Single node transaction desteklemez
-5. **Custom repository'leri MongoDB layer'da tanımla** — Domain layer'da sadece interface
-6. **`IAsyncQueryableExecuter` kullan** — Domain layer'ı MongoDB'den izole tut
-7. **Extra Properties MongoDB'de native desteklenir** — JSON field yerine ayrı element olarak saklanır
+1. **Use `AbpMongoDbContext`** — Instead of directly using `IMongoDatabase`
+2. **Define collection names via attribute** — `[MongoCollection("name")]`
+3. **Define indexes in `CreateModel`** — A migration-like approach
+4. **Set up a replica set if you need transactions** — A single node does not support transactions
+5. **Define custom repositories in the MongoDB layer** — Only the interface in the domain layer
+6. **Use `IAsyncQueryableExecuter`** — Keep the domain layer isolated from MongoDB
+7. **Extra Properties are natively supported in MongoDB** — Stored as a separate element instead of a JSON field
+
+---
+
+## Related
+
+- [DDD](../abp-ddd/SKILL.md) — entity, aggregate, repository pattern
+- [EF Core](../abp-efcore/SKILL.md) — relational database alternative
+- [Dependency Rules](../abp-dependency-rules/SKILL.md) — repository interface/impl placement
+- [Multi-Tenancy](../abp-multitenancy/SKILL.md) — tenant data isolation
+- ABP Docs: https://abp.io/docs/latest/framework/data/mongodb

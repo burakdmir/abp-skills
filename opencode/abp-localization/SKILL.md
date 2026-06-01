@@ -1,3 +1,8 @@
+---
+name: abp-localization
+description: "ABP Framework v10.4 localization: localization resource, JSON files, culture fallback, L[] helper, IStringLocalizer. Use for multi-language, localization, or translation in ABP."
+---
+
 # ABP Localization Skill
 
 ## Trigger
@@ -68,3 +73,7 @@ Auto-merged. Split large modules by feature.
 - Embed via Virtual File System
 - Set `LocalizationResource` in base classes
 - Localize all user-facing text
+
+## Related
+
+[Exception Handling](../abp-exception-handling/SKILL.md) · [UI](../abp-ui/SKILL.md) · [Settings & Features](../abp-settings-features/SKILL.md) · Docs: https://abp.io/docs/latest/framework/fundamentals/localization

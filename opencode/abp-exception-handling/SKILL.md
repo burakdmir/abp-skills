@@ -1,3 +1,8 @@
+---
+name: abp-exception-handling
+description: "ABP Framework v10.4 exception handling: BusinessException, UserFriendlyException, RemoteServiceErrorResponse, HTTP status mapping, error code localization. Use for error handling in ABP, when you need a business exception or an HTTP error response."
+---
+
 # ABP Exception Handling Skill
 
 ## Trigger
@@ -70,3 +75,7 @@ Configure<AbpExceptionHandlingOptions>(options =>
 - Never expose stack traces in production
 - Use specific exception types
 - Localize error messages
+
+## Related
+
+[Validation](../abp-validation/SKILL.md) · [Localization](../abp-localization/SKILL.md) · [API](../abp-api/SKILL.md) · Docs: https://abp.io/docs/latest/framework/fundamentals/exception-handling

@@ -1,3 +1,8 @@
+---
+name: abp-dependency-injection
+description: "ABP Framework v10.4 dependency injection: ITransientDependency/IScopedDependency/ISingletonDependency, [Dependency], [ExposeServices], LazyServiceProvider, property injection, Autofac. Use when you need service registration, DI, or automatic registration in ABP."
+---
+
 # ABP Dependency Injection Skill
 
 ## Trigger
@@ -76,3 +81,7 @@ public class MyCustomEmailSender : IEmailSender, ITransientDependency { }
 - ISingletonDependency only for stateless/caches
 - Don't use service locator pattern
 - Autofac required for interceptors (UOW, validation, auth, audit)
+
+## Related
+
+[Framework](../abp-framework/SKILL.md) · [Modularity](../abp-modularity/SKILL.md) · [DDD](../abp-ddd/SKILL.md) · Docs: https://abp.io/docs/latest/framework/fundamentals/dependency-injection

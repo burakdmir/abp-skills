@@ -1,6 +1,11 @@
+---
+name: abp-ui
+description: "ABP Framework v10.4 UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
+---
+
 # ABP Framework — UI & Frontend
 
-ABP Framework v10.4 UI framework entegrasyonları. MVC/Razor Pages, Blazor, Angular, React ve UI theming.
+ABP Framework v10.4 UI framework integrations. MVC/Razor Pages, Blazor, Angular, React, and UI theming.
 
 ## Trigger
 
@@ -13,23 +18,23 @@ ABP Framework v10.4 UI framework entegrasyonları. MVC/Razor Pages, Blazor, Angu
 - "ABP Razor Pages"
 - "ABP frontend"
 
-## UI Framework Seçenekleri
+## UI Framework Options
 
-| Framework | Tip | Not |
+| Framework | Type | Note |
 |---|---|---|
-| **MVC/Razor Pages** | Server-side | Varsayılan, en olgun |
-| **Blazor Web App** | Server-side (.NET 8+) | Modern Blazor |
-| **Blazor WASM** | Client-side | SPA tarzı |
-| **Blazor Server** | Server-side | SignalR ile |
+| **MVC/Razor Pages** | Server-side | Default, most mature |
+| **Blazor Web App** | Server-side (.NET 10) | Modern Blazor |
+| **Blazor WASM** | Client-side | SPA style |
+| **Blazor Server** | Server-side | With SignalR |
 | **Angular** | Client-side | TypeScript SPA |
-| **React** | Client-side | Modern template ile |
-| **MAUI Blazor** | Cross-platform mobile | Team+ lisans |
+| **React** | Client-side | With the modern template |
+| **MAUI Blazor** | Cross-platform mobile | Team+ license |
 
 ---
 
 ## MVC / Razor Pages
 
-### Module Kaydı
+### Module Registration
 
 ```csharp
 [DependsOn(typeof(AbpAspNetCoreMvcModule))]
@@ -154,8 +159,8 @@ else
 ### Blazor Service Proxy
 
 ```csharp
-// Dynamic C# HTTP proxy otomatik generate edilir
-// HttpApi.Client projesinde tanımlanır
+// The dynamic C# HTTP proxy is generated automatically
+// Defined in the HttpApi.Client project
 ```
 
 ---
@@ -168,9 +173,9 @@ else
 abp generate-proxy -t ng
 ```
 
-Otomatik generate edilen servisler `src/app/proxy/` dizininde oluşturulur.
+The automatically generated services are created in the `src/app/proxy/` directory.
 
-### Component Kullanımı
+### Using a Component
 
 ```typescript
 import { BookService } from '@proxy/books';
@@ -197,7 +202,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAbpCore(
       withOptions({
-        tenantKey: "__tenant",  // Varsayılan
+        tenantKey: "__tenant",  // Default
       })
     ),
   ],
@@ -208,27 +213,27 @@ export const appConfig: ApplicationConfig = {
 
 ## React (Modern Template)
 
-Modern template ile React SPA oluşturulur:
+A React SPA is created with the modern template:
 
 ```bash
 abp new Acme.BookStore --template app --modern
 ```
 
-### Proje Yapısı
+### Project Structure
 
 ```
 Acme.BookStore/
-├── react/                    # React SPA (kullanıcı arayüzü)
+├── react/                    # React SPA (user interface)
 ├── src/
-│   └── ...                   # Backend projeleri
+│   └── ...                   # Backend projects
 ```
 
-Microservice template'te:
+In the microservice template:
 
 ```
 Acme.BookStore/
 ├── apps/react/               # React SPA
-├── apps/react-admin-console/ # Admin Console (backend tarafından serve edilir)
+├── apps/react-admin-console/ # Admin Console (served by the backend)
 ├── apps/auth-server/         # OpenIddict Auth Server
 ├── gateways/web/             # YARP reverse proxy
 └── gateways/mobile/          # Mobile gateway
@@ -236,7 +241,7 @@ Acme.BookStore/
 
 ### OpenIddict Client Seeding
 
-Modern template otomatik seed eder:
+The modern template seeds automatically:
 - `MyProjectName_App` — React SPA
 - `MyProjectName_AdminConsole` — Admin Console
 
@@ -246,30 +251,30 @@ Modern template otomatik seed eder:
 abp new Acme.BookStore --modern --shadcn-theme blue
 ```
 
-Theme değerleri: `slate`, `pink`, `blue`, `turquoise`, `orange`, `purple`
+Theme values: `slate`, `pink`, `blue`, `turquoise`, `orange`, `purple`
 
 ---
 
 ## UI Theming
 
-ABP UI theming sistemi ile pre-built temalar veya custom temalar kullanılabilir.
+With the ABP UI theming system, you can use pre-built themes or custom themes.
 
-### Pre-built Temalar
+### Pre-built Themes
 
-| Theme | Açıklama | Lisans |
+| Theme | Description | License |
 |---|---|---|
 | `leptonx` | LeptonX (full) | Team+ |
-| `leptonx-lite` | LeptonX Lite | Ücretsiz |
-| `basic` | Basic Theme | Ücretsiz |
+| `leptonx-lite` | LeptonX Lite | Free |
+| `basic` | Basic Theme | Free |
 
-### Theme Seçimi
+### Theme Selection
 
 ```bash
 abp new Acme.BookStore --theme leptonx-lite
 abp new Acme.BookStore --theme basic
 ```
 
-### Basic Theme Kurulumu (MVC)
+### Basic Theme Installation (MVC)
 
 ```csharp
 [DependsOn(
@@ -282,7 +287,7 @@ public class MyWebModule : AbpModule { }
 
 ## Authorization UI
 
-### Permission Tanımlama
+### Defining Permissions
 
 ```csharp
 public static class BookStorePermissions
@@ -313,7 +318,7 @@ public class BookStorePermissionDefinitionProvider : PermissionDefinitionProvide
 }
 ```
 
-### UI'da Permission Kontrolü
+### Checking Permissions in the UI
 
 ```razor
 @* MVC/Razor *@
@@ -369,10 +374,20 @@ public class BookStoreMenuContributor : IMenuContributor
 
 ## Best Practices
 
-1. **MVC/Razor Pages varsayılan tercih** — En olgun ve en iyi entegre
-2. **Blazor Web App (.NET 8+) tercih et** — Blazor Server/WASM yerine
-3. **React için modern template kullan** — `--modern` flag ile
-4. **Dynamic C# proxy kullan** — Manuel HTTP client yazma
-5. **Permission'ları sabit class'ta tanımla** — String literal kullanma
-6. **Menu contributor kullan** — Menü öğelerini modüler şekilde ekle
-7. **LeptonX-Lite başla** — Ücretsiz, yeterli özellikler
+1. **MVC/Razor Pages as the default choice** — The most mature and best integrated
+2. **Prefer Blazor Web App (.NET 10)** — Instead of Blazor Server/WASM
+3. **Use the modern template for React** — With the `--modern` flag
+4. **Use the dynamic C# proxy** — Avoid writing an HTTP client manually
+5. **Define permissions in a constant class** — Don't use string literals
+6. **Use the menu contributor** — Add menu items in a modular way
+7. **Start with LeptonX-Lite** — Free, with sufficient features
+
+---
+
+## Related
+
+- [API](../abp-api/SKILL.md) — dynamic proxy, Auto API Controllers
+- [Authorization](../abp-authorization/SKILL.md) — checking permissions in the UI
+- [Localization](../abp-localization/SKILL.md) — UI texts, L[] helper
+- [Framework Core](../abp-framework/SKILL.md) — solution template UI options
+- ABP Docs: https://abp.io/docs/latest/framework/ui

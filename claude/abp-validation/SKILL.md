@@ -1,3 +1,8 @@
+---
+name: abp-validation
+description: "ABP Framework v10.4 validation: DTO validation, Data Annotations, FluentValidation, IValidatableObject, AbpValidationException. Use when you need input validation or DTO validation in ABP."
+---
+
 # ABP Validation Skill
 
 ## Trigger

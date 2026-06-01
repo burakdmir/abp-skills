@@ -1,6 +1,11 @@
+---
+name: abp-mongodb
+description: "ABP Framework v10.4 MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
+---
+
 # ABP Framework — MongoDB
 
-ABP Framework v10.4 MongoDB entegrasyonu. MongoDbContext, collection mapping, repository, indexes, transactions.
+ABP Framework v10.4 MongoDB integration. MongoDbContext, collection mapping, repository, indexes, transactions.
 
 ## Trigger
 
@@ -11,7 +16,7 @@ ABP Framework v10.4 MongoDB entegrasyonu. MongoDbContext, collection mapping, re
 - "ABP Mongo index"
 - "ABP Mongo transaction"
 
-## Kurulum
+## Installation
 
 ```bash
 abp add-package Volo.Abp.MongoDB
@@ -38,7 +43,7 @@ public class MyDbContext : AbpMongoDbContext
 }
 ```
 
-Veya attribute: `[MongoCollection("MyQuestions")]`
+Or via attribute: `[MongoCollection("MyQuestions")]`
 
 ### Index
 
@@ -50,7 +55,7 @@ modelBuilder.Entity<Question>(b =>
 });
 ```
 
-## DbContext Kaydı
+## DbContext Registration
 
 ```csharp
 context.Services.AddMongoDbContext<MyDbContext>(options => options.AddDefaultRepositories());
@@ -72,7 +77,7 @@ public class BookRepository : MongoDbRepository<MyMongoDbContext, Book, Guid>, I
 }
 ```
 
-## MongoDB API Erişimi
+## MongoDB API Access
 
 ```csharp
 IMongoDatabase db = await _repository.GetDatabaseAsync();
@@ -82,9 +87,9 @@ IAggregateFluent<Book> agg = await _repository.GetAggregateAsync();
 
 ## Transactions
 
-MongoDB 4.0+ transaction destekler. Startup template'lerde **varsayılan kapalı**.
+MongoDB 4.0+ supports transactions. In the startup templates they are **disabled by default**.
 
-**Enable:** `YourProjectMongoDbModule`'da `AddAlwaysDisableUnitOfWorkTransaction()` ve `TransactionBehavior = Disabled` kodlarını kaldır.
+**Enable:** In `YourProjectMongoDbModule`, remove the `AddAlwaysDisableUnitOfWorkTransaction()` and `TransactionBehavior = Disabled` code.
 
 **Docker Replica Set:**
 ```yaml
@@ -98,18 +103,22 @@ Connection: `mongodb://localhost:27017/YourProjectName?replicaSet=rs0`
 
 ## EF Core vs MongoDB
 
-| Özellik | EF Core | MongoDB |
+| Feature | EF Core | MongoDB |
 |---|---|---|
 | DbContext | `AbpDbContext<T>` | `AbpMongoDbContext` |
 | Query | `IQueryable` (LINQ) | Filter/Aggregate |
-| Transaction | Varsayılan açık | Varsayılan kapalı |
-| Change Tracking | Var | Yok |
+| Transaction | Enabled by default | Disabled by default |
+| Change Tracking | Yes | No |
 | Extra Properties | JSON field | Native element |
 
 ## Best Practices
 
-1. `AbpMongoDbContext` kullan
-2. Collection name'leri `[MongoCollection]` ile tanımla
-3. Index'leri `CreateModel`'da tanımla
-4. Transaction için replica set kur
-5. Custom repository'leri MongoDB layer'da tanımla
+1. Use `AbpMongoDbContext`
+2. Define collection names with `[MongoCollection]`
+3. Define indexes in `CreateModel`
+4. Set up a replica set for transactions
+5. Define custom repositories in the MongoDB layer
+
+## Related
+
+[DDD](../abp-ddd/SKILL.md) · [EF Core](../abp-efcore/SKILL.md) · [Dependency Rules](../abp-dependency-rules/SKILL.md) · [Multi-Tenancy](../abp-multitenancy/SKILL.md) · Docs: https://abp.io/docs/latest/framework/data/mongodb

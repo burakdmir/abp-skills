@@ -1,3 +1,8 @@
+---
+name: abp-audit-logging
+description: "ABP Framework v10.4 audit logging: AbpAuditingOptions, entity history, IAuditingStore, audit log storage and filtering. Use when configuring audit trails, audit logs, or entity history in ABP."
+---
+
 # ABP Audit Logging Skill
 
 ## Trigger
@@ -90,3 +95,7 @@ Configure<AbpAspNetCoreAuditingUrlOptions>(o =>
 - Don't log GET requests unless debugging
 - Monitor storage growth with entity history
 - Blazor Server entity history has known limitations (#11682)
+
+## Related
+
+[Infrastructure](../abp-infrastructure/SKILL.md) · [DDD](../abp-ddd/SKILL.md) · [Multi-Tenancy](../abp-multitenancy/SKILL.md) · Docs: https://abp.io/docs/latest/framework/infrastructure/audit-logging

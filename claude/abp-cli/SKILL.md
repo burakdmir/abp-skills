@@ -1,44 +1,49 @@
+---
+name: abp-cli
+description: "ABP Framework v10.4 CLI and tooling: abp new, add-package, generate-proxy, ABP Studio, ABP Suite, --modern flag. Use when working with ABP CLI commands, creating projects, adding packages, or generating proxies."
+---
+
 # ABP Framework — CLI & Tooling
 
-ABP Framework v10.4 CLI komutları, ABP Studio, ABP Suite ve geliştirme tooling rehberi.
+ABP Framework v10.4 CLI commands, ABP Studio, ABP Suite, and development tooling guide.
 
 ## Trigger
 
 - "ABP CLI"
-- "ABP komut"
+- "ABP command"
 - "abp new"
 - "abp update"
 - "ABP Suite"
 - "ABP Studio"
 - "ABP generate-proxy"
-- "ABP package yönetimi"
+- "ABP package management"
 
-## ABP CLI Kurulum
+## ABP CLI Installation
 
 ```bash
-# Kurulum
+# Installation
 dotnet tool install -g Volo.Abp.Studio.Cli
 
-# Güncelleme
+# Update
 dotnet tool update -g Volo.Abp.Studio.Cli
 
 # Global options
---skip-cli-version-check (-scvc)   # Versiyon kontrolünü atla
---skip-extension-version-check (-sevc)  # Extension kontrolünü atla
---old  # Eski CLI (Volo.Abp.Cli) kullan
---help (-h)  # Yardım
+--skip-cli-version-check (-scvc)   # Skip the version check
+--skip-extension-version-check (-sevc)  # Skip the extension check
+--old  # Use the old CLI (Volo.Abp.Cli)
+--help (-h)  # Help
 ```
 
-## Solution Oluşturma
+## Creating a Solution
 
 ```bash
-# Layered application (varsayılan)
+# Layered application (default)
 abp new Acme.BookStore --template app
 
 # Single-layer
 abp new Acme.BookStore --template app-nolayers
 
-# Microservice (Business+ lisans)
+# Microservice (Business+ license)
 abp new Acme.BookStore --template microservice
 
 # Modern template (React-first)
@@ -46,20 +51,20 @@ abp new Acme.BookStore --template app --modern
 abp new Acme.BookStore --template app-nolayers --modern --modular
 abp new Acme.BookStore --template microservice --modern
 
-# DBMS seçimi
+# DBMS selection
 abp new Acme.BookStore --database-management-system PostgreSQL
 abp new Acme.BookStore --database-management-system MySQL
 
 # Connection string
 abp new Acme.BookStore --connection-string "Server=localhost;Database=BookStore;Trusted_Connection=True"
 
-# Multi-tenancy kapalı
+# Multi-tenancy disabled
 abp new Acme.BookStore --no-multi-tenancy
 
-# Test projeleri olmadan
+# Without test projects
 abp new Acme.BookStore --no-tests
 
-# Theme seçimi
+# Theme selection
 abp new Acme.BookStore --theme leptonx-lite
 abp new Acme.BookStore --theme basic
 
@@ -67,7 +72,7 @@ abp new Acme.BookStore --theme basic
 abp new Acme.BookStore --modern --shadcn-theme blue
 ```
 
-### Template + UI Kombinasyonları
+### Template + UI Combinations
 
 | Template | MVC | Angular | Blazor | React | No-UI |
 |---|---|---|---|---|---|
@@ -75,48 +80,48 @@ abp new Acme.BookStore --modern --shadcn-theme blue
 | `app-nolayers` | ✓ | ✓ | ✓ | --modern | ✓ |
 | `microservice` | ✓ | ✓ | ✓ | --modern | ✓ |
 
-### Modern Template Seçenekleri
+### Modern Template Options
 
-| Option | Açıklama |
+| Option | Description |
 |---|---|
 | `--shadcn-theme <theme>` | slate, pink, blue, turquoise, orange, purple |
-| `--admin-password <password>` | Initial admin şifresi |
+| `--admin-password <password>` | Initial admin password |
 | `--modular` | Modular monolith variant (`app-nolayers --modern`) |
-| `--services <list>` | Ek microservice isimleri (virgülle ayrılmış) |
+| `--services <list>` | Additional microservice names (comma-separated) |
 
-## Module Oluşturma
+## Creating a Module
 
 ```bash
-# DDD modülü
+# DDD module
 abp new-module Acme.BookStore.Orders -t module:ddd
 
-# Modern modül
+# Modern module
 abp new-module Acme.BookStore.Orders --modern
 
-# Hedef solution'a ekle
+# Add to the target solution
 abp new-module Acme.BookStore.Orders -t module:ddd -ts Acme.BookStore.sln
 
 # EF + MVC
 abp new-module Acme.BookStore.Orders -d ef -u mvc
 ```
 
-## Package Yönetimi
+## Package Management
 
 ```bash
-# Package ekle (NuGet + DependsOn otomatik)
+# Add a package (NuGet + DependsOn automatically)
 abp add-package Volo.Abp.EntityFrameworkCore
 abp add-package Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic
 
-# Kaynak kodu ile ekle
+# Add with source code
 abp add-package Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic --with-source-code
 
-# Tüm ABP paketlerini güncelle
+# Update all ABP packages
 abp update
-abp update --version 8.0.0       # Belirli versiyon
-abp update --npm                 # Sadece NPM
-abp update --nuget               # Sadece NuGet
+abp update --version 8.0.0       # Specific version
+abp update --npm                 # NPM only
+abp update --nuget               # NuGet only
 
-# Preview/Stable/Nightly arası geçiş
+# Switch between Preview/Stable/Nightly
 abp switch-to-preview
 abp switch-to-stable
 abp switch-to-nightly
@@ -125,7 +130,7 @@ abp switch-to-nightly
 abp switch-to-local --paths "D:\Github\abp"
 ```
 
-## Proxy Generate
+## Generate Proxy
 
 ```bash
 # Angular proxy
@@ -140,85 +145,85 @@ abp generate-proxy -t csharp --without-contracts
 # JavaScript proxy
 abp generate-proxy -t js
 
-# Proxy kaldır
+# Remove proxy
 abp remove-proxy -t ng
 abp remove-proxy -t csharp
 ```
 
-## Module Kaynak Yönetimi
+## Module Source Management
 
 ```bash
-# Modül listele
+# List modules
 abp list-modules
 
-# Kaynak kodu indir
+# Download source code
 abp get-source Volo.Blogging
 abp get-source Volo.Blogging --local-framework-ref --abp-path D:\GitHub\abp
 
-# Kaynak kodu projeye ekle (NuGet → project reference)
+# Add source code to the project (NuGet → project reference)
 abp add-source-code Volo.Chat --add-to-solution-file
 
-# Modül yükle
+# Install a module
 abp install-module Volo.Blogging
 abp install-local-module ../Acme.Blogging
 
-# Remote module source yönetimi
+# Remote module source management
 abp list-module-sources
 abp add-module-source -n "Custom" -p "https://example.com/modules.json"
 abp delete-module-source -n "Custom"
 ```
 
-## Template Listeleme
+## Listing Templates
 
 ```bash
 abp list-templates
 ```
 
-## Proje Temizleme
+## Cleaning the Project
 
 ```bash
-abp clean  # Tüm BIN/OBJ klasörlerini siler
+abp clean  # Deletes all BIN/OBJ folders
 ```
 
-## ABP Studio Entegrasyonu
+## ABP Studio Integration
 
 ```bash
-# Solution için Studio config oluştur
+# Create the Studio config for a solution
 abp init-solution --name Acme.BookStore
 
-# Kubernetes bağlantısı (Business+ lisans)
+# Kubernetes connection (Business+ license)
 abp kube-connect
 abp kube-connect -p Default.abpk8s.json
 abp kube-connect -c docker-desktop -ns mycrm-local
 
-# Kubernetes service intercept (Business+ lisans)
+# Kubernetes service intercept (Business+ license)
 abp kube-intercept mycrm-product-service -ns mycrm-local
 abp kube-intercept mycrm-product-service -ns mycrm-local -a MyCrm.ProductService.HttpApi.Host.csproj
 ```
 
 ## ABP Suite
 
-ABP Suite, CRUD sayfa otomatik oluşturma aracıdır:
+ABP Suite is a tool that automatically generates CRUD pages:
 
-1. Entity ve property'lerini tanımla
-2. İlişkileri belirle
-3. UI framework seç (MVC/Blazor/Angular)
-4. CRUD sayfaları otomatik generate edilir
+1. Define the entity and its properties
+2. Specify the relationships
+3. Choose the UI framework (MVC/Blazor/Angular)
+4. CRUD pages are generated automatically
 
 ```bash
-# Suite ile ilgili CLI komutu yok — ABP Studio üzerinden çalışır
+# No CLI command for Suite — it runs through ABP Studio
 ```
 
-## Localization Çeviri
+## Localization Translation
 
 ```bash
-# Unified translation dosyası oluştur
-abp translate -c de                    # Almanca
-abp translate -c de -r en              # Referans: İngilizce
-abp translate -c de -o my-trans.json   # Çıktı dosyası
-abp translate -c de --all-values       # Tüm keys (zaten çevrilmiş olanlar dahil)
+# Create a unified translation file
+abp translate -c de                    # German
+abp translate -c de -r en              # Reference: English
+abp translate -c de -o my-trans.json   # Output file
+abp translate -c de --all-values       # All keys (including already translated ones)
 
-# Çevirileri uygula
+# Apply translations
 abp translate --apply
 abp translate -a
 ```
@@ -234,31 +239,31 @@ abp upgrade -t app-nolayers --audit-logging-ui
 ## MCP Studio (AI Tools)
 
 ```bash
-abp mcp-studio  # ABP Studio MCP bridge (AI tools için, ABP Studio çalışıyor olmalı)
+abp mcp-studio  # ABP Studio MCP bridge (for AI tools, ABP Studio must be running)
 ```
 
-## Diğer Komutlar
+## Other Commands
 
 ```bash
-# NPM paketlerini yükle (MVC/Blazor)
+# Install NPM packages (MVC/Blazor)
 abp install-libs
 
 # Blazor script/style bundle
 abp bundle
 
-# Template download cache temizle
+# Clear the template download cache
 abp clear-download-cache
 
-# Extension versiyon kontrolü
+# Extension version check
 abp check-extensions
 
-# Eski CLI kurulumu
+# Install the old CLI
 abp install-old-cli
 
-# Razor page generate
+# Generate a Razor page
 abp generate-razor-page
 
-# JWKS generate (OpenIddict private_key_jwt)
+# Generate JWKS (OpenIddict private_key_jwt)
 abp generate-jwks
 
 # Login
@@ -269,17 +274,17 @@ abp logout
 # Build
 abp build
 
-# Package oluştur
+# Create a package
 abp new-package --name Acme.BookStore.Domain --template lib.domain
 
-# Package referansı ekle
+# Add a package reference
 abp add-package-ref Acme.BookStore.Domain
 abp add-package-ref "Acme.BookStore.Domain Acme.BookStore.Domain.Shared" -t Acme.BookStore.Web
 ```
 
-### new-package Template'leri
+### new-package Templates
 
-| Template | Açıklama |
+| Template | Description |
 |---|---|
 | `lib.class-library` | Class library |
 | `lib.domain-shared` | Domain shared |
@@ -298,9 +303,19 @@ abp add-package-ref "Acme.BookStore.Domain Acme.BookStore.Domain.Shared" -t Acme
 
 ## Best Practices
 
-1. **Her zaman en son CLI versiyonunu kullan** — `dotnet tool update -g Volo.Abp.Studio.Cli`
-2. **Modern template'leri tercih et** — React-first, daha güncel stack
-3. **`abp update` ile paketleri güncel tut** — Preview→Stable geçiş için `abp switch-to-stable`
-4. **Proxy generate için server çalışır durumda olmalı** — `abp generate-proxy`
-5. **Module development için `abp new-module` kullan** — Manuel oluşturmak yerine
-6. **Kaynak kodu gerektiğinde `abp add-source-code` kullan** — Debug ve customizasyon için
+1. **Always use the latest CLI version** — `dotnet tool update -g Volo.Abp.Studio.Cli`
+2. **Prefer modern templates** — React-first, more up-to-date stack
+3. **Keep packages up to date with `abp update`** — Use `abp switch-to-stable` for the Preview→Stable transition
+4. **The server must be running to generate proxies** — `abp generate-proxy`
+5. **Use `abp new-module` for module development** — Instead of creating manually
+6. **Use `abp add-source-code` when you need the source code** — For debugging and customization
+
+---
+
+## Related
+
+- [Framework Core](../abp-framework/SKILL.md) — solution templates, `abp new`
+- [Modularity](../abp-modularity/SKILL.md) — `abp new-module`, modular monolith
+- [Microservices](../abp-microservices/SKILL.md) — `generate-proxy`, adding services
+- [Development Flow](../abp-development-flow/SKILL.md) — migration, proxy generation steps
+- ABP Docs: https://abp.io/docs/latest/cli

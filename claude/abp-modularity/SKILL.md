@@ -1,20 +1,24 @@
+---
+name: abp-modularity
+description: "ABP Framework v10.4 modularity: AbpModule, [DependsOn], module lifecycle, plugin modules, modular monolith. Use when creating a module, defining module dependencies, or building a modular architecture in ABP."
+---
+
 # ABP Framework — Modularity
 
-ABP Framework v10.4 modüler uygulama geliştirme rehberi. Module sistemi, dependency management, plugin modüller ve best practices.
+A guide to modular application development in ABP Framework v10.4. The module system, dependency management, plugin modules, and best practices.
 
 ## Trigger
 
 - "ABP modularity"
-- "ABP module oluştur"
+- "create an ABP module"
 - "ABP DependsOn"
 - "ABP plugin module"
 - "ABP modular monolith"
 - "ABP module dependency"
-- "ABP modül bağımlılığı"
 
-## Modularity Nedir
+## What Is Modularity
 
-ABP tam modüler uygulamalar ve sistemler oluşturmayı destekler. Her modül kendi entity'lerini, servislerini, database entegrasyonunu, API'lerini ve UI component'lerini içerebilir.
+ABP supports building fully modular applications and systems. Each module can contain its own entities, services, database integration, APIs, and UI components.
 
 ## Module Class
 
@@ -30,7 +34,7 @@ public class BlogModule : AbpModule
     
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        // DI kayıt, modül konfigürasyonu
+        // DI registration, module configuration
         Configure<AbpDbConnectionOptions>(options =>
         {
             options.ConnectionStrings.Default = "...";
@@ -52,71 +56,71 @@ public class BlogModule : AbpModule
 }
 ```
 
-### Lifecycle Metodları
+### Lifecycle Methods
 
-| Metot | Ne Zaman Çalışır | Kullanım |
+| Method | When It Runs | Usage |
 |---|---|---|
-| `PreConfigureServices` | Tüm `ConfigureServices`'lerden önce | Erken konfigürasyon |
-| `ConfigureServices` | Service registration | DI kayıt, modül ayarları |
-| `PostConfigureServices` | Tüm `ConfigureServices`'lerden sonra | Geç konfigürasyon |
-| `OnPreApplicationInitialization` | Init öncesi | Pre-init logic |
-| `OnApplicationInitialization` | Uygulama başlatma | Middleware pipeline |
-| `OnPostApplicationInitialization` | Init sonrası | Post-init logic |
-| `OnApplicationShutdown` | Uygulama kapanışı | Cleanup logic |
+| `PreConfigureServices` | Before all `ConfigureServices` | Early configuration |
+| `ConfigureServices` | Service registration | DI registration, module settings |
+| `PostConfigureServices` | After all `ConfigureServices` | Late configuration |
+| `OnPreApplicationInitialization` | Before init | Pre-init logic |
+| `OnApplicationInitialization` | Application startup | Middleware pipeline |
+| `OnPostApplicationInitialization` | After init | Post-init logic |
+| `OnApplicationShutdown` | Application shutdown | Cleanup logic |
 
-Her metodun `Async` versiyonu da mevcuttur.
+An `Async` version of each method is also available.
 
 ## Module Dependencies
 
 ```csharp
-// Tek DependsOn ile birden fazla
+// Multiple within a single DependsOn
 [DependsOn(typeof(AbpAspNetCoreMvcModule), typeof(AbpAutofacModule))]
 public class BlogModule : AbpModule { }
 
-// Birden fazla attribute
+// Multiple attributes
 [DependsOn(typeof(AbpAspNetCoreMvcModule))]
 [DependsOn(typeof(AbpAutofacModule))]
 public class BlogModule : AbpModule { }
 ```
 
-ABP startup'ta dependency graph'i inceler ve modülleri doğru sırayla başlatır/kapatır.
+At startup, ABP inspects the dependency graph and starts/shuts down modules in the correct order.
 
 ## Additional Assembly
 
-Nadir durumlarda, modülünüz birden fazla assembly'den oluşuyorsa:
+In rare cases, if your module consists of more than one assembly:
 
 ```csharp
 [DependsOn(...)]
-[AdditionalAssembly(typeof(BlogService))]  // Hedef assembly'den bir type
+[AdditionalAssembly(typeof(BlogService))]  // A type from the target assembly
 public class BlogModule : AbpModule { }
 ```
 
-> **Uyarı:** `AdditionalAssembly` sadece gerçekten gerektiğinde kullanın. Normalde `DependsOn` tercih edilmelidir.
+> **Warning:** Use `AdditionalAssembly` only when truly needed. Normally `DependsOn` should be preferred.
 
 ## Framework vs Application Modules
 
-| Tip | Açıklama | Örnek |
+| Type | Description | Example |
 |---|---|---|
-| **Framework Module** | Altyapı, entegrasyon, abstraction | Caching, EF Core, Validation, Logging |
-| **Application Module** | İşlevsel/business özellikler | Blogging, Identity, Tenant Management |
+| **Framework Module** | Infrastructure, integration, abstraction | Caching, EF Core, Validation, Logging |
+| **Application Module** | Functional/business features | Blogging, Identity, Tenant Management |
 
 ## Plugin Modules
 
-Runtime'da dinamik olarak yüklenebilen modüller:
+Modules that can be loaded dynamically at runtime:
 
 ```csharp
 [DependsOn(typeof(AbpKernelModule))]
 public class MyPluginModule : AbpModule { }
 ```
 
-Plugin modüller:
-- Compile-time'da referans edilmez
-- Runtime'da belirtilen dizinden yüklenir
-- Hot-plug benzeri senaryolar için kullanılır
+Plugin modules:
+- Are not referenced at compile-time
+- Are loaded at runtime from a specified directory
+- Are used for hot-plug-like scenarios
 
-## Module Geliştirme Best Practices
+## Module Development Best Practices
 
-1. **DDD katmanlarına uygun paketleme:**
+1. **Package according to DDD layers:**
    ```
    Acme.Blog/
    ├── Acme.Blog.Domain.Shared     # Constants, enums, localization
@@ -128,9 +132,9 @@ Plugin modüller:
    └── Acme.Blog.HttpApi.Client    # Dynamic C# clients
    ```
 
-2. **Database provider'dan bağımsız tasarla** — Domain/Application layer'ları EF Core'a bağımlı yapma
+2. **Design independently of the database provider** — don't make the Domain/Application layers depend on EF Core
 
-3. **Her modül kendi connection string'ini tanımlayabilir:**
+3. **Each module can define its own connection string:**
    ```csharp
    Configure<AbpDbConnectionOptions>(options =>
    {
@@ -138,54 +142,54 @@ Plugin modüller:
    });
    ```
 
-4. **Modül konfigürasyonu için Options pattern kullan:**
+4. **Use the Options pattern for module configuration:**
    ```csharp
    public class BlogOptions
    {
        public int MaxPostLength { get; set; } = 5000;
    }
    
-   // Module'da configure et
+   // Configure it in the Module
    Configure<BlogOptions>(options => options.MaxPostLength = 10000);
    ```
 
-5. **Reusable modüller için `IRepository` kullan** — Direkt `DbContext` kullanma
+5. **Use `IRepository` for reusable modules** — don't use `DbContext` directly
 
-## CLI ile Module Oluşturma
+## Creating a Module with the CLI
 
 ```bash
-# DDD modülü
+# DDD module
 abp new-module Acme.Blog -t module:ddd
 
-# Modern modül
+# Modern module
 abp new-module Acme.Blog --modern
 
-# Belirli solution'a ekle
+# Add to a specific solution
 abp new-module Acme.Blog -t module:ddd -ts Acme.Crm.sln
 
-# EF + MVC destekli
+# With EF + MVC support
 abp new-module Acme.Blog -t module:ddd -d ef -u mvc
 ```
 
-## Modül Yükleme
+## Installing a Module
 
 ```bash
-# NuGet modülü yükle
+# Install a NuGet module
 abp install-module Volo.Blogging
 
-# Local modül yükle
+# Install a local module
 abp install-local-module ../Acme.Blogging
 
-# Package ekle
+# Add a package
 abp add-package Volo.Abp.Blogging
 ```
 
 ## Module Extending
 
-Pre-built modülleri genişletme:
+Extending pre-built modules:
 
 ```csharp
-// Entity genişletme
+// Extending an entity
 ObjectExtensionManager.Instance
     .MapEfCoreProperty<IdentityUser, string>(
         "Title",
@@ -198,13 +202,23 @@ ObjectExtensionManager.Instance
 
 ## Modular Monolith
 
-Modüler monolith, mikro servislerin avantajlarını tek process'te sunar:
+A modular monolith offers the advantages of microservices within a single process:
 
-- Her modül kendi bounded context'ini tanımlar
-- Modüller arası iletişim interface üzerinden
-- Deployment tek bir uygulama olarak
-- İleride mikro servise dönüştürülebilir
+- Each module defines its own bounded context
+- Inter-module communication happens via interfaces
+- Deployment is as a single application
+- It can later be converted into a microservice
 
 ```bash
 abp new Acme.Crm --template app-nolayers --modern --modular
 ```
+
+---
+
+## Related
+
+- [Framework Core](../abp-framework/SKILL.md) — AbpModule, lifecycle, [DependsOn]
+- [Dependency Injection](../abp-dependency-injection/SKILL.md) — module-based service registration
+- [Dependency Rules](../abp-dependency-rules/SKILL.md) — inter-module dependency rules
+- [Microservices](../abp-microservices/SKILL.md) — from modular monolith to microservice
+- ABP Docs: https://abp.io/docs/latest/framework/architecture/modularity/basics

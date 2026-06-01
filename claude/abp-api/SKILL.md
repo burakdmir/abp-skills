@@ -1,6 +1,11 @@
+---
+name: abp-api
+description: "ABP Framework v10.4 API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
+---
+
 # ABP Framework — API Development
 
-ABP Framework v10.4 API geliştirme rehberi. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
+Guide to ABP Framework v10.4 API development. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
 
 ## Trigger
 
@@ -18,9 +23,9 @@ ABP Framework v10.4 API geliştirme rehberi. Auto API Controllers, Dynamic C# Cl
 
 ## Auto API Controllers
 
-ABP application service'leri otomatik olarak REST API endpoint'lerine dönüştürür.
+ABP automatically converts application services into REST API endpoints.
 
-### Konfigürasyon
+### Configuration
 
 ```csharp
 [DependsOn(BookStoreApplicationModule)]
@@ -45,9 +50,9 @@ public class BookStoreWebModule : AbpModule
 | `Delete`, `Remove` | DELETE |
 | `Create`, `Add`, `Insert`, `Post` | POST |
 | `Patch` | PATCH |
-| Diğer | POST (default) |
+| Other | POST (default) |
 
-### Route Hesaplama
+### Route Computation
 
 | Service Method | HTTP Method | Route |
 |---|---|---|
@@ -58,14 +63,14 @@ public class BookStoreWebModule : AbpModule
 | `DeleteAsync(Guid id)` | DELETE | `/api/app/book/{id}` |
 | `GetEditorsAsync(Guid id)` | GET | `/api/app/book/{id}/editors` |
 
-**Route kuralları:**
-- Her zaman `/api` ile başlar
-- Varsayılan root path: `/app`
-- Controller adı normalize edilir: `BookAppService` → `book` (kebab-case, suffix'ler kaldırılır)
-- `id` parametresi route'a eklenir: `/{id}`
-- Action adı eklenir (HTTP prefix ve `Async` suffix kaldırılır)
+**Route rules:**
+- Always starts with `/api`
+- Default root path: `/app`
+- The controller name is normalized: `BookAppService` → `book` (kebab-case, suffixes removed)
+- The `id` parameter is added to the route: `/{id}`
+- The action name is added (HTTP prefix and `Async` suffix removed)
 
-### Root Path Değiştirme
+### Changing the Root Path
 
 ```csharp
 PreConfigure<AbpAspNetCoreMvcOptions>(options =>
@@ -81,11 +86,11 @@ PreConfigure<AbpAspNetCoreMvcOptions>(options =>
 ### RemoteService Attribute
 
 ```csharp
-// API controller olarak expose etme
+// Don't expose as an API controller
 [RemoteService(IsEnabled = false)]
 public class PersonAppService : ApplicationService { }
 
-// Sadece belirli metodları disable et
+// Disable only specific methods
 [RemoteService(IsEnabled = false)]
 public override Task DeleteAsync(Guid id) { }
 ```
@@ -93,7 +98,7 @@ public override Task DeleteAsync(Guid id) { }
 ### IRemoteService Interface
 
 ```csharp
-// Application service olmayan class'ları API controller yap
+// Turn non-application-service classes into API controllers
 public class MyCustomService : IRemoteService, ITransientDependency
 {
     public Task<string> GetDataAsync() => Task.FromResult("data");
@@ -104,15 +109,15 @@ public class MyCustomService : IRemoteService, ITransientDependency
 
 ## Dynamic C# API Client Proxies
 
-Runtime'da otomatik C# client proxy oluşturur.
+Automatically creates a C# client proxy at runtime.
 
-### Kurulum
+### Installation
 
 ```bash
 abp add-package Volo.Abp.Http.Client
 ```
 
-### Konfigürasyon
+### Configuration
 
 ```csharp
 [DependsOn(
@@ -130,7 +135,7 @@ public class MyClientModule : AbpModule
 }
 ```
 
-### Endpoint Konfigürasyonu
+### Endpoint Configuration
 
 ```json
 {
@@ -142,7 +147,7 @@ public class MyClientModule : AbpModule
 }
 ```
 
-### Kullanım
+### Usage
 
 ```csharp
 public class MyClientService : ITransientDependency
@@ -157,32 +162,32 @@ public class MyClientService : ITransientDependency
 }
 ```
 
-**Otomatik yönetilen:**
+**Handled automatically:**
 - HTTP method, route, query string mapping
-- Authentication (access token header'a eklenir)
+- Authentication (the access token is added to the header)
 - JSON serialization/deserialization
 - API versioning
-- Correlation ID, tenant ID, culture header'ları
-- Error handling (proper exception'lar fırlatılır)
+- Correlation ID, tenant ID, culture headers
+- Error handling (proper exceptions are thrown)
 
 ---
 
 ## Static C# API Client Proxies
 
-Development-time'da proxy kodu generate edilir (daha iyi performans).
+Proxy code is generated at development time (better performance).
 
-### CLI ile Generate
+### Generate with the CLI
 
 ```bash
 abp generate-proxy -t csharp
-abp generate-proxy -t csharp --without-contracts  # Sadece client proxy, contracts olmadan
-abp generate-proxy -t csharp --folder MyProxies   # Özel klasör
+abp generate-proxy -t csharp --without-contracts  # Only the client proxy, without contracts
+abp generate-proxy -t csharp --folder MyProxies   # Custom folder
 ```
 
-### Manuel Generate
+### Manual Generation
 
 ```csharp
-// HttpApi.Client projesinde
+// In the HttpApi.Client project
 [DependsOn(typeof(AbpHttpClientModule))]
 public class MyClientModule : AbpModule
 {
@@ -197,17 +202,17 @@ public class MyClientModule : AbpModule
 
 ### Dynamic vs Static
 
-| Özellik | Dynamic | Static |
+| Feature | Dynamic | Static |
 |---|---|---|
-| Performans | Runtime generate | Compile-time |
-| Geliştirme | Kolay, otomatik | Re-generate gerekli |
-| API değişikliği | Otomatik algılar | Manuel re-generate |
+| Performance | Runtime generation | Compile-time |
+| Development | Easy, automatic | Re-generation required |
+| API change | Detected automatically | Manual re-generation |
 
 ---
 
 ## Swagger
 
-### Konfigürasyon
+### Configuration
 
 ```csharp
 [DependsOn(typeof(AbpAspNetCoreMvcModule))]
@@ -240,7 +245,7 @@ public class MyHttpApiModule : AbpModule
 }
 ```
 
-### JWT Authentication ile Swagger
+### Swagger with JWT Authentication
 
 ```csharp
 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -291,7 +296,7 @@ public class BookAppService : ApplicationService, IBookAppService
 public class BookController : AbpController { }
 ```
 
-### Swagger ile Versioning
+### Versioning with Swagger
 
 ```csharp
 context.Services.AddAbpSwaggerGenWithVersioning(options =>
@@ -305,17 +310,17 @@ context.Services.AddAbpSwaggerGenWithVersioning(options =>
 
 ## Integration Services
 
-Integration service'ler modüller arası doğrudan iletişim için kullanılır (HTTP yerine).
+Integration services are used for direct communication between modules (instead of HTTP).
 
 ```csharp
-// Integration service interface (Application.Contracts'ta)
+// Integration service interface (in Application.Contracts)
 public interface IProductIntegrationService : IIntegrationService
 {
     Task<ProductDto> GetProductAsync(Guid id);
     Task CreateProductAsync(CreateProductDto input);
 }
 
-// Implementation (Application'da)
+// Implementation (in Application)
 [ExposeServices(typeof(IProductIntegrationService))]
 public class ProductIntegrationService : ApplicationService, IProductIntegrationService
 {
@@ -337,19 +342,29 @@ public class ProductIntegrationService : ApplicationService, IProductIntegration
 }
 ```
 
-**IIntegrationService** marker interface'i ile ABP bu servisleri otomatik olarak:
-- Local event bus üzerinden çağırır (modular monolith)
-- Distributed event bus üzerinden çağırır (microservice, provider yapılandırılmışsa)
+With the **IIntegrationService** marker interface, ABP automatically calls these services:
+- Over the local event bus (modular monolith)
+- Over the distributed event bus (microservice, if a provider is configured)
 
 ---
 
 ## Best Practices
 
-1. **Auto API Controllers kullan** — Manuel controller yazma, convention yeterli
-2. **Dynamic client proxy kullan** — `HttpClient` manuel kullanma
-3. **Static proxy'yi production'da tercih et** — Runtime overhead yok
-4. **Swagger'da JWT authentication ekle** — API test kolaylığı
-5. **API versioning ile backward compatibility sağla** — `[Obsolete]` ile eski versiyonları işaretle
-6. **Integration services ile modüller arası iletişim kur** — HTTP yerine doğrudan çağrı
-7. **RemoteService attribute ile API exposure kontrol et** — Gereksiz endpoint'leri kapat
-8. **Root path'i modül bazlı ayarla** — `/api/app` yerine `/api/my-module`
+1. **Use Auto API Controllers** — Don't write controllers manually, the convention is enough
+2. **Use dynamic client proxies** — Don't use `HttpClient` manually
+3. **Prefer static proxies in production** — No runtime overhead
+4. **Add JWT authentication in Swagger** — Easier API testing
+5. **Ensure backward compatibility with API versioning** — Mark old versions with `[Obsolete]`
+6. **Communicate between modules with integration services** — Direct calls instead of HTTP
+7. **Control API exposure with the RemoteService attribute** — Close off unnecessary endpoints
+8. **Set the root path per module** — `/api/my-module` instead of `/api/app`
+
+---
+
+## Related
+
+- [DDD](../abp-ddd/SKILL.md) — application service (the source of Auto API Controllers)
+- [UI](../abp-ui/SKILL.md) — proxy consumption (Angular/Blazor/React)
+- [Microservices](../abp-microservices/SKILL.md) — Integration Services, static HTTP client proxy
+- [Authorization](../abp-authorization/SKILL.md) — endpoint authorization
+- ABP Docs: https://abp.io/docs/latest/framework/api-development

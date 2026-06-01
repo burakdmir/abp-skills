@@ -1,3 +1,8 @@
+---
+name: abp-authorization
+description: "ABP Framework v10.4 authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+---
+
 # ABP Authorization Skill
 
 ## Trigger
@@ -51,3 +56,7 @@ await _authService.IsGrantedAsync("PermissionName");
 - Group by module/feature
 - Use child perms for CRUD hierarchy
 - Set multi-tenancy side explicitly
+
+## Related
+
+[Settings & Features](../abp-settings-features/SKILL.md) · [Multi-Tenancy](../abp-multitenancy/SKILL.md) · [UI](../abp-ui/SKILL.md) · [Exception Handling](../abp-exception-handling/SKILL.md) · Docs: https://abp.io/docs/latest/framework/fundamentals/authorization

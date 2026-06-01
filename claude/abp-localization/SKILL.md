@@ -1,3 +1,8 @@
+---
+name: abp-localization
+description: "ABP Framework v10.4 localization: localization resource, JSON files, culture fallback, L[] helper, IStringLocalizer. Use for multi-language, localization, or translation in ABP."
+---
+
 # ABP Localization Skill
 
 ## Trigger

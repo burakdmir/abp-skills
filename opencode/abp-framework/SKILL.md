@@ -1,231 +1,101 @@
+---
+name: abp-framework
+description: "ABP Framework v10.4 core quick reference: solution templates, layered architecture, module system, base classes, Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
+---
+
 # ABP Framework — Core Skill
 
-ABP Framework v10.4 için temel geliştirme skill'i. Opinionated, DDD-tabanlı, modüler ASP.NET Core uygulama geliştirme rehberi.
+ABP Framework v10.4 (.NET 10) core reference. Opinionated, DDD-based, modular ASP.NET Core.
 
 ## Trigger
 
-- "ABP ile proje oluştur"
-- "ABP solution/template"
-- "ABP module"
-- "ABP best practices"
-- "ABP architecture"
-- "abp new"
-- ABP projesinde çalışma
+"create ABP project", "ABP solution/template", "ABP module", "ABP architecture", "abp new", ABP best practices.
 
-## ABP Nedir
+## Solution Templates
 
-ABP, .NET ve ASP.NET Core üzerinde **opinionated architecture** sunan, DDD prensiplerine dayalı, modüler bir framework'tür. Tekrarlayan işleri otomatize eder, production-ready startup template'ler, pre-built application modüller ve tooling sağlar.
-
-## Solution Template'leri
-
-| Template | Açıklama |
+| Template | Description |
 |---|---|
-| `app` | Layered web application (varsayılan) |
-| `app-nolayers` | Single-layer web application |
-| `microservice` | Microservice solution (Business+ lisans) |
-| `empty` | Empty solution |
+| `app` | Layered (default) |
+| `app-nolayers` | Single-layer |
+| `microservice` | Microservice (Business+ license) |
+| `empty` | Empty |
 
-### UI Framework Seçenekleri
+**Modern Monolith / Modular Monolith** can also be selected as a separate path in the ABP Studio wizard.
 
-- `mvc` — ASP.NET Core MVC / Razor Pages
-- `angular` — Angular SPA
-- `blazor-webapp` — Blazor Web App
-- `blazor` — Blazor WASM
-- `blazor-server` — Blazor Server
-- `react` — React SPA (modern template ile)
-- `no-ui` — Frontend olmadan
+**UI:** `mvc`, `angular`, `blazor-webapp`, `blazor` (WASM), `blazor-server`, `react` (`--modern`), `no-ui`
+**DB:** `ef` (default), `mongodb`
 
-### Database Provider'ları
-
-- `ef` — Entity Framework Core (varsayılan)
-- `mongodb` — MongoDB
-
-## ABP CLI Komutları
+## CLI (summary)
 
 ```bash
-# Kurulum
 dotnet tool install -g Volo.Abp.Studio.Cli
-
-# Yeni solution oluştur
-abp new Acme.BookStore --template app
-abp new Acme.BookStore --template app --modern          # React-first modern template
-abp new Acme.BookStore --template app-nolayers --modern # Single-layer modern
-abp new Acme.BookStore --template microservice --modern # Microservice modern
-
-# Module oluştur
-abp new-module Acme.BookStore.Orders -t module:ddd
-abp new-module Acme.BookStore.Orders --modern
-
-# Package ekle
+abp new Acme.BookStore --template app                 # classic
+abp new Acme.BookStore --template app --modern        # React-first modern
+abp new Acme.BookStore --template app --modern --modular  # modular monolith
 abp add-package Volo.Abp.EntityFrameworkCore
-
-# Paketleri güncelle
+abp generate-proxy -t ng        # ng | csharp | js
 abp update
-
-# Proxy generate (Angular/C#/JS)
-abp generate-proxy -t ng
-abp generate-proxy -t csharp
-
-# Kaynak kodu indir
-abp get-source Volo.Blogging
-abp add-source-code Volo.Chat
 ```
+> For details see [CLI skill](../abp-cli/SKILL.md).
 
-### Modern Template'ler (`--modern` flag)
-
-Modern template'ler React-first'tir ve ABP Studio ile gönderilen farklı template kaynağını kullanır.
-
-```bash
-abp new Acme.BookStore --template app --modern
-abp new Acme.BookStore --template app-nolayers --modern --modular  # Modular monolith
-abp new Acme.BookStore --template microservice --modern --services Ordering,Shipping
-abp new Acme.BookStore --template microservice --modern --shadcn-theme blue
-```
-
-**Shadcn theme değerleri:** `slate` (default), `pink`, `blue`, `turquoise`, `orange`, `purple`
-
-## Proje Yapısı (Layered Template)
+## Layer Structure (Layered)
 
 ```
-Acme.BookStore/
-├── src/
-│   ├── Acme.BookStore.Domain.Shared    # Sabitler, enum'lar, localization
-│   ├── Acme.BookStore.Domain           # Entities, aggregates, domain services, repositories (interface)
-│   ├── Acme.BookStore.Application.Contracts  # DTOs, application service interfaces
-│   ├── Acme.BookStore.Application      # Application services, object mapping
-│   ├── Acme.BookStore.EntityFrameworkCore  # DbContext, repository implementations, migrations
-│   ├── Acme.BookStore.HttpApi          # API controllers
-│   ├── Acme.BookStore.HttpApi.Client   # Dynamic C# HTTP clients
-│   └── Acme.BookStore.Web              # MVC/Razor Pages UI
-└── test/
-    ├── Acme.BookStore.TestBase
-    ├── Acme.BookStore.Domain.Tests
-    ├── Acme.BookStore.Application.Tests
-    └── Acme.BookStore.Web.Tests
+Domain.Shared → Domain → Application.Contracts → Application → HttpApi → Web/Host
+                  ↑ EntityFrameworkCore/MongoDB (only Host references it)
 ```
+> For dependency rules see [Dependency Rules skill](../abp-dependency-rules/SKILL.md).
 
-## Module Class Yapısı
-
-Her modül bir `AbpModule` türevi tanımlar:
+## Module Class
 
 ```csharp
-[DependsOn(
-    typeof(AbpAspNetCoreMvcModule),
-    typeof(AbpEntityFrameworkCoreModule),
-    typeof(AbpAutofacModule)
-)]
+[DependsOn(typeof(AbpAspNetCoreMvcModule), typeof(AbpEntityFrameworkCoreModule), typeof(AbpAutofacModule))]
 public class BookStoreModule : AbpModule
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context) { }
-    
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        // DI kayıt, modül konfigürasyonu
-    }
-    
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
-    {
-        // Middleware pipeline, startup logic
-    }
-    
-    public override void OnApplicationShutdown(ApplicationShutdownContext context) { }
+    public override void ConfigureServices(ServiceConfigurationContext context) { }   // DI + config
+    public override void OnApplicationInitialization(ApplicationInitializationContext context) { } // middleware (host only)
 }
 ```
+Lifecycle: `PreConfigureServices` → `ConfigureServices` → `PostConfigureServices` → `OnApplicationInitialization` (+ `*Async` versions).
 
-### Lifecycle Metodları
-
-| Metot | Açıklama | Async Versiyon |
-|---|---|---|
-| `PreConfigureServices` | Tüm ConfigureServices'den önce çalışır | `PreConfigureServicesAsync` |
-| `ConfigureServices` | DI kayıt ve modül konfigürasyonu | `ConfigureServicesAsync` |
-| `PostConfigureServices` | Tüm ConfigureServices'den sonra çalışır | `PostConfigureServicesAsync` |
-| `OnPreApplicationInitialization` | Init öncesi | `OnPreApplicationInitializationAsync` |
-| `OnApplicationInitialization` | Middleware kurulumu | `OnApplicationInitializationAsync` |
-| `OnPostApplicationInitialization` | Init sonrası | `OnPostApplicationInitializationAsync` |
-| `OnApplicationShutdown` | Kapanış logic'i | `OnApplicationShutdownAsync` |
-
-## Dependency Injection
-
-### Otomatik Kayıt Yöntemleri
+## DI (summary)
 
 ```csharp
-// 1. Interface implementasyonu
-public class TaxCalculator : ITransientDependency { }       // Transient
-public class CacheService : ISingletonDependency { }        // Singleton
-public class ScopedService : IScopedDependency { }          // Scoped
-
-// 2. Attribute ile
-[Dependency(ServiceLifetime.Transient, ReplaceServices = true)]
-public class TaxCalculator { }
-
-// 3. ExposeServices ile hangi interface'lerin expose edileceğini kontrol et
-[ExposeServices(typeof(ITaxCalculator))]
-public class TaxCalculator : ICalculator, ITaxCalculator, ITransientDependency { }
-
-// 4. Keyed Services
-[ExposeKeyedService<ITaxCalculator>("taxCalculator")]
-public class TaxCalculator : ITransientDependency { }
+public class TaxCalculator : ITransientDependency { }   // ISingletonDependency | IScopedDependency
+[Dependency(ServiceLifetime.Transient, ReplaceServices = true)] public class X { }
+[ExposeServices(typeof(ITaxCalculator))] public class TaxCalculator : ITaxCalculator, ITransientDependency { }
 ```
 
-### Manuel Kayıt
+## Base Class Pre-injected Services
 
-```csharp
-public override void ConfigureServices(ServiceConfigurationContext context)
-{
-    context.Services.AddSingleton<TaxCalculator>(new TaxCalculator(0.18));
-    context.Services.AddScoped<ITaxCalculator>(sp => sp.GetRequiredService<TaxCalculator>());
-    
-    // Service değiştirme
-    context.Services.Replace(ServiceDescriptor.Transient<IConnectionStringResolver, MyResolver>());
-}
-```
+`ApplicationService` / `DomainService` / `AbpController` provide these as properties — don't inject them:
 
-## Önemli Konfigürasyon Pattern'leri
-
-```csharp
-// Options pattern
-Configure<AbpDbConnectionOptions>(options =>
-{
-    options.ConnectionStrings.Default = "...";
-});
-
-// Modül konfigürasyonu
-Configure<AbpMultiTenancyOptions>(options =>
-{
-    options.IsEnabled = true;
-});
-```
-
-## Pre-built Application Modüller
-
-| Modül | Açıklama |
+| Property | Note |
 |---|---|
-| `Volo.Abp.Account` | Account management |
-| `Volo.Abp.Identity` | Identity & user management |
-| `Volo.Abp.TenantManagement` | Tenant management (multi-tenancy) |
-| `Volo.Abp.SettingManagement` | Setting management |
-| `Volo.Abp.PermissionManagement` | Permission management |
-| `Volo.Abp.FeatureManagement` | Feature management |
-| `Volo.Abp.AuditLogging` | Audit logging |
-| `Volo.Abp.BackgroundJobs` | Background job system |
-| `Volo.Abp.CmsKit` | CMS kit (content management) |
-| `Volo.Abp.Saas` | SaaS module (PRO) |
-| `Volo.Abp.OpenIddict` | OpenIddict integration |
+| `GuidGenerator` | instead of `Guid.NewGuid()` |
+| `Clock` | instead of `DateTime.Now` (test/timezone) |
+| `CurrentUser` | user info |
+| `CurrentTenant` | tenant context |
+| `L` | localization (ApplicationService/AbpController) |
+| `AuthorizationService` / `FeatureChecker` | permission/feature check |
+| `LazyServiceProvider` | lazy resolution via `LazyGetRequiredService<T>()` |
+| `UnitOfWorkManager` | UOW |
+
+**Async all-the-way** — don't use `.Result`/`.Wait()`; methods should end with `Async`.
+
+## Pre-built Modules
+
+`Volo.Abp.Account`, `.Identity`, `.TenantManagement`, `.SettingManagement`, `.PermissionManagement`, `.FeatureManagement`, `.AuditLogging`, `.BackgroundJobs`, `.CmsKit`, `.OpenIddict` (auth server, replacing IdentityServer from v6.0+).
 
 ## Best Practices
 
-1. **Her zaman `AbpModule` ile modül bağımlılıklarını tanımla** — `[DependsOn]` attribute kullan
-2. **GUID primary key kullan** — `IGuidGenerator.Create()` ile sequential GUID üret
-3. **DTO kullan** — Entity'leri presentation layer'a expose etme
-4. **Mapperly kullan** — Object-to-object mapping için (ABP 10.4'te varsayılan)
-5. **Repository pattern kullan** — `IRepository<TEntity, TKey>` inject et
-6. **Unit of Work convention'larına güven** — Manuel UOW yönetimine gerek yok
-7. **Async metodları tercih et** — `async/await` ile scalable kod yaz
-8. **Domain layer'ı database provider'dan izole tut** — `IAsyncQueryableExecuter` kullan
+1. Define module dependencies with `[DependsOn]`
+2. `IGuidGenerator.Create()` (sequential GUID), `Clock` (time)
+3. Don't expose entities — use DTOs
+4. Mapperly (default in v10.4) object mapping
+5. Inject `IRepository<TEntity, TKey>`, rely on UOW conventions
 
-## Kaynaklar
+## Related
 
-- ABP Docs: `/Users/burakdemir/Code/abp-upstream/docs/en/`
-- ABP CLI: `abp help`
-- ABP GitHub: https://github.com/abpframework/abp
-- ABP Community: https://abp.io/community/
+- [DDD](../abp-ddd/SKILL.md) · [Modularity](../abp-modularity/SKILL.md) · [Dependency Injection](../abp-dependency-injection/SKILL.md) · [CLI](../abp-cli/SKILL.md) · [Dependency Rules](../abp-dependency-rules/SKILL.md) · [Microservices](../abp-microservices/SKILL.md)
+- ABP Docs: https://abp.io/docs/latest

@@ -20,10 +20,11 @@ git checkout -b feat/add-new-skill
 ### 3. Make Your Changes
 
 - Each skill lives in its own directory under `claude/` or `opencode/`
+- **Every SKILL.md must start with YAML frontmatter** (`name` + `description`) — required for agent auto-activation
 - Claude skill files should be detailed (200-800+ lines)
 - OpenCode skill files should be compact (50-200 lines)
 - Follow the existing naming convention: `abp-{topic}/SKILL.md`
-- Each SKILL.md must have a `## Trigger` section
+- Each SKILL.md should also have a `## Trigger` section and a `## Related` section
 
 ### 4. Commit and Push
 
@@ -47,12 +48,19 @@ git push origin feat/add-new-skill
 
 ### Required Sections
 
-1. **Title** — `# ABP {Topic} Skill`
-2. **Trigger** — Keywords that activate the skill
-3. **Core Concepts** — Brief overview
-4. **Code Examples** — Practical, copy-paste ready examples
-5. **Best Practices** — Actionable recommendations
-6. **Related** — Links to other skills or external docs
+1. **YAML frontmatter** — `name` (lowercase-hyphen, matches directory) + `description` (what it does + when to use). Example:
+   ```yaml
+   ---
+   name: abp-ddd
+   description: "ABP Framework v10.4 DDD: entity, aggregate, repository... Use when designing the domain layer in ABP."
+   ---
+   ```
+2. **Title** — `# ABP {Topic} Skill`
+3. **Trigger** — Keywords that activate the skill
+4. **Core Concepts** — Brief overview
+5. **Code Examples** — Practical, copy-paste ready examples
+6. **Best Practices** — Actionable recommendations
+7. **Related** — Links to other skills (relative paths) or external docs
 
 ## Guidelines
 

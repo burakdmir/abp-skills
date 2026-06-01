@@ -1,3 +1,8 @@
+---
+name: abp-dependency-injection
+description: "ABP Framework v10.4 dependency injection: ITransientDependency/IScopedDependency/ISingletonDependency, [Dependency], [ExposeServices], LazyServiceProvider, property injection, Autofac. Use when you need service registration, DI, or automatic registration in ABP."
+---
+
 # ABP Dependency Injection Skill
 
 ## Trigger
@@ -254,6 +259,36 @@ public class MyService : ITransientDependency
 }
 ```
 
+### Lazy Service Resolution (LazyServiceProvider)
+
+Instead of manual resolution via `IServiceProvider`, ABP's lazy service resolution is preferred. ABP base classes (`ApplicationService`, `DomainService`, `AbpController`) come with a `LazyServiceProvider` property out of the box — it prevents constructor bloat when you have optional or numerous dependencies:
+
+```csharp
+public class BookAppService : ApplicationService
+{
+    // No need to inject — comes from the base class
+    private IEmailSender EmailSender => LazyServiceProvider.LazyGetRequiredService<IEmailSender>();
+
+    public async Task NotifyAsync()
+    {
+        await EmailSender.SendAsync("to@x.com", "Subject", "Body");
+    }
+}
+```
+
+In non-base-class services, inject `ITransientCachedServiceProvider` (the old `IAbpLazyServiceProvider` is for backward compatibility and may be removed in the future):
+
+```csharp
+public class MyService : ITransientDependency
+{
+    private readonly ITransientCachedServiceProvider _serviceProvider;
+    public MyService(ITransientCachedServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    private IEmailSender EmailSender => _serviceProvider.GetRequiredService<IEmailSender>();
+}
+```
+
 ---
 
 ## Best Practices
@@ -324,6 +359,8 @@ public class MyCustomEmailSender : IEmailSender, ITransientDependency
 
 ## Related
 
-- [Autofac](https://autofac.org/) — DI container with dynamic proxying
-- [Options Pattern](../fundamentals/options.md) — Configure services with options
-- [Modularity](../architecture/modularity/basics.md) — Module-based DI registration
+- [Framework Core](../abp-framework/SKILL.md) — base classes, module system, configuration
+- [Modularity](../abp-modularity/SKILL.md) — module-based DI registration, [DependsOn]
+- [DDD](../abp-ddd/SKILL.md) — application/domain service registration
+- [Autofac](https://autofac.org/) — DI container with dynamic proxying support
+- ABP Docs: https://abp.io/docs/latest/framework/fundamentals/dependency-injection
