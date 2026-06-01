@@ -9,7 +9,10 @@
     {
       "name": "abp-sensei",
       "displayName": "ABP Sensei",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "burakdmir/abp-skills"
+      },
       "description": "Expert ABP Framework v10.4 (.NET 10) companion: 23 skills, an ABP architect subagent, and slash commands for scaffolding, review, CRUD, and upgrade audits.",
       "version": "1.0.0",
       "author": {
