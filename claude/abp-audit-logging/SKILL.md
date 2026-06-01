@@ -351,6 +351,6 @@ abp add-package Volo.Abp.AuditLogging.EntityFrameworkCore
 
 ## Related
 
-- [Exception Handling](../fundamentals/exception-handling.md) — Exceptions logged in audit trail
-- [Settings](../infrastructure/settings.md) — Audit log settings
-- [Multi-Tenancy](../architecture/multi-tenancy/index.md) — Tenant-scoped audit logs
+- [Exception Handling](../abp-exception-handling/SKILL.md) — Exceptions logged in audit trail
+- [Settings & Features](../abp-settings-features/SKILL.md) — Audit log settings
+- [Multi-Tenancy](../abp-multitenancy/SKILL.md) — Tenant-scoped audit logs

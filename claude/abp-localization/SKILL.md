@@ -294,6 +294,6 @@ throw new UserFriendlyException(L["Error:InsufficientStock"]);
 
 ## Related
 
-- [Virtual File System](../infrastructure/virtual-file-system.md) — Embedding resources
-- [URL-Based Localization](../fundamentals/url-based-localization.md) — Culture in URLs
+- [Virtual File System](https://abp.io/docs/latest/framework/infrastructure/virtual-file-system) — Embedding resources
+- [Localization](https://abp.io/docs/latest/framework/fundamentals/localization) — Culture in URLs
 - [Microsoft.Extensions.Localization](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization) — Microsoft's localization docs

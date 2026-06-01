@@ -471,7 +471,7 @@ Features are managed via the Feature Management UI (available with Identity modu
 
 ## Related
 
-- [Setting Management Module](../../modules/setting-management.md) — Full module docs
-- [Multi-Tenancy](../architecture/multi-tenancy/index.md) — Tenant-scoped settings
-- [Configuration](../fundamentals/configuration.md) — appsettings.json integration
-- [Options Pattern](../fundamentals/options.md) — Configure options
+- [Setting Management Module](https://abp.io/docs/latest/modules/setting-management) — Full module docs
+- [Multi-Tenancy](../abp-multitenancy/SKILL.md) — Tenant-scoped settings
+- [Configuration](https://abp.io/docs/latest/framework/fundamentals/configuration) — appsettings.json integration
+- [Options Pattern](https://abp.io/docs/latest/framework/fundamentals/options) — Configure options
