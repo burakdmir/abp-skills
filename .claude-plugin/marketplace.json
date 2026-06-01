@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "name": "abp-skills",
+  "owner": {
+    "name": "Burak Demir"
+  },
+  "description": "ABP Framework skills and tooling for Claude Code, grounded in the official ABP v10.4 (.NET 10) documentation.",
+  "plugins": [
+    {
+      "name": "abp-sensei",
+      "displayName": "ABP Sensei",
+      "source": ".",
+      "description": "Expert ABP Framework v10.4 (.NET 10) companion: 23 skills, an ABP architect subagent, and slash commands for scaffolding, review, CRUD, and upgrade audits.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Burak Demir"
+      },
+      "homepage": "https://github.com/burakdmir/abp-skills",
+      "repository": "https://github.com/burakdmir/abp-skills",
+      "license": "MIT",
+      "category": "development",
+      "keywords": [
+        "abp",
+        "abp-framework",
+        "dotnet",
+        "ddd",
+        "multi-tenancy",
+        "microservices"
+      ]
+    }
+  ]
+}

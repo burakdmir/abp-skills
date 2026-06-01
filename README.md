@@ -40,6 +40,35 @@ This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that 
 
 ---
 
+## Claude Code Plugin — **ABP Sensei**
+
+The `claude/` skills are also packaged as a first-class **Claude Code plugin** named `abp-sensei`, distributed through this repo's plugin marketplace. Installing it gives you, in one step:
+
+- **23 ABP skills** that auto-activate by topic (DDD, EF Core, multi-tenancy, microservices, …)
+- An **`abp-expert` subagent** — a senior ABP v10.4 architect (`/agents` → `abp-sensei:abp-expert`)
+- **Slash commands** (`/abp-sensei:<command>`):
+  | Command | What it does |
+  |---|---|
+  | `new-entity` | Scaffold a full DDD entity end-to-end (domain → migration → service → permission → test) |
+  | `crud` | Generate a `CrudAppService` + DTOs + permissions for an aggregate |
+  | `review` | Review your diff against ABP best practices & dependency rules |
+  | `upgrade-audit` | Audit a solution for ABP v10.4 / .NET 10 readiness |
+  | `explain` | Explain any ABP concept with a minimal idiomatic example |
+
+### Install
+
+```bash
+# 1. Add this repo as a plugin marketplace
+/plugin marketplace add burakdmir/abp-skills
+
+# 2. Install the plugin
+/plugin install abp-sensei@abp-skills
+```
+
+That's it — skills, subagent, and commands are immediately available. No manual file copying.
+
+---
+
 ## Quick Start
 
 ### Claude Code
