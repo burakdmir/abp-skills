@@ -1,6 +1,11 @@
+---
+name: abp-infrastructure
+description: "ABP Framework v10.4 infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+---
+
 # ABP Framework — Infrastructure
 
-ABP Framework v10.4 altyapı bileşenleri. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
+ABP Framework v10.4 infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
 
 ## Trigger
 
@@ -22,10 +27,10 @@ ABP Framework v10.4 altyapı bileşenleri. Event Bus, Background Jobs, Caching, 
 
 ## Event Bus
 
-| Tip | Interface | Kullanım |
+| Type | Interface | Usage |
 |---|---|---|
-| Local | `ILocalEventBus`, `ILocalEventHandler<TEvent>` | Aynı process |
-| Distributed | `IDistributedEventBus`, `IDistributedEventHandler<TEvent>` | Process'ler arası |
+| Local | `ILocalEventBus`, `ILocalEventHandler<TEvent>` | Same process |
+| Distributed | `IDistributedEventBus`, `IDistributedEventHandler<TEvent>` | Across processes |
 
 ```csharp
 // Event
@@ -48,9 +53,9 @@ public class Handler : ILocalEventHandler<StockCountChangedEvent>, ITransientDep
 }
 ```
 
-**Distributed Provider'lar:** Local (default), RabbitMQ, Kafka, Azure Service Bus, Rebus
+**Distributed Providers:** Local (default), RabbitMQ, Kafka, Azure Service Bus, Rebus
 
-**Kural:** Microservice → Distributed, Modular Monolith → Distributed (inter-module), Monolith → Local
+**Rule:** Microservice → Distributed, Modular Monolith → Distributed (inter-module), Monolith → Local
 
 ## Background Jobs
 
@@ -69,7 +74,7 @@ public class EmailSendingJob : AsyncBackgroundJob<EmailSendingArgs>, ITransientD
 await _backgroundJobManager.EnqueueAsync(new EmailSendingArgs { ... }, priority: BackgroundJobPriority.Normal, delay: TimeSpan.FromMinutes(5));
 ```
 
-**Provider'lar:** Default (in-memory/DB), Hangfire, Quartz, RabbitMQ
+**Providers:** Default (in-memory/DB), Hangfire, Quartz, RabbitMQ
 
 ## Caching
 
@@ -92,7 +97,7 @@ public class BookService : ITransientDependency
 ```json
 "Redis": { "IsEnabled": "true", "Configuration": "127.0.0.1" }
 ```
-**Neden ABP Redis paketi?** `SetManyAsync`/`GetManyAsync` var (Microsoft'ta yok), konfigürasyon basit.
+**Why the ABP Redis package?** Has `SetManyAsync`/`GetManyAsync` (not in Microsoft's), simple configuration.
 
 **Batch:** `GetManyAsync`, `SetManyAsync`, `GetOrAddManyAsync`, `RemoveManyAsync`
 
@@ -104,12 +109,12 @@ public class BookService : ITransientDependency
 [BlobContainerName("product-images")]
 public class ProductImageBlobContainer : AbpBlobContainer { }
 
-// Kullanım
+// Usage
 await _blobContainer.SaveAsync(productId.ToString(), imageBytes, true);
 var bytes = await _blobContainer.GetAllAsync(productId.ToString());
 ```
 
-**Provider'lar:** FileSystem, Database, AWS S3, Azure, MinIO, Google, Alibaba, Bunny, Memory
+**Providers:** FileSystem, Database, AWS S3, Azure, MinIO, Google, Alibaba, Bunny, Memory
 
 ## Emailing
 
@@ -146,7 +151,7 @@ public class MyAppSettings : SettingDefinitionProvider
         context.Add(new SettingDefinition("MyApp.MaxPrice", defaultValue: "1000", isVisibleToClients: true));
 }
 
-// Kullanım
+// Usage
 var max = await _settingProvider.GetOrNullAsync<decimal>("MyApp.MaxPrice");
 await SettingManager.SetAsync("MyApp.MaxPrice", "2000");
 ```
@@ -160,7 +165,7 @@ public class MyAppFeatures : FeatureDefinitionProvider
         context.Add(new FeatureDefinition("MyApp.Premium", defaultValue: "false"));
 }
 
-// Kullanım
+// Usage
 var enabled = await _featureChecker.IsEnabledAsync("MyApp.Premium");
 ```
 
@@ -184,15 +189,19 @@ var isAuthenticated = CurrentUser.IsAuthenticated;
 
 ```csharp
 await using var handle = await _distributedLock.TryAcquireAsync("my-lock-key");
-if (handle != null) { /* kritik işlem */ }
+if (handle != null) { /* critical operation */ }
 ```
 
 ## Best Practices
 
-1. Entity'den event publish et, service'den handle et
-2. Uzun işleri background job'a al
-3. `GetOrAddAsync` kullan, expiration ayarla
-4. BLOB provider abstraction kullan
-5. Data filter'ı `using` ile disable et
-6. Settings runtime-değiştirilebilir ayarlar için
-7. Features tenant bazlı toggle için
+1. Publish events from the entity, handle them in the service
+2. Move long-running work to a background job
+3. Use `GetOrAddAsync`, set expiration
+4. Use the BLOB provider abstraction
+5. Disable the data filter with `using`
+6. Settings for runtime-changeable values
+7. Features for per-tenant toggles
+
+## Related
+
+[DDD](../abp-ddd/SKILL.md) · [Microservices](../abp-microservices/SKILL.md) · [Deployment](../abp-deployment/SKILL.md) · [Settings & Features](../abp-settings-features/SKILL.md) · Docs: https://abp.io/docs/latest/framework/infrastructure

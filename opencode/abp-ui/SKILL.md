@@ -1,6 +1,11 @@
+---
+name: abp-ui
+description: "ABP Framework v10.4 UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
+---
+
 # ABP Framework — UI & Frontend
 
-ABP Framework v10.4 UI framework entegrasyonları. MVC, Blazor, Angular, React, theming.
+ABP Framework v10.4 UI framework integrations. MVC, Blazor, Angular, React, theming.
 
 ## Trigger
 
@@ -11,12 +16,12 @@ ABP Framework v10.4 UI framework entegrasyonları. MVC, Blazor, Angular, React, 
 - "ABP React"
 - "ABP theme"
 
-## UI Framework'leri
+## UI Frameworks
 
-| Framework | Tip | Not |
+| Framework | Type | Note |
 |---|---|---|
-| MVC/Razor Pages | Server-side | Varsayılan |
-| Blazor Web App | Server-side (.NET 8+) | Modern Blazor |
+| MVC/Razor Pages | Server-side | Default |
+| Blazor Web App | Server-side (.NET 10) | Modern Blazor |
 | Blazor WASM | Client-side | SPA |
 | Angular | Client-side | TypeScript |
 | React | Client-side | Modern template |
@@ -103,7 +108,11 @@ public static class BookStorePermissions
 
 ## Best Practices
 
-1. MVC/Razor Pages varsayılan tercih
-2. Blazor Web App (.NET 8+) kullan
-3. React için `--modern` flag
-4. Permission'ları sabit class'ta tanımla
+1. MVC/Razor Pages as the default choice
+2. Use Blazor Web App (.NET 10)
+3. Use the `--modern` flag for React
+4. Define permissions in a constant class
+
+## Related
+
+[API](../abp-api/SKILL.md) · [Authorization](../abp-authorization/SKILL.md) · [Localization](../abp-localization/SKILL.md) · [Framework](../abp-framework/SKILL.md) · Docs: https://abp.io/docs/latest/framework/ui

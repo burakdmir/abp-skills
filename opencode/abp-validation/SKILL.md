@@ -1,3 +1,8 @@
+---
+name: abp-validation
+description: "ABP Framework v10.4 validation: DTO validation, Data Annotations, FluentValidation, IValidatableObject, AbpValidationException. Use when you need input validation or DTO validation in ABP."
+---
+
 # ABP Validation Skill
 
 ## Trigger
@@ -76,3 +81,7 @@ Method must be `virtual` or use interface injection.
 - Domain validation → domain services, not DTOs
 - Methods must be `virtual` for interception
 - Localize validation messages
+
+## Related
+
+[DDD](../abp-ddd/SKILL.md) · [Exception Handling](../abp-exception-handling/SKILL.md) · [Localization](../abp-localization/SKILL.md) · Docs: https://abp.io/docs/latest/framework/fundamentals/validation

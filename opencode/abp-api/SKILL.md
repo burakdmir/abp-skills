@@ -1,6 +1,11 @@
+---
+name: abp-api
+description: "ABP Framework v10.4 API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
+---
+
 # ABP Framework — API Development
 
-ABP Framework v10.4 API geliştirme. Auto API Controllers, Dynamic/Static C# Clients, Swagger, API Versioning.
+ABP Framework v10.4 API development. Auto API Controllers, Dynamic/Static C# Clients, Swagger, API Versioning.
 
 ## Trigger
 
@@ -30,7 +35,7 @@ PreConfigure<AbpAspNetCoreMvcOptions>(options =>
 | `Create`, `Add`, `Insert`, `Post` | POST |
 | `Patch` | PATCH |
 
-### Route Örnekleri
+### Route Examples
 
 | Method | Route |
 |---|---|
@@ -43,7 +48,7 @@ PreConfigure<AbpAspNetCoreMvcOptions>(options =>
 ### RemoteService
 
 ```csharp
-[RemoteService(IsEnabled = false)]  // API olarak expose etme
+[RemoteService(IsEnabled = false)]  // Don't expose as API
 public class PersonAppService : ApplicationService { }
 ```
 
@@ -62,7 +67,7 @@ context.Services.AddHttpClientProxies(typeof(BookStoreApplicationContractsModule
 ```
 
 ```csharp
-// Kullanım — interface inject et
+// Usage — inject the interface
 var books = await _bookAppService.GetListAsync();
 ```
 
@@ -96,8 +101,12 @@ public class BookAppService : ApplicationService, IBookAppService { }
 
 ## Best Practices
 
-1. Auto API Controllers kullan — manuel controller yazma
-2. Dynamic client proxy kullan — HttpClient manuel kullanma
-3. Static proxy production'da tercih et
-4. Swagger'da JWT auth ekle
-5. API versioning ile backward compatibility sağla
+1. Use Auto API Controllers — don't write controllers manually
+2. Use dynamic client proxies — don't use HttpClient manually
+3. Prefer static proxies in production
+4. Add JWT auth in Swagger
+5. Ensure backward compatibility with API versioning
+
+## Related
+
+[DDD](../abp-ddd/SKILL.md) · [UI](../abp-ui/SKILL.md) · [Microservices](../abp-microservices/SKILL.md) · [Authorization](../abp-authorization/SKILL.md) · Docs: https://abp.io/docs/latest/framework/api-development

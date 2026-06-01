@@ -1,3 +1,8 @@
+---
+name: abp-settings-features
+description: "ABP Framework v10.4 settings and features: ISettingProvider/ISettingManager, SettingDefinitionProvider, IFeatureChecker, feature toggle. Use for configuration management, settings, or feature flags in ABP."
+---
+
 # ABP Settings & Features Skill
 
 ## Trigger
@@ -112,3 +117,7 @@ parent.AddChild("BookStore.PdfExport", valueType: new ToggleStringValueType());
 - Features = tenant-scoped toggles
 - [RequiresFeature] for automatic checking
 - Localize displayName/description
+
+## Related
+
+[Authorization](../abp-authorization/SKILL.md) · [Multi-Tenancy](../abp-multitenancy/SKILL.md) · [Infrastructure](../abp-infrastructure/SKILL.md) · Docs: https://abp.io/docs/latest/framework/infrastructure/settings

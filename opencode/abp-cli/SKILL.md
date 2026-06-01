@@ -1,6 +1,11 @@
+---
+name: abp-cli
+description: "ABP Framework v10.4 CLI and tooling: abp new, add-package, generate-proxy, ABP Studio, ABP Suite, --modern flag. Use when working with ABP CLI commands, creating projects, adding packages, or generating proxies."
+---
+
 # ABP Framework — CLI & Tooling
 
-ABP Framework v10.4 CLI komutları ve tooling rehberi.
+ABP Framework v10.4 CLI commands and tooling guide.
 
 ## Trigger
 
@@ -10,14 +15,14 @@ ABP Framework v10.4 CLI komutları ve tooling rehberi.
 - "ABP generate-proxy"
 - "ABP package"
 
-## Kurulum
+## Installation
 
 ```bash
 dotnet tool install -g Volo.Abp.Studio.Cli
 dotnet tool update -g Volo.Abp.Studio.Cli
 ```
 
-## Solution Oluşturma
+## Creating a Solution
 
 ```bash
 abp new Acme.BookStore --template app
@@ -63,7 +68,7 @@ abp add-source-code Volo.Chat --add-to-solution-file
 abp install-module Volo.Blogging
 ```
 
-## Diğer
+## Other
 
 ```bash
 abp clean
@@ -81,7 +86,11 @@ abp add-package-ref Acme.BookStore.Domain
 
 ## Best Practices
 
-1. En son CLI versiyonunu kullan
-2. Modern template'leri tercih et
-3. `abp update` ile paketleri güncel tut
-4. Proxy generate için server çalışır olmalı
+1. Use the latest CLI version
+2. Prefer modern templates
+3. Keep packages up to date with `abp update`
+4. The server must be running to generate proxies
+
+## Related
+
+[Framework](../abp-framework/SKILL.md) · [Modularity](../abp-modularity/SKILL.md) · [Microservices](../abp-microservices/SKILL.md) · [Development Flow](../abp-development-flow/SKILL.md) · Docs: https://abp.io/docs/latest/cli

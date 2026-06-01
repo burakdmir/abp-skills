@@ -1,6 +1,11 @@
+---
+name: abp-efcore
+description: "ABP Framework v10.4 Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
+---
+
 # ABP Framework — Entity Framework Core
 
-ABP Framework v10.4 EF Core entegrasyon rehberi. DbContext, repository, migration, eager/lazy loading.
+A guide to EF Core integration in ABP Framework v10.4. DbContext, repository, migration, eager/lazy loading.
 
 ## Trigger
 
@@ -31,13 +36,13 @@ protected override void OnModelCreating(ModelBuilder builder)
     builder.Entity<Book>(b =>
     {
         b.ToTable("Books");
-        b.ConfigureByConvention();  // ZORUNLU
+        b.ConfigureByConvention();  // REQUIRED
         b.Property(x => x.Name).IsRequired().HasMaxLength(128);
     });
 }
 ```
 
-## DbContext Kaydı
+## DbContext Registration
 
 ```csharp
 context.Services.AddAbpDbContext<MyDbContext>(options =>
@@ -46,7 +51,7 @@ context.Services.AddAbpDbContext<MyDbContext>(options =>
 });
 ```
 
-## DBMS Konfigürasyonu
+## DBMS Configuration
 
 ```csharp
 Configure<AbpDbContextOptions>(options =>
@@ -92,7 +97,7 @@ ObjectExtensionManager.Instance
         (entityBuilder, propertyBuilder) => propertyBuilder.HasMaxLength(64));
 ```
 
-## DBMS Seçimi
+## Choosing a DBMS
 
 ```bash
 abp new Acme.BookStore -dbms PostgreSQL
@@ -104,7 +109,7 @@ abp new Acme.BookStore -dbms Oracle
 ### PostgreSQL
 
 ```csharp
-// Volo.Abp.EntityFrameworkCore.PostgreSql paketini ekle
+// Add the Volo.Abp.EntityFrameworkCore.PostgreSql package
 [DependsOn(typeof(AbpEntityFrameworkCorePostgreSqlModule))]
 Configure<AbpDbContextOptions>(options => options.UseNpgsql());
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -120,7 +125,7 @@ Configure<AbpDbContextOptions>(options =>
         ctx.DbContextOptions.UseMySql(ctx.ExistingConnection ?? ctx.ConnectionString);
     });
 });
-// Modül ayarı: builder.ConfigureIdentityServer(o => o.DatabaseProvider = EfCoreDatabaseProvider.MySql);
+// Module setting: builder.ConfigureOpenIddict(o => o.DatabaseProvider = EfCoreDatabaseProvider.MySql);
 ```
 
 ## Migrations
@@ -143,7 +148,11 @@ public class UnifiedDbContext : AbpDbContext<UnifiedDbContext>, IBookStoreDbCont
 
 ## Best Practices
 
-1. `ConfigureByConvention()` her zaman çağır
-2. Domain layer'ı EF Core'dan izole tut
-3. Read-only sorgular için `IReadOnlyRepository` kullan
-4. `WithDetailsAsync` ile eager loading yap
+1. Always call `ConfigureByConvention()`
+2. Keep the domain layer isolated from EF Core
+3. Use `IReadOnlyRepository` for read-only queries
+4. Do eager loading with `WithDetailsAsync`
+
+## Related
+
+[DDD](../abp-ddd/SKILL.md) · [MongoDB](../abp-mongodb/SKILL.md) · [Dependency Rules](../abp-dependency-rules/SKILL.md) · [Development Flow](../abp-development-flow/SKILL.md) · Docs: https://abp.io/docs/latest/framework/data/entity-framework-core

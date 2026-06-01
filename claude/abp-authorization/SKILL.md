@@ -1,3 +1,8 @@
+---
+name: abp-authorization
+description: "ABP Framework v10.4 authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+---
+
 # ABP Authorization Skill
 
 ## Trigger
@@ -175,6 +180,53 @@ public class MyService : ITransientDependency
 }
 ```
 
+> Shortcut methods in base classes: `await CheckPolicyAsync("...")` (throws an exception if not granted) and `await IsGrantedAsync("...")` (returns a bool, does not throw).
+
+---
+
+## Current User
+
+Authenticated user information is accessed via the `CurrentUser` property — it is available out of the box in base classes (`ApplicationService`, `DomainService`, `AbpController`) and requires no injection:
+
+```csharp
+public class BookAppService : ApplicationService
+{
+    public async Task DoSomethingAsync()
+    {
+        var userId   = CurrentUser.Id;             // Guid?
+        var userName = CurrentUser.UserName;
+        var email    = CurrentUser.Email;
+        var isAuth   = CurrentUser.IsAuthenticated;
+        var roles    = CurrentUser.Roles;
+        var tenantId = CurrentUser.TenantId;
+    }
+}
+
+// Inject ICurrentUser in services that don't derive from a base class
+public class MyService : ITransientDependency
+{
+    private readonly ICurrentUser _currentUser;
+    public MyService(ICurrentUser currentUser) => _currentUser = currentUser;
+}
+```
+
+### Ownership Verification
+
+```csharp
+public async Task UpdateMyBookAsync(Guid bookId, UpdateBookDto input)
+{
+    var book = await _bookRepository.GetAsync(bookId);
+
+    if (book.CreatorId != CurrentUser.Id)
+    {
+        throw new AbpAuthorizationException();
+    }
+    // update...
+}
+```
+
+> Security: **never** trust client input for the user identity — always use `CurrentUser` and verify ownership inside the application service.
+
 ---
 
 ## Resource-Based Authorization
@@ -193,7 +245,7 @@ var bookPermission = booksGroup.AddResourcePermission(
 
 Resource-based permissions are managed through the **Resource Permission Management Dialog** on individual resource instances (not the global permissions dialog).
 
-See: [Resource-Based Authorization](resource-based-authorization.md)
+See: [Resource-Based Authorization](https://abp.io/docs/latest/framework/fundamentals/authorization)
 
 ---
 
@@ -262,3 +314,11 @@ public abstract class BookStoreAppService : ApplicationService
 - **Identity Module** — User and role management, permission UI
 - **Permission Management Module** — Resource permission management dialog
 - **Setting Management Module** — Feature-based permission toggling
+
+## Related
+
+- [Settings & Features](../abp-settings-features/SKILL.md) — feature-dependent permissions, IFeatureChecker
+- [Multi-Tenancy](../abp-multitenancy/SKILL.md) — per-tenant permissions (MultiTenancySides)
+- [Exception Handling](../abp-exception-handling/SKILL.md) — AbpAuthorizationException
+- [UI](../abp-ui/SKILL.md) — permission checks in the UI (IsGrantedAsync, Authorize)
+- ABP Docs: https://abp.io/docs/latest/framework/fundamentals/authorization

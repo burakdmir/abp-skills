@@ -1,10 +1,15 @@
+---
+name: abp-ddd
+description: "ABP Framework v10.4 Domain Driven Design: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events (AddLocalEvent/AddDistributedEvent), specification, value object, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
+---
+
 # ABP Framework — Domain Driven Design (DDD)
 
-ABP Framework v10.4'te DDD uygulama rehberi. Entity, Aggregate Root, Repository, Domain Service, Application Service ve DTO tasarım pattern'leri.
+A guide to applying DDD in ABP Framework v10.4. Entity, Aggregate Root, Repository, Domain Service, Application Service, and DTO design patterns.
 
 ## Trigger
 
-- "ABP entity oluştur"
+- "create an ABP entity"
 - "ABP aggregate root"
 - "ABP repository"
 - "ABP application service"
@@ -14,9 +19,9 @@ ABP Framework v10.4'te DDD uygulama rehberi. Entity, Aggregate Root, Repository,
 - "ABP CRUD app service"
 - "ABP DDD"
 
-## DDD Katmanları
+## DDD Layers
 
-ABP dört katmanlı mimari uygular:
+ABP applies a four-layer architecture:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -30,13 +35,13 @@ ABP dört katmanlı mimari uygular:
 └─────────────────────────────────────────┘
 ```
 
-DDD esas olarak **Domain** ve **Application** katmanlarını ilgilendirir.
+DDD primarily concerns the **Domain** and **Application** layers.
 
 ---
 
 ## Domain Layer
 
-### Entity Tasarımı
+### Entity Design
 
 ```csharp
 public class Book : Entity<Guid>
@@ -44,20 +49,20 @@ public class Book : Entity<Guid>
     public string Name { get; set; }
     public float Price { get; set; }
 
-    protected Book() { }  // ORM deserialization için
+    protected Book() { }  // for ORM deserialization
 
     public Book(Guid id) : base(id) { }
 }
 ```
 
 **GUID Key Best Practices:**
-- Constructor'da `id` parametresi al ve base'e geçir
-- `Guid.NewGuid()` **kullanma** — `IGuidGenerator.Create()` kullan (sequential GUID)
-- Protected/private empty constructor ekle (ORM deserialization)
+- Take an `id` parameter in the constructor and pass it to base
+- **Do not use** `Guid.NewGuid()` — use `IGuidGenerator.Create()` (sequential GUID)
+- Add a protected/private empty constructor (ORM deserialization)
 
 ### Aggregate Root
 
-Aggregate Root, bir aggregate'in tek giriş noktasıdır ve tutarlılıktan sorumludur.
+The Aggregate Root is the single entry point of an aggregate and is responsible for consistency.
 
 ```csharp
 public class Order : AggregateRoot<Guid>
@@ -113,25 +118,25 @@ public class OrderLine : Entity
 }
 ```
 
-**Aggregate Root Kuralları:**
-- Aggregate root kendi ve alt entity'lerinin geçerliliğinden sorumludur
-- `Id` ile referans ver, navigation property ile değil
-- Tek bir birim olarak retrieve ve update edilir (transaction boundary)
-- Alt entity'ler aggregate root üzerinden değiştirilir
+**Aggregate Root Rules:**
+- The aggregate root is responsible for the validity of itself and its child entities
+- Reference by `Id`, not via a navigation property
+- It is retrieved and updated as a single unit (transaction boundary)
+- Child entities are modified through the aggregate root
 
 ### Audit Properties
 
 ```csharp
-// En yaygın kullanım
+// Most common usage
 public class Product : FullAuditedAggregateRoot<Guid>
 {
-    // Otomatik: CreationTime, CreatorId, LastModificationTime, 
-    //           LastModifierId, IsDeleted, DeletionTime, DeleterId
+    // Automatic: CreationTime, CreatorId, LastModificationTime, 
+    //            LastModifierId, IsDeleted, DeletionTime, DeleterId
     public string Name { get; set; }
 }
 ```
 
-| Base Class | Sağladığı Özellikler |
+| Base Class | Properties Provided |
 |---|---|
 | `CreationAuditedAggregateRoot<TKey>` | CreationTime, CreatorId |
 | `AuditedAggregateRoot<TKey>` | + LastModificationTime, LastModifierId |
@@ -183,15 +188,73 @@ public class OrderManager : DomainService
 }
 ```
 
-Domain service kullan:
-- İş kuralı tek bir entity'ye sığmıyorsa
-- Birden fazla aggregate ile çalışılması gerekiyorsa
+Use a domain service when:
+- The business rule doesn't fit into a single entity
+- Multiple aggregates need to be worked with
+
+**Domain Service Best Practices (ai-rules):**
+- Use the `*Manager` suffix (e.g. `OrderManager`)
+- Don't define an interface by default (add one if needed)
+- Take/return domain objects, not DTOs
+- Don't depend on the authenticated user — take values as parameters from the application layer
+- Don't inject `IGuidGenerator`/`IClock` — use the base class properties (`GuidGenerator`, `Clock`)
+
+### Domain Events
+
+Aggregate roots publish domain events to trigger side effects. There are two kinds:
+
+```csharp
+public class Order : AggregateRoot<Guid>
+{
+    public OrderStatus Status { get; private set; }
+
+    public void Complete()
+    {
+        if (Status != OrderStatus.Created)
+            throw new BusinessException("Orders:CannotCompleteOrder");
+
+        Status = OrderStatus.Completed;
+
+        // Processed synchronously within the same transaction — can access the entire entity
+        AddLocalEvent(new OrderCompletedEvent(Id));
+
+        // Asynchronous, across modules/microservices — use an ETO (Event Transfer Object)
+        AddDistributedEvent(new OrderCompletedEto { OrderId = Id });
+    }
+}
+```
+
+**Local Event** — synchronous, within the same UOW/transaction:
+
+```csharp
+public class OrderCompletedEventHandler
+    : ILocalEventHandler<OrderCompletedEvent>, ITransientDependency
+{
+    public async Task HandleEventAsync(OrderCompletedEvent eventData)
+    {
+        // Runs within the same transaction
+    }
+}
+```
+
+**Distributed Event (ETO)** — asynchronous, loosely coupled. Define the ETO in `*.Domain.Shared`:
+
+```csharp
+[EventName("Orders.OrderCompleted")]
+public class OrderCompletedEto
+{
+    public Guid OrderId { get; set; }
+    public string OrderNumber { get; set; }
+}
+```
+
+> Events are added inside the aggregate root with `AddLocalEvent`/`AddDistributedEvent`; ABP publishes them automatically when the entity is saved. Handlers are registered automatically via `ITransientDependency`. For distributed event publish/subscribe details see the [Infrastructure skill](../abp-infrastructure/SKILL.md).
 
 ---
 
 ## Application Layer
 
-### DTO Tasarımı
+### DTO Design
 
 ```csharp
 public class BookDto : AuditedEntityDto<Guid>
@@ -215,11 +278,11 @@ public class CreateUpdateBookDto
 }
 ```
 
-**Kural:** Entity'leri presentation layer'a asla expose etme. Her zaman DTO kullan.
+**Rule:** Never expose entities to the presentation layer. Always use DTOs.
 
 ### Object Mapping (Mapperly)
 
-ABP 10.4'te varsayılan mapping provider Mapperly'dir.
+In ABP 10.4 the default mapping provider is Mapperly.
 
 ```csharp
 [Mapper]
@@ -237,7 +300,7 @@ public partial class CreateUpdateBookDtoToBookMapper : MapperBase<CreateUpdateBo
 }
 ```
 
-Module konfigürasyonu:
+Module configuration:
 
 ```csharp
 [DependsOn(typeof(AbpMapperlyModule))]
@@ -250,7 +313,7 @@ public class MyModule : AbpModule
 }
 ```
 
-Kullanım:
+Usage:
 
 ```csharp
 var bookDto = ObjectMapper.Map<Book, BookDto>(book);
@@ -314,7 +377,7 @@ public class BookAppService : CrudAppService<
 }
 ```
 
-`ICrudAppService` otomatik sağlar: `GetAsync`, `GetListAsync`, `CreateAsync`, `UpdateAsync`, `DeleteAsync`
+`ICrudAppService` automatically provides: `GetAsync`, `GetListAsync`, `CreateAsync`, `UpdateAsync`, `DeleteAsync`
 
 ### AbstractKeyCrudAppService (Composite Key)
 
@@ -364,7 +427,7 @@ public class BookAppService : CrudAppService<Book, BookDto, Guid, PagedAndSorted
 
 ## Repositories
 
-### Generic Repository Kullanımı
+### Using the Generic Repository
 
 ```csharp
 public class PersonAppService : ApplicationService
@@ -376,7 +439,7 @@ public class PersonAppService : ApplicationService
         _personRepository = personRepository;
     }
 
-    // Standart metodlar:
+    // Standard methods:
     // GetAsync, FindAsync, InsertAsync, UpdateAsync, DeleteAsync
     // GetListAsync, GetPagedListAsync, GetCountAsync
     // InsertManyAsync, UpdateManyAsync, DeleteManyAsync
@@ -422,16 +485,16 @@ var queryable = await _orderRepository.WithDetailsAsync(x => x.OrderLines);
 var orders = await AsyncExecuter.ToListAsync(queryable);
 ```
 
-### Change Tracking Kontrolü
+### Change Tracking Control
 
 ```csharp
-// Disable tracking (read-only sorgular için performans artışı)
+// Disable tracking (performance boost for read-only queries)
 using (_personRepository.DisableTracking())
 {
     var list = await _personRepository.GetPagedListAsync(0, 100, "Name ASC");
 }
 
-// Attribute ile
+// With an attribute
 [DisableEntityChangeTracking]
 public virtual async Task<List<PersonDto>> GetListAsync() { ... }
 ```
@@ -440,17 +503,17 @@ public virtual async Task<List<PersonDto>> GetListAsync() { ... }
 
 ## Unit of Work
 
-### Conventions (Otomatik)
+### Conventions (Automatic)
 
-ABP otomatik UOW başlatır:
+ABP starts a UOW automatically for:
 - ASP.NET Core MVC Controller Actions
 - Razor Page Handlers
-- Application Service metodları
-- Repository metodları
+- Application Service methods
+- Repository methods
 
-**HTTP GET** istekleri transactional UOW başlatmaz (sadece read-only).
+**HTTP GET** requests do not start a transactional UOW (read-only only).
 
-### Manuel UOW
+### Manual UOW
 
 ```csharp
 public class MyService : ITransientDependency
@@ -489,12 +552,12 @@ public virtual async Task BazAsync() { }
 ### SaveChanges
 
 ```csharp
-// autoSave parametresi (tercih edilen)
+// autoSave parameter (preferred)
 await _repository.InsertAsync(entity, autoSave: true);
 
-// Manuel
+// Manual
 await UnitOfWorkManager.Current.SaveChangesAsync();
-// veya
+// or
 await CurrentUnitOfWork.SaveChangesAsync();
 ```
 
@@ -502,7 +565,7 @@ await CurrentUnitOfWork.SaveChangesAsync();
 
 ## Validation
 
-Application service input'ları otomatik validate edilir:
+Application service inputs are validated automatically:
 
 ```csharp
 public class CreateBookDto
@@ -513,7 +576,7 @@ public class CreateBookDto
 }
 ```
 
-Fluent Validation desteği de mevcuttur:
+Fluent Validation support is also available:
 
 ```csharp
 public class CreateBookDtoValidator : AbstractValidator<CreateBookDto>
@@ -542,7 +605,7 @@ public class ProductsByCategorySpec : Specification<Product>
     }
 }
 
-// Kullanım
+// Usage
 var spec = new ProductsByCategorySpec(categoryId);
 var products = await _productRepository.GetListAsync(spec);
 var count = await _productRepository.CountAsync(spec);
@@ -552,7 +615,7 @@ var count = await _productRepository.CountAsync(spec);
 
 ## Extra Properties
 
-Entity'lere dinamik property ekleme (özellikle modül genişletme için):
+Adding dynamic properties to entities (especially for module extension):
 
 ```csharp
 // Set
@@ -561,7 +624,7 @@ user.SetProperty("Title", "Dr.");
 // Get
 var title = user.GetProperty<string>("Title");
 
-// Extension method ile
+// With an extension method
 public static class IdentityUserExtensions
 {
     private const string TitlePropertyName = "Title";
@@ -603,7 +666,7 @@ public class TestAppService : ApplicationService, ITestAppService
 }
 ```
 
-DTO'da stream kullanırken `AbpAspNetCoreMvcOptions` konfigürasyonu:
+When using a stream in a DTO, the `AbpAspNetCoreMvcOptions` configuration:
 
 ```csharp
 Configure<AbpAspNetCoreMvcOptions>(options =>
@@ -616,32 +679,45 @@ Configure<AbpAspNetCoreMvcOptions>(options =>
 
 ## IUnitOfWorkEnabled Interface
 
-Convention dışındaki class'larda UOW enable etmek için:
+To enable UOW in classes outside the convention:
 
 ```csharp
 public class MyService : ITransientDependency, IUnitOfWorkEnabled
 {
-    // Tüm metodlar UOW scope'unda çalışır
-    public virtual async Task FooAsync() { }  // virtual olmalı (interface ile inject edilmiyorsa)
+    // All methods run within a UOW scope
+    public virtual async Task FooAsync() { }  // must be virtual (if not injected via an interface)
 }
 ```
 
-**Kurallar:**
-- Interface ile inject edilmiyorsa metodlar `virtual` olmalı
-- Sadece `async` metodlar (Task/Task<T> dönen) intercept edilir
-- Sync metodlar UOW başlatamaz
+**Rules:**
+- Methods must be `virtual` if not injected via an interface
+- Only `async` methods (returning Task/Task<T>) are intercepted
+- Sync methods cannot start a UOW
 
 ---
 
 ## Best Practices
 
-1. **Aggregate Root tasarla** — Entity'leri doğrudanAggregateRoot yerine AggregateRoot kullan
-2. **Protected setter kullan** — Entity state'ini koru
-3. **Constructor validation** — Entity constructor'ında validasyon yap
-4. **DTO kullan** — Entity'leri asla presentation'a expose etme
-5. **Mapperly mapper'ları partial class olarak tanımla** — `[Mapper]` attribute ile
-6. **IAsyncQueryableExecuter kullan** — Domain layer'ı EF Core'dan izole tut
-7. **Sequential GUID kullan** — `IGuidGenerator.Create()` ile
-8. **Soft-delete için FullAuditedAggregateRoot kullan** — `ISoftDelete` implementasyonu otomatik
-9. **CrudAppService base class kullan** — CRUD işlemleri için boilerplate azaltır
-10. **UOW convention'larına güven** — Manuel UOW sadece özel durumlarda gerekli
+1. **Design Aggregate Roots** — use AggregateRoot instead of plain Entity directly
+2. **Use protected setters** — protect entity state
+3. **Constructor validation** — validate in the entity constructor
+4. **Use DTOs** — never expose entities to the presentation layer
+5. **Define Mapperly mappers as partial classes** — with the `[Mapper]` attribute
+6. **Use IAsyncQueryableExecuter** — keep the domain layer isolated from EF Core
+7. **Use sequential GUIDs** — with `IGuidGenerator.Create()`
+8. **Use FullAuditedAggregateRoot for soft-delete** — `ISoftDelete` implementation is automatic
+9. **Use the CrudAppService base class** — reduces boilerplate for CRUD operations
+10. **Rely on UOW conventions** — manual UOW is only needed in special cases
+
+---
+
+## Related
+
+- [EF Core](../abp-efcore/SKILL.md) — repository implementation, ConfigureByConvention, migration
+- [MongoDB](../abp-mongodb/SKILL.md) — MongoDB repository implementation
+- [Object Mapping](../abp-object-mapping/SKILL.md) — entity↔DTO conversion (Mapperly/AutoMapper)
+- [Dependency Rules](../abp-dependency-rules/SKILL.md) — layer dependency rules
+- [Development Flow](../abp-development-flow/SKILL.md) — end-to-end flow for adding a new entity
+- [Validation](../abp-validation/SKILL.md) — DTO validation
+- [Infrastructure](../abp-infrastructure/SKILL.md) — domain event publish/subscribe
+- ABP Docs: https://abp.io/docs/latest/framework/architecture/domain-driven-design
