@@ -67,6 +67,33 @@ The `claude/` skills are also packaged as a first-class **Claude Code plugin** n
 
 That's it — skills, subagent, and commands are immediately available. No manual file copying.
 
+### Updating
+
+New versions ship on every push to `main` — the marketplace tracks this repo directly, so there's no version pinning to wait on.
+
+**Manual (default):** pull the latest skills, subagent, and commands anytime:
+
+```bash
+/plugin marketplace update abp-skills
+```
+
+If anything changed, Claude Code prompts you to run `/reload-plugins`.
+
+**Automatic (opt-in):** to have Claude Code refresh `abp-skills` and update the installed plugin at every startup, set `autoUpdate` for this marketplace in your `settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "abp-skills": {
+      "source": { "source": "github", "repo": "burakdmir/abp-skills" },
+      "autoUpdate": true
+    }
+  }
+}
+```
+
+> Third-party marketplaces have auto-update **off by default** — only the official Anthropic marketplace is on. The opt-in above is per-user; the repo can't enable it on your behalf.
+
 ---
 
 ## Quick Start
