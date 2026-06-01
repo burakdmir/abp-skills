@@ -260,6 +260,6 @@ Client receives structured error
 
 ## Related
 
-- [Exception Handling](../fundamentals/exception-handling.md) — How validation errors are handled
+- [Exception Handling](../abp-exception-handling/SKILL.md) — How validation errors are handled
 - [FluentValidation](https://fluentvalidation.net/) — External validation library docs
 - [ASP.NET Core Validation](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation) — Microsoft's validation documentation

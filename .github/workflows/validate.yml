@@ -1,0 +1,107 @@
+name: Validate Skills
+
+on:
+  pull_request:
+    paths:
+      - "claude/**"
+      - "opencode/**"
+      - "README.md"
+      - ".github/workflows/validate.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate SKILL.md files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run content validation
+        shell: bash --noprofile --norc {0}
+        run: |
+          set -uo pipefail
+          ERR="$(mktemp)"
+          fail() { echo "$1" >> "$ERR"; }
+
+          strip() { tr -d '\r'; }
+
+          # ---- 1. Frontmatter + name == directory ----
+          while IFS= read -r f; do
+            first="$(head -n1 "$f" | strip)"
+            if [ "$first" != "---" ]; then
+              fail "$f: missing YAML frontmatter (first line is not '---')"
+              continue
+            fi
+            fm="$(awk 'NR==1 && /^---/ {inb=1; next} inb && /^---/ {exit} inb {print}' "$f" | strip)"
+            echo "$fm" | grep -q '^name:'        || fail "$f: frontmatter missing 'name:'"
+            echo "$fm" | grep -q '^description:' || fail "$f: frontmatter missing 'description:'"
+            name="$(echo "$fm" | sed -n 's/^name:[[:space:]]*//p' | tr -d "\"'" | xargs)"
+            dir="$(basename "$(dirname "$f")")"
+            if [ -n "$name" ] && [ "$name" != "$dir" ]; then
+              fail "$f: frontmatter name '$name' does not match directory '$dir'"
+            fi
+          done < <(find claude opencode -name SKILL.md | sort)
+
+          # ---- 2. Both trees expose the same topic set ----
+          claude_topics="$(cd claude && ls -d */ 2>/dev/null | sort)"
+          opencode_topics="$(cd opencode && ls -d */ 2>/dev/null | sort)"
+          if [ "$claude_topics" != "$opencode_topics" ]; then
+            fail "claude/ and opencode/ topic sets differ:"
+            diff <(echo "$claude_topics") <(echo "$opencode_topics") | sed 's/^/    /' >> "$ERR"
+          fi
+
+          # ---- 3. Every topic dir actually has a SKILL.md in both trees ----
+          for tree in claude opencode; do
+            for d in "$tree"/*/; do
+              [ -f "${d}SKILL.md" ] || fail "${d}: missing SKILL.md"
+            done
+          done
+
+          # ---- 4. Broken relative links (../abp-x/SKILL.md style) ----
+          while IFS= read -r f; do
+            d="$(dirname "$f")"
+            grep -oE '\]\((\.\./[^) ]+)\)' "$f" | sed -E 's/^\]\((.*)\)$/\1/' | while read -r link; do
+              [ -f "$d/$link" ] || echo "$f: broken relative link -> $link" >> "$ERR"
+            done
+          done < <(find claude opencode -name SKILL.md | sort)
+
+          # ---- 5. Deprecated / leaked tokens ----
+          if grep -rIl "ConfigureIdentityServer" claude opencode >/dev/null 2>&1; then
+            grep -rIn "ConfigureIdentityServer" claude opencode | sed 's/^/    deprecated API: /' >> "$ERR"
+            fail "ConfigureIdentityServer is deprecated since ABP v6.0 — use ConfigureOpenIddict"
+          fi
+          if grep -rIn "/Users/[A-Za-z]" claude opencode >/dev/null 2>&1; then
+            grep -rIn "/Users/[A-Za-z]" claude opencode | sed 's/^/    /' >> "$ERR"
+            fail "leaked local filesystem path detected"
+          fi
+
+          # ---- 6. README stats consistency ----
+          total="$(find claude opencode -name SKILL.md | wc -l | xargs)"
+          topics="$(cd claude && ls -d */ | wc -l | xargs)"
+          if ! grep -q "$total SKILL.md files" README.md 2>/dev/null && ! grep -q "$total \*\*SKILL.md" README.md 2>/dev/null; then
+            fail "README.md does not reflect the current file count ($total SKILL.md files found)"
+          fi
+          if ! grep -q "$topics Skills" README.md 2>/dev/null; then
+            fail "README.md does not reflect the current topic count ($topics topics found)"
+          fi
+
+          # ---- Report ----
+          if [ -s "$ERR" ]; then
+            {
+              echo "## ❌ Skill validation failed"
+              echo ""
+              sed 's/^/- /' "$ERR"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Skill validation failed — see job summary"
+            cat "$ERR"
+            exit 1
+          fi
+
+          echo "✅ All skill files valid ($total files, $topics topics, both trees in sync)"
+          echo "## ✅ Skill validation passed" >> "$GITHUB_STEP_SUMMARY"
+          echo "$total SKILL.md files · $topics topics · trees in sync" >> "$GITHUB_STEP_SUMMARY"
