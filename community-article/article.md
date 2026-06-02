@@ -1,6 +1,8 @@
 # Empowering AI Agents with ABP Framework: A Comprehensive Skill Collection
 
-> How I built 17 AI agent skills covering every aspect of ABP Framework v10.4 — and why it matters for the future of .NET development.
+> How I built 23 AI agent skills covering every aspect of ABP Framework v10.4 — and why it matters for the future of .NET development.
+
+🔗 **GitHub:** [github.com/burakdmir/abp-skills](https://github.com/burakdmir/abp-skills)
 
 ---
 
@@ -23,13 +25,13 @@ The result? Code that compiles but doesn't follow ABP best practices — and req
 
 AI agents support **skills** — structured knowledge files that teach them specific frameworks, patterns, and conventions. When a skill is active, the AI's responses are grounded in real framework documentation instead of generic patterns.
 
-I built **abp-skills** — a collection of 34 skill files (17 topics × 2 AI tools) covering every major aspect of ABP Framework v10.4.
+I built **abp-skills** — a collection of 46 skill files (23 topics × 2 AI tools) covering every major aspect of ABP Framework v10.4.
 
 **GitHub Repository:** [github.com/burakdmir/abp-skills](https://github.com/burakdmir/abp-skills)
 
 ## What's Included
 
-The repository covers 17 ABP topics, each with two versions:
+The repository covers 23 ABP topics, each with two versions:
 
 | # | Topic | What It Covers |
 |---|---|---|
@@ -49,11 +51,17 @@ The repository covers 17 ABP topics, each with two versions:
 | 14 | **Localization** | Localization resources, JSON files, culture fallback, L[] helper |
 | 15 | **Settings & Features** | ISettingProvider, ISettingManager, IFeatureChecker, feature toggles |
 | 16 | **Audit Logging** | Audit logging, entity history, AbpAuditingOptions, IAuditingStore |
-| 17 | **Dependency Injection** | DI, ITransientDependency, [Dependency], [ExposeServices], Autofac |
+| 17 | **Dependency Injection** | DI, ITransientDependency, [Dependency], [ExposeServices], LazyServiceProvider, Autofac |
+| 18 | **Testing** | Integration tests, *TestBase, SQLite in-memory, Shouldly, NSubstitute, data seeding |
+| 19 | **Microservices** | Solution structure, Integration Services, distributed events (RabbitMQ), YARP gateway, OpenIddict |
+| 20 | **Object Mapping** | IObjectMapper, Mapperly (default), AutoMapper profiles, entity↔DTO mapping |
+| 21 | **Development Flow** | End-to-end entity flow: domain → migration → contracts → service → permission → test |
+| 22 | **Dependency Rules** | Layer dependency direction, project reference matrix, architecture anti-patterns |
+| 23 | **Deployment** | Clustered/stateless, distributed cache/lock, forwarded headers, SSL, OpenIddict prod, Docker/Helm |
 
 Each topic has:
-- **Claude Code version** — Detailed (200-840 lines) with full explanations, patterns, and best practices
-- **OpenCode version** — Compact (53-587 lines) as quick-reference for inline use
+- **Claude Code version** — Detailed (~210–850 lines) with full explanations, patterns, and best practices
+- **OpenCode version** — Compact (~55–230 lines) as quick-reference for inline use
 
 ## How It Works
 
@@ -115,7 +123,21 @@ The difference is night and day: proper base class, repository abstraction, perm
 
 ## Installation
 
-### Claude Code
+### Claude Code Plugin — ABP Sensei (recommended)
+
+The `claude/` skills ship as a first-class Claude Code plugin named **`abp-sensei`**, distributed through this repo's plugin marketplace. One install gives you all 23 skills, an `abp-expert` subagent (a senior ABP v10.4 architect), and slash commands (`new-entity`, `crud`, `review`, `upgrade-audit`, `explain`):
+
+```bash
+# 1. Add this repo as a plugin marketplace
+/plugin marketplace add burakdmir/abp-skills
+
+# 2. Install the plugin
+/plugin install abp-sensei@abp-skills
+```
+
+New versions ship on every push to `main`; pull them with `/plugin marketplace update abp-skills` (or opt into `autoUpdate` in `settings.json`).
+
+### Claude Code (manual clone)
 
 ```bash
 git clone https://github.com/burakdmir/abp-skills.git ~/.claude/skills/abp-skills
@@ -198,13 +220,12 @@ See [CONTRIBUTING.md](https://github.com/burakdmir/abp-skills/blob/main/CONTRIBU
 
 ## What's Next
 
-The ABP ecosystem is evolving rapidly. Planned additions:
+The first 17 topics have since grown to **23** — Testing, Microservices, Object Mapping, Development Flow, Dependency Rules, and Deployment all shipped. The ABP ecosystem keeps evolving, so planned additions include:
 
 - **ABP Studio integration** skills for AI-assisted development workflows
 - **LeptonX theme** customization skills
-- **Testing** skills (unit, integration, E2E with ABP patterns)
-- **Deployment** skills (Docker, Kubernetes, Azure, AWS)
 - **Module-specific** skills for Identity, Saas, CMS Kit, and other pre-built modules
+- **More slash commands** for the ABP Sensei plugin
 
 ## Conclusion
 
