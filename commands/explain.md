@@ -1,12 +1,12 @@
 ---
-description: Explain an ABP Framework v10.4 concept or API clearly, grounded in the bundled skills, with a minimal idiomatic code example.
+description: Explain an ABP Framework v10.x (10.4/10.5) concept or API clearly, grounded in the bundled skills, with a minimal idiomatic code example.
 ---
 
 # Explain an ABP concept
 
 Topic / question: **$ARGUMENTS**
 
-Explain the requested ABP Framework concept for **v10.4 on .NET 10**, using the relevant `abp-*` skill(s) as the source of truth. Keep it tight and practical:
+Explain the requested ABP Framework concept for **v10.x on .NET 10**, using the relevant `abp-*` skill(s) as the source of truth. If a solution is open, detect its ABP version (`Volo.Abp.*` package version) and scope the explanation to that version; otherwise assume the latest stable (v10.5). Note explicitly when a feature is version-specific (e.g. "v10.5+"). Keep it tight and practical:
 
 1. **What it is** — one or two sentences.
 2. **When to use it** — the decision/trigger, plus the ABP-idiomatic alternative if there is one.

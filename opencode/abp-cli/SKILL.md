@@ -1,11 +1,11 @@
 ---
 name: abp-cli
-description: "ABP Framework v10.4 CLI and tooling: abp new, add-package, generate-proxy, ABP Studio, ABP Suite, --modern flag. Use when working with ABP CLI commands, creating projects, adding packages, or generating proxies."
+description: "ABP Framework v10.x (10.4/10.5) CLI and tooling: abp new, add-package, generate-proxy, ABP Studio, ABP Suite, --modern flag. Use when working with ABP CLI commands, creating projects, adding packages, or generating proxies."
 ---
 
 # ABP Framework — CLI & Tooling
 
-ABP Framework v10.4 CLI commands and tooling guide.
+ABP Framework v10.x (10.4/10.5) CLI commands and tooling guide.
 
 ## Trigger
 

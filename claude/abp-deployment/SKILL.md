@@ -1,11 +1,11 @@
 ---
 name: abp-deployment
-description: "ABP Framework v10.4 deployment: production config, clustered/stateless design, distributed cache (Redis), BLOB provider selection, distributed lock, SignalR backplane, ForwardedHeaders (reverse proxy), SSL/HTTPS, OpenIddict production certificates, Docker/Kubernetes (Helm). Use when you need to deploy an ABP application to production or containerize it."
+description: "ABP Framework v10.x (10.4/10.5) deployment: production config, clustered/stateless design, distributed cache (Redis), BLOB provider selection, distributed lock, SignalR backplane, ForwardedHeaders (reverse proxy), SSL/HTTPS, OpenIddict production certificates, Docker/Kubernetes (Helm). Use when you need to deploy an ABP application to production or containerize it."
 ---
 
 # ABP Framework — Deployment
 
-ABP Framework v10.4 deployment guide. An ABP application is deployed like any .NET/ASP.NET Core application (Azure/AWS/GCP/on-prem/IIS). However, there are ABP-specific points to watch for clustered environments, reverse proxy, OpenIddict, and production configuration.
+ABP Framework v10.x (10.4/10.5) deployment guide. An ABP application is deployed like any .NET/ASP.NET Core application (Azure/AWS/GCP/on-prem/IIS). However, there are ABP-specific points to watch for clustered environments, reverse proxy, OpenIddict, and production configuration.
 
 ## Trigger
 

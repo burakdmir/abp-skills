@@ -1,11 +1,11 @@
 ---
 name: abp-framework
-description: "ABP Framework v10.4 core quick reference: solution templates, layered architecture, module system, base classes, Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
+description: "ABP Framework v10.x (10.4/10.5) core quick reference: solution templates, layered architecture, module system, base classes, Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
 ---
 
 # ABP Framework — Core Skill
 
-ABP Framework v10.4 (.NET 10) core reference. Opinionated, DDD-based, modular ASP.NET Core.
+ABP Framework v10.x (10.4/10.5) (.NET 10) core reference. Opinionated, DDD-based, modular ASP.NET Core.
 
 ## Trigger
 
@@ -92,8 +92,12 @@ public class TaxCalculator : ITransientDependency { }   // ISingletonDependency 
 1. Define module dependencies with `[DependsOn]`
 2. `IGuidGenerator.Create()` (sequential GUID), `Clock` (time)
 3. Don't expose entities — use DTOs
-4. Mapperly (default in v10.4) object mapping
+4. Mapperly (default since v10.4) object mapping
 5. Inject `IRepository<TEntity, TKey>`, rely on UOW conventions
+
+## Version Detection & v10.5
+
+Covers ABP **10.x** (10.4/10.5, .NET 10). Detect the solution's version from the `Volo.Abp.*` package version in `Directory.Packages.props` / `*.csproj`; no solution → assume latest stable (v10.5). v10.5 has no breaking changes over 10.4. New in v10.5 (only suggest when version ≥ 10.5): S3-compatible blob storage (`ServiceURL`), background worker capability markers (`ISupportsRuntimeRegistration`/`ISupportsCronScheduling`), single-active identity token providers (`AbpDefaultTokenProvider`), opt-in OpenIddict default-scope fallback, MySQL `ResourcePermissionGrant` index fix, Blazorise 2.2.1 / MongoDB.Driver 3.9.0. Migration guide: https://abp.io/docs/latest/release-info/migration-guides/abp-10-5
 
 ## Related
 

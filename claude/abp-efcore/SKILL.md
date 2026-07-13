@@ -1,11 +1,11 @@
 ---
 name: abp-efcore
-description: "ABP Framework v10.4 Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
+description: "ABP Framework v10.x (10.4/10.5) Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
 ---
 
 # ABP Framework — Entity Framework Core
 
-A guide to EF Core integration in ABP Framework v10.4. DbContext, repository, migration, eager/lazy loading, and advanced topics.
+A guide to EF Core integration in ABP Framework v10.x (10.4/10.5). DbContext, repository, migration, eager/lazy loading, and advanced topics.
 
 ## Trigger
 
@@ -436,6 +436,10 @@ public class MyCustomEfCoreBulkOperationProvider : IEfCoreBulkOperationProvider,
 ```
 
 ---
+
+## What's New in v10.5
+
+- **MySQL `ResourcePermissionGrant` index length fix (v10.5+):** for MySQL only, ABP shortened the `ResourceName` and `ResourceKey` max lengths of the Permission Management module's `ResourcePermissionGrant` entity to stay within MySQL's `utf8mb4` index key limit. Other providers are unchanged. When creating a fresh MySQL solution or generating new migrations after upgrading, regenerate/review the affected migrations; if you have a custom migration touching `ResourcePermissionGrant`, align its column lengths with the updated model.
 
 ## Related
 

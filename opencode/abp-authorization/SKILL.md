@@ -1,6 +1,6 @@
 ---
 name: abp-authorization
-description: "ABP Framework v10.4 authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+description: "ABP Framework v10.x (10.4/10.5) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
 ---
 
 # ABP Authorization Skill
@@ -56,6 +56,11 @@ await _authService.IsGrantedAsync("PermissionName");
 - Group by module/feature
 - Use child perms for CRUD hierarchy
 - Set multi-tenancy side explicitly
+
+## v10.5+
+
+- Identity token providers are single-active per user/purpose (`AbpDefaultTokenProvider`, 10-min default lifetime via `AbpDefaultTokenProviderOptions`/`AbpLinkUserTokenProviderOptions`). Re-test 2FA, password change, and link-user flows after upgrading.
+- OpenIddict default-scope fallback (opt-in): `AbpOpenIddictAspNetCoreOptions.UseDefaultScopesForClientCredentials/Password/TokenExchange = true`.
 
 ## Related
 

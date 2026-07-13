@@ -1,11 +1,11 @@
 ---
 name: abp-api
-description: "ABP Framework v10.4 API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
+description: "ABP Framework v10.x (10.4/10.5) API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
 ---
 
 # ABP Framework — API Development
 
-Guide to ABP Framework v10.4 API development. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
+Guide to ABP Framework v10.x (10.4/10.5) API development. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
 
 ## Trigger
 

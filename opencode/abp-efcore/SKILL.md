@@ -1,11 +1,11 @@
 ---
 name: abp-efcore
-description: "ABP Framework v10.4 Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
+description: "ABP Framework v10.x (10.4/10.5) Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
 ---
 
 # ABP Framework — Entity Framework Core
 
-A guide to EF Core integration in ABP Framework v10.4. DbContext, repository, migration, eager/lazy loading.
+A guide to EF Core integration in ABP Framework v10.x (10.4/10.5). DbContext, repository, migration, eager/lazy loading.
 
 ## Trigger
 
@@ -152,6 +152,10 @@ public class UnifiedDbContext : AbpDbContext<UnifiedDbContext>, IBookStoreDbCont
 2. Keep the domain layer isolated from EF Core
 3. Use `IReadOnlyRepository` for read-only queries
 4. Do eager loading with `WithDetailsAsync`
+
+## v10.5+
+
+- MySQL only: `ResourcePermissionGrant.ResourceName/ResourceKey` max lengths shortened (utf8mb4 index limit). Regenerate/review fresh MySQL migrations after upgrading.
 
 ## Related
 

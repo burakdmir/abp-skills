@@ -1,11 +1,11 @@
 ---
 name: abp-multitenancy
-description: "ABP Framework v10.4 multi-tenancy: tenant resolver, ICurrentTenant, IMultiTenant, database isolation, tenant-based data filtering. Use when working with SaaS, multi-tenancy, or tenant management in ABP."
+description: "ABP Framework v10.x (10.4/10.5) multi-tenancy: tenant resolver, ICurrentTenant, IMultiTenant, database isolation, tenant-based data filtering. Use when working with SaaS, multi-tenancy, or tenant management in ABP."
 ---
 
 # ABP Framework — Multi-Tenancy
 
-ABP Framework v10.4 multi-tenancy (SaaS) guide. Tenant resolver, IMultiTenant, ICurrentTenant.
+ABP Framework v10.x (10.4/10.5) multi-tenancy (SaaS) guide. Tenant resolver, IMultiTenant, ICurrentTenant.
 
 ## Trigger
 

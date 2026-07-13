@@ -1,5 +1,5 @@
 ---
-description: Review code or the current diff against ABP Framework v10.4 best practices — layering, dependency rules, DDD, async, security, and deprecated APIs.
+description: Review code or the current diff against ABP Framework v10.x best practices — layering, dependency rules, DDD, async, security, and deprecated APIs.
 ---
 
 # ABP best-practices review
@@ -8,7 +8,7 @@ Scope (optional — file paths, a glob, or empty for the working diff): **$ARGUM
 
 If no scope is given, review the current working changes (`git diff` and staged changes). Otherwise review the named files/paths.
 
-Audit strictly against ABP v10.4 conventions (lean on `abp-dependency-rules`, `abp-ddd`, `abp-efcore`, `abp-authorization`, `abp-validation`). Check for:
+Detect the solution's ABP version first (`Volo.Abp.*` package version in `Directory.Packages.props` / `*.csproj`) and audit strictly against that version's conventions (lean on `abp-dependency-rules`, `abp-ddd`, `abp-efcore`, `abp-authorization`, `abp-validation`). Don't flag as missing any API newer than the detected version. Check for:
 
 - **Layer violations** — Domain/Application referencing EF Core; repositories exposing `IQueryable` across boundaries; controllers holding business logic.
 - **Anemic domain** — public setters, logic that belongs in the aggregate leaking into app services; missing invariant enforcement.

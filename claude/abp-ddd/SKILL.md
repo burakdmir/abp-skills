@@ -1,11 +1,11 @@
 ---
 name: abp-ddd
-description: "ABP Framework v10.4 Domain Driven Design: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events (AddLocalEvent/AddDistributedEvent), specification, value object, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
+description: "ABP Framework v10.x (10.4/10.5) Domain Driven Design: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events (AddLocalEvent/AddDistributedEvent), specification, value object, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
 ---
 
 # ABP Framework — Domain Driven Design (DDD)
 
-A guide to applying DDD in ABP Framework v10.4. Entity, Aggregate Root, Repository, Domain Service, Application Service, and DTO design patterns.
+A guide to applying DDD in ABP Framework v10.x (10.4/10.5). Entity, Aggregate Root, Repository, Domain Service, Application Service, and DTO design patterns.
 
 ## Trigger
 
@@ -282,7 +282,7 @@ public class CreateUpdateBookDto
 
 ### Object Mapping (Mapperly)
 
-In ABP 10.4 the default mapping provider is Mapperly.
+Since ABP 10.4 the default mapping provider is Mapperly.
 
 ```csharp
 [Mapper]

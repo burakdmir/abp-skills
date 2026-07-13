@@ -1,12 +1,12 @@
 ---
-description: Scaffold a complete ABP DDD entity end-to-end (domain → contracts → application service → EF Core mapping + migration → permissions → integration test) for ABP v10.4 / .NET 10.
+description: Scaffold a complete ABP DDD entity end-to-end (domain → contracts → application service → EF Core mapping + migration → permissions → integration test) for ABP v10.x / .NET 10.
 ---
 
 # Scaffold an ABP entity end-to-end
 
 Target entity and details: **$ARGUMENTS**
 
-Generate a full, ABP v10.4-idiomatic vertical slice for this entity. Follow the `abp-development-flow`, `abp-ddd`, `abp-efcore`, and `abp-authorization` skills. Before writing anything, inspect the current solution to detect its structure (Layered / Modular Monolith / Microservice), ORM (EF Core vs MongoDB), and naming conventions, then match them exactly.
+Generate a full, ABP v10.x-idiomatic vertical slice for this entity. Follow the `abp-development-flow`, `abp-ddd`, `abp-efcore`, and `abp-authorization` skills. Before writing anything, inspect the current solution to detect its ABP version (`Volo.Abp.*` package version in `Directory.Packages.props` / `*.csproj`), its structure (Layered / Modular Monolith / Microservice), ORM (EF Core vs MongoDB), and naming conventions, then match them exactly.
 
 Produce, in order:
 

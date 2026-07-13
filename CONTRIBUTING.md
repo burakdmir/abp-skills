@@ -1,6 +1,6 @@
 # Contributing to ABP Framework Skills
 
-Thank you for your interest in contributing! This repository contains skill files for Claude Code and OpenCode that help AI agents work with ABP Framework v10.4.
+Thank you for your interest in contributing! This repository contains skill files for Claude Code and OpenCode that help AI agents work with ABP Framework v10.x (10.4/10.5).
 
 ## How to Contribute
 
@@ -52,7 +52,7 @@ git push origin feat/add-new-skill
    ```yaml
    ---
    name: abp-ddd
-   description: "ABP Framework v10.4 DDD: entity, aggregate, repository... Use when designing the domain layer in ABP."
+   description: "ABP Framework v10.x (10.4/10.5) DDD: entity, aggregate, repository... Use when designing the domain layer in ABP."
    ---
    ```
 2. **Title** — `# ABP {Topic} Skill`
@@ -64,7 +64,7 @@ git push origin feat/add-new-skill
 
 ## Guidelines
 
-- **Accuracy**: All content must be based on official ABP Framework v10.4 documentation
+- **Accuracy**: All content must be based on official ABP Framework v10.x documentation (mark v10.5-only features as `v10.5+`)
 - **Code Quality**: Examples should be production-ready and follow ABP conventions
 - **No Fluff**: Keep explanations concise and actionable
 - **Cross-reference**: Link to related skills when relevant

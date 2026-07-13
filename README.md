@@ -1,6 +1,6 @@
 # ABP Framework Skills
 
-> Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.4.
+> Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.x (10.4/10.5), with dynamic per-solution version detection.
 
 <p align="center">
   <a href="#available-skills"><strong>23 Skills</strong></a> ·
@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/burakdmir/abp-skills/stargazers"><img src="https://img.shields.io/github/stars/burakdmir/abp-skills?style=for-the-badge&logo=github" alt="Stars"></a>
   <a href="https://github.com/burakdmir/abp-skills/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"></a>
-  <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4"></a>
+  <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4%20%2F%20v10.5-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4 / v10.5"></a>
   <a href="https://github.com/burakdmir/abp-skills/pulse"><img src="https://img.shields.io/github/last-commit/burakdmir/abp-skills/main?style=for-the-badge&logo=git&cacheSeconds=3600" alt="Last Commit"></a>
 </p>
 
@@ -20,7 +20,7 @@
 
 ## What is This?
 
-This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.4** (.NET 10). Each skill covers a specific ABP topic with:
+This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.x** — 10.4 and 10.5, both on .NET 10. The agent detects the solution's actual ABP version (from `Volo.Abp.*` package versions) and adapts its guidance; v10.5-only features are marked `v10.5+` throughout. Each skill covers a specific ABP topic with:
 
 - **YAML frontmatter** — `name` + `description` for agent auto-activation (Claude Code / OpenCode skill format)
 - **Trigger keywords** — when the AI should activate the skill
@@ -45,14 +45,14 @@ This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that 
 The `claude/` skills are also packaged as a first-class **Claude Code plugin** named `abp-sensei`, distributed through this repo's plugin marketplace. Installing it gives you, in one step:
 
 - **23 ABP skills** that auto-activate by topic (DDD, EF Core, multi-tenancy, microservices, …)
-- An **`abp-expert` subagent** — a senior ABP v10.4 architect (`/agents` → `abp-sensei:abp-expert`)
+- An **`abp-expert` subagent** — a senior ABP v10.x architect that detects and targets your solution's ABP version (`/agents` → `abp-sensei:abp-expert`)
 - **Slash commands** (`/abp-sensei:<command>`):
   | Command | What it does |
   |---|---|
   | `new-entity` | Scaffold a full DDD entity end-to-end (domain → migration → service → permission → test) |
   | `crud` | Generate a `CrudAppService` + DTOs + permissions for an aggregate |
   | `review` | Review your diff against ABP best practices & dependency rules |
-  | `upgrade-audit` | Audit a solution for ABP v10.4 / .NET 10 readiness |
+  | `upgrade-audit` | Audit a solution against the latest stable ABP (v10.5) / .NET 10 — or any target version you pass |
   | `explain` | Explain any ABP concept with a minimal idiomatic example |
 
 ### Install
@@ -170,8 +170,9 @@ your-project/
 ## Stats
 
 - **46 SKILL.md files** (23 Claude + 23 OpenCode)
-- **~9,960 total lines** of skill content
-- **ABP Framework v10.4** (.NET 10) documentation based — cross-checked against the official `ai-rules` and `docs`
+- **~10,090 total lines** of skill content
+- **ABP Framework v10.x (10.4/10.5)** (.NET 10) documentation based — cross-checked against the official `ai-rules`, `docs`, and the v10.5 migration guide
+- **Dynamic version detection** — guidance adapts to the solution's actual ABP version; v10.5-only features marked `v10.5+`
 - **YAML frontmatter** on every skill for agent auto-activation
 - **All examples** production-ready
 

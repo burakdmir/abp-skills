@@ -1,11 +1,11 @@
 ---
 name: abp-object-mapping
-description: "ABP Framework v10.4 object mapping quick reference: IObjectMapper, Mapperly (v10.4 default), AutoMapper profile/attribute, entity↔DTO. Use when you need object mapping in ABP."
+description: "ABP Framework v10.x (10.4/10.5) object mapping quick reference: IObjectMapper, Mapperly (default since v10.4), AutoMapper profile/attribute, entity↔DTO. Use when you need object mapping in ABP."
 ---
 
 # ABP Framework — Object Mapping
 
-ABP v10.4 object mapping. The `IObjectMapper` abstraction; **Mapperly** is the default (compile-time), AutoMapper is also supported.
+ABP v10.x object mapping. The `IObjectMapper` abstraction; **Mapperly** is the default (compile-time), AutoMapper is also supported.
 
 ## Trigger
 
@@ -52,7 +52,7 @@ public class MyProfile : Profile
 ## Best Practices
 
 1. Use the `ObjectMapper` abstraction (don't depend on the provider)
-2. Mapperly for new projects (the v10.4 default)
+2. Mapperly for new projects (default since v10.4)
 3. Keep mappings in the Application layer; use `validate: true` with AutoMapper
 4. On create/update, only map allowed fields
 

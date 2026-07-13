@@ -1,11 +1,11 @@
 ---
 name: abp-mongodb
-description: "ABP Framework v10.4 MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
+description: "ABP Framework v10.x (10.4/10.5) MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
 ---
 
 # ABP Framework — MongoDB
 
-ABP Framework v10.4 MongoDB integration. MongoDbContext, collection mapping, repository, indexes, transactions.
+ABP Framework v10.x (10.4/10.5) MongoDB integration. MongoDbContext, collection mapping, repository, indexes, transactions.
 
 ## Trigger
 
@@ -118,6 +118,10 @@ Connection: `mongodb://localhost:27017/YourProjectName?replicaSet=rs0`
 3. Define indexes in `CreateModel`
 4. Set up a replica set for transactions
 5. Define custom repositories in the MongoDB layer
+
+## v10.5+
+
+- MongoDB.Driver upgraded to 3.9.0 — align direct driver pins with ABP's version.
 
 ## Related
 

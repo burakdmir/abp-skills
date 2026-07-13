@@ -1,11 +1,11 @@
 ---
 name: abp-microservices
-description: "ABP Framework v10.4 microservice quick reference: Integration Services [IntegrationService], distributed events (RabbitMQ Outbox/Inbox), YARP gateway, OpenIddict, Entity Cache, database-per-service. Use when you need microservices or inter-service communication in ABP."
+description: "ABP Framework v10.x (10.4/10.5) microservice quick reference: Integration Services [IntegrationService], distributed events (RabbitMQ Outbox/Inbox), YARP gateway, OpenIddict, Entity Cache, database-per-service. Use when you need microservices or inter-service communication in ABP."
 ---
 
 # ABP Framework — Microservices
 
-ABP v10.4 microservice template (Business+). Synchronous = Integration Services, asynchronous = distributed events. YARP gateway + OpenIddict auth server.
+ABP v10.x microservice template (Business+). Synchronous = Integration Services, asynchronous = distributed events. YARP gateway + OpenIddict auth server.
 
 ## Trigger
 
