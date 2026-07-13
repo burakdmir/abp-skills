@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-A **content-only** repository: AI agent skill files for ABP Framework v10.4, targeting two tools — Claude Code and OpenCode. There is no application code, build system, test suite, or lint step. Every change is editing Markdown.
+A **content-only** repository: AI agent skill files for ABP Framework v10.x (10.4/10.5), targeting two tools — Claude Code and OpenCode. There is no application code, build system, test suite, or lint step. Every change is editing Markdown.
 
-The deliverable is 46 `SKILL.md` files (23 topics × 2 tools) plus repo docs (README, CONTRIBUTING, etc.). Skill content is written in **Turkish prose** with English code/technical terms. Targets ABP v10.4 on **.NET 10**.
+The deliverable is 46 `SKILL.md` files (23 topics × 2 tools) plus repo docs (README, CONTRIBUTING, etc.). Skill content is written in **English prose** with ABP/C# technical terms. Targets ABP v10.x (10.4 baseline + `v10.5+`-marked additions) on **.NET 10**. Version-sensitive guidance is dynamic: the agent/commands detect the solution's ABP version from `Volo.Abp.*` package versions and adapt.
 
 ## Architecture
 

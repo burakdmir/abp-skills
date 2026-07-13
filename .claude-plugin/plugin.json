@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "abp-sensei",
   "displayName": "ABP Sensei",
-  "version": "1.0.0",
-  "description": "Expert ABP Framework v10.4 (.NET 10) companion for Claude Code: 23 production-grounded skills, a specialized ABP architect subagent, and slash commands for entity scaffolding, code review, CRUD generation, and v10.4 upgrade audits. Covers DDD, EF Core/MongoDB, multi-tenancy, modularity, authorization, microservices, and more.",
+  "version": "1.1.0",
+  "description": "Expert ABP Framework v10.x (10.4/10.5, .NET 10) companion for Claude Code: 23 production-grounded skills, a specialized ABP architect subagent that detects your solution's ABP version and adapts, and slash commands for entity scaffolding, code review, CRUD generation, and upgrade audits. Covers DDD, EF Core/MongoDB, multi-tenancy, modularity, authorization, microservices, and more.",
   "author": {
     "name": "Burak Demir",
     "url": "https://github.com/burakdmir"

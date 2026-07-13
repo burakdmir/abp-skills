@@ -1,4 +1,21 @@
+# OS
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
 *.swp
 *.swo
 *~
+.idea/
+.vscode/
+
+# Local AI-tool state (never commit)
+.claude/settings.local.json
+.tokensave/
+.opencode/
+
+# Temp / backup
+*.tmp
+*.bak
+*.original.md

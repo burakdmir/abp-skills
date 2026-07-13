@@ -1,11 +1,11 @@
 ---
 name: abp-ddd
-description: "ABP Framework v10.4 DDD quick reference: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events, specification, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
+description: "ABP Framework v10.x (10.4/10.5) DDD quick reference: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events, specification, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
 ---
 
 # ABP Framework — Domain Driven Design (DDD)
 
-ABP Framework v10.4 DDD quick reference. Entity, Aggregate Root, Repository, Domain/Application Service, DTO.
+ABP Framework v10.x (10.4/10.5) DDD quick reference. Entity, Aggregate Root, Repository, Domain/Application Service, DTO.
 
 ## Trigger
 
@@ -110,7 +110,7 @@ public class CreateUpdateBookDto
 ```
 **Rule:** never expose entities, always DTOs.
 
-### Object Mapping (Mapperly — default in v10.4)
+### Object Mapping (Mapperly — default since v10.4)
 
 ```csharp
 [Mapper]

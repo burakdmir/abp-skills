@@ -1,11 +1,11 @@
 ---
 name: abp-infrastructure
-description: "ABP Framework v10.4 infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+description: "ABP Framework v10.x (10.4/10.5) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
 ---
 
 # ABP Framework — Infrastructure
 
-ABP Framework v10.4 infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
+ABP Framework v10.x (10.4/10.5) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
 
 ## Trigger
 
@@ -201,6 +201,11 @@ if (handle != null) { /* critical operation */ }
 5. Disable the data filter with `using`
 6. Settings for runtime-changeable values
 7. Features for per-tenant toggles
+
+## v10.5+
+
+- AWS blob provider supports S3-compatible services (R2, MinIO, B2, Wasabi): `aws.ServiceURL = "https://<account-id>.r2.cloudflarestorage.com"; aws.DisablePayloadSigning = true;`
+- Dynamic background worker capability markers: check `ISupportsRuntimeRegistration` / `ISupportsCronScheduling` on the manager; in-memory manager rejects cron — use Hangfire/Quartz for runtime cron scheduling.
 
 ## Related
 

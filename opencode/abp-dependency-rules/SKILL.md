@@ -1,11 +1,11 @@
 ---
 name: abp-dependency-rules
-description: "ABP Framework v10.4 layer dependency rules quick reference: layer direction, project reference matrix, anti-patterns (no DbContext in Application, don't expose IQueryable, don't return entity as DTO). Use when you need layer architecture/dependency rules in ABP."
+description: "ABP Framework v10.x (10.4/10.5) layer dependency rules quick reference: layer direction, project reference matrix, anti-patterns (no DbContext in Application, don't expose IQueryable, don't return entity as DTO). Use when you need layer architecture/dependency rules in ABP."
 ---
 
 # ABP Framework — Dependency Rules
 
-ABP v10.4 layer dependency guardrails.
+ABP v10.x layer dependency guardrails.
 
 ## Trigger
 

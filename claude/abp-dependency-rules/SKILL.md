@@ -1,11 +1,11 @@
 ---
 name: abp-dependency-rules
-description: "ABP Framework v10.4 layer dependency rules: layer direction (Domain.Shared→Domain→Application.Contracts→Application→HttpApi→Host), project reference matrix, anti-patterns (no DbContext in Application, don't expose IQueryable, don't return entity as DTO). Use when you need project/layer architecture or dependency rules in ABP."
+description: "ABP Framework v10.x (10.4/10.5) layer dependency rules: layer direction (Domain.Shared→Domain→Application.Contracts→Application→HttpApi→Host), project reference matrix, anti-patterns (no DbContext in Application, don't expose IQueryable, don't return entity as DTO). Use when you need project/layer architecture or dependency rules in ABP."
 ---
 
 # ABP Framework — Dependency Rules
 
-ABP Framework v10.4 layer dependency rules and project-structure guardrails. Correct dependency direction, use of abstractions, and common violations.
+ABP Framework v10.x (10.4/10.5) layer dependency rules and project-structure guardrails. Correct dependency direction, use of abstractions, and common violations.
 
 ## Trigger
 

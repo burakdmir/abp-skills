@@ -1,11 +1,11 @@
 ---
 name: abp-framework
-description: "ABP Framework v10.4 core guide: solution templates (app, app-nolayers, microservice), layered architecture, module system, base classes (ApplicationService/DomainService), Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
+description: "ABP Framework v10.x (10.4/10.5) core guide: solution templates (app, app-nolayers, microservice), layered architecture, module system, base classes (ApplicationService/DomainService), Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
 ---
 
 # ABP Framework — Core Skill
 
-Core development skill for ABP Framework v10.4. A guide to opinionated, DDD-based, modular ASP.NET Core application development.
+Core development skill for ABP Framework v10.x (10.4/10.5). A guide to opinionated, DDD-based, modular ASP.NET Core application development.
 
 ## Trigger
 
@@ -271,11 +271,33 @@ Configure<AbpMultiTenancyOptions>(options =>
 1. **Always define module dependencies with `AbpModule`** — use the `[DependsOn]` attribute
 2. **Use a GUID primary key** — generate a sequential GUID with `IGuidGenerator.Create()`
 3. **Use DTOs** — do not expose entities to the presentation layer
-4. **Use Mapperly** — for object-to-object mapping (the default in ABP 10.4)
+4. **Use Mapperly** — for object-to-object mapping (the default since ABP 10.4)
 5. **Use the repository pattern** — inject `IRepository<TEntity, TKey>`
 6. **Rely on Unit of Work conventions** — no need for manual UOW management
 7. **Prefer async methods** — write scalable code with `async/await`
 8. **Keep the domain layer isolated from the database provider** — use `IAsyncQueryableExecuter`
+
+## Version Detection & What's New
+
+This skill set covers **ABP 10.x** (10.4 and 10.5, both on .NET 10). Always detect the solution's actual ABP version before giving version-sensitive advice:
+
+1. `Directory.Packages.props` → `<PackageVersion Include="Volo.Abp.Core" Version="..." />` (central package management).
+2. `*.csproj` → `<PackageReference Include="Volo.Abp.*" Version="..." />`.
+3. `common.props` / custom `AbpVersion` MSBuild property.
+4. No solution present → assume the latest stable (**v10.5**).
+
+v10.5 (released 2026-06-30) has **no breaking changes** over v10.4; everything documented for 10.4 also applies to 10.5. New in v10.5 — only recommend these when the detected version is ≥ 10.5:
+
+| Change | Area | Skill |
+|--------|------|-------|
+| S3-compatible blob storage (`ServiceURL`, `DisablePayloadSigning` — R2, MinIO, B2, Wasabi, Spaces) | BLOB Storing | `abp-infrastructure` |
+| Dynamic background worker capability markers (`ISupportsRuntimeRegistration`, `ISupportsCronScheduling`) | Background Workers | `abp-infrastructure` |
+| Single-active identity token providers (`AbpDefaultTokenProvider`, 10-min default lifetime) | Identity | `abp-authorization` |
+| OpenIddict default scope fallback (opt-in, `AbpOpenIddictAspNetCoreOptions`) | Auth | `abp-authorization` |
+| MySQL `ResourcePermissionGrant` index length fix | EF Core | `abp-efcore` |
+| Blazorise 2.2.1, MongoDB.Driver 3.9.0, CodeMirror 6.0.2 | Dependencies | `abp-ui`, `abp-mongodb` |
+
+Migration guide: https://abp.io/docs/latest/release-info/migration-guides/abp-10-5
 
 ## Resources
 

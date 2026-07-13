@@ -1,11 +1,11 @@
 ---
 name: abp-ui
-description: "ABP Framework v10.4 UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
+description: "ABP Framework v10.x (10.4/10.5) UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
 ---
 
 # ABP Framework — UI & Frontend
 
-ABP Framework v10.4 UI framework integrations. MVC, Blazor, Angular, React, theming.
+ABP Framework v10.x (10.4/10.5) UI framework integrations. MVC, Blazor, Angular, React, theming.
 
 ## Trigger
 
@@ -112,6 +112,10 @@ public static class BookStorePermissions
 2. Use Blazor Web App (.NET 10)
 3. Use the `--modern` flag for React
 4. Define permissions in a constant class
+
+## v10.5+
+
+- Blazorise upgraded to 2.2.1; CMS Kit editor uses CodeMirror 6.0.2. Align direct pins and re-test custom Blazor components / editor pages.
 
 ## Related
 

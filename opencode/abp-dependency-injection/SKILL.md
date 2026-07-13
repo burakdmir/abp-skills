@@ -1,6 +1,6 @@
 ---
 name: abp-dependency-injection
-description: "ABP Framework v10.4 dependency injection: ITransientDependency/IScopedDependency/ISingletonDependency, [Dependency], [ExposeServices], LazyServiceProvider, property injection, Autofac. Use when you need service registration, DI, or automatic registration in ABP."
+description: "ABP Framework v10.x (10.4/10.5) dependency injection: ITransientDependency/IScopedDependency/ISingletonDependency, [Dependency], [ExposeServices], LazyServiceProvider, property injection, Autofac. Use when you need service registration, DI, or automatic registration in ABP."
 ---
 
 # ABP Dependency Injection Skill

@@ -1,6 +1,6 @@
 ---
 name: abp-authorization
-description: "ABP Framework v10.4 authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+description: "ABP Framework v10.x (10.4/10.5) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
 ---
 
 # ABP Authorization Skill
@@ -308,6 +308,41 @@ public abstract class BookStoreAppService : ApplicationService
 ```
 
 ---
+
+## What's New in v10.5
+
+### Single-Active Identity Token Providers (v10.5+)
+
+ABP replaces ASP.NET Core Identity's default `DataProtectorTokenProvider` with `AbpDefaultTokenProvider`, and `LinkUserTokenProvider` uses the same single-active infrastructure. Tokens are now **single-active per user/purpose**: generating a new token invalidates the previous one. Default lifetime is 10 minutes:
+
+```csharp
+Configure<AbpDefaultTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromMinutes(10);
+});
+
+Configure<AbpLinkUserTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromMinutes(10);
+});
+```
+
+After upgrading to 10.5, re-test login, two-factor, forced/periodic password change, and link-user flows. If a flow sends multiple tokens for the same purpose and expects older ones to stay valid, switch it to use only the latest token.
+
+### OpenIddict Default Scope Fallback (v10.5+, opt-in)
+
+For `client_credentials`, `password`, and token-exchange grants, ABP can fall back to the client application's registered scopes when the request omits the `scope` parameter. Disabled by default:
+
+```csharp
+Configure<AbpOpenIddictAspNetCoreOptions>(options =>
+{
+    options.UseDefaultScopesForClientCredentials = true;
+    options.UseDefaultScopesForPassword = true;
+    options.UseDefaultScopesForTokenExchange = true;
+});
+```
+
+After enabling, re-test token issuance for the affected grant types and confirm the resulting scopes/resources match authorization expectations.
 
 ## Related Modules
 

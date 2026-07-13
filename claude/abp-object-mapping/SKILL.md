@@ -1,11 +1,11 @@
 ---
 name: abp-object-mapping
-description: "ABP Framework v10.4 object mapping: IObjectMapper, Mapperly (v10.4 default, MapperBase), AutoMapper profiles, entity↔DTO conversion, AutoMap attributes. Use when you need object mapping or DTO mapping in ABP."
+description: "ABP Framework v10.x (10.4/10.5) object mapping: IObjectMapper, Mapperly (default since v10.4, MapperBase), AutoMapper profiles, entity↔DTO conversion, AutoMap attributes. Use when you need object mapping or DTO mapping in ABP."
 ---
 
 # ABP Framework — Object Mapping
 
-ABP Framework v10.4 object mapping guide. Entity↔DTO conversion via the `IObjectMapper` abstraction. In v10.4, **Mapperly** (compile-time, source-generated) is the default provider; **AutoMapper** is also supported. Stick with whichever one the solution already uses.
+ABP Framework v10.x (10.4/10.5) object mapping guide. Entity↔DTO conversion via the `IObjectMapper` abstraction. Since v10.4, **Mapperly** (compile-time, source-generated) is the default provider; **AutoMapper** is also supported. Stick with whichever one the solution already uses.
 
 ## Trigger
 
@@ -43,7 +43,7 @@ public class BookAppService : ApplicationService
 
 In places without a base class, inject `IObjectMapper`.
 
-## Mapperly (v10.4 Default)
+## Mapperly (Default Since v10.4)
 
 A compile-time source generator — no reflection, fast. ABP integration uses `MapperBase<TSource, TDestination>`:
 
@@ -140,7 +140,7 @@ public class CreateBookDto { public string Name { get; set; } }
 ## Best Practices
 
 1. **Use the `ObjectMapper` abstraction** — don't depend directly on the provider (Mapperly/AutoMapper)
-2. **Stick with the solution's provider** — for new projects, prefer Mapperly (the v10.4 default)
+2. **Stick with the solution's provider** — for new projects, prefer Mapperly (default since v10.4)
 3. **Keep mappings in the Application layer** — entity↔DTO conversion is an application responsibility
 4. **Use `validate: true` with AutoMapper** — catch unmapped fields early
 5. **Map entity to DTO, do the reverse carefully** — on create/update, only map allowed fields

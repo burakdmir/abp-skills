@@ -1,11 +1,11 @@
 ---
 name: abp-infrastructure
-description: "ABP Framework v10.4 infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+description: "ABP Framework v10.x (10.4/10.5) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
 ---
 
 # ABP Framework — Infrastructure
 
-Guide to ABP Framework v10.4 infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
+Guide to ABP Framework v10.x (10.4/10.5) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
 
 ## Trigger
 
@@ -845,6 +845,37 @@ Configure<AbpClockOptions>(options =>
 8. **Distributed Lock:** Use for operations requiring concurrent execution control
 
 ---
+
+## What's New in v10.5
+
+### S3-Compatible Blob Storage (v10.5+)
+
+The AWS blob provider (`Volo.Abp.BlobStoring.Aws`) now supports S3-compatible services (Cloudflare R2, MinIO, Backblaze B2, Wasabi, DigitalOcean Spaces) via a custom endpoint:
+
+```csharp
+Configure<AbpBlobStoringOptions>(options =>
+{
+    options.Containers.ConfigureDefault(container =>
+    {
+        container.UseAws(aws =>
+        {
+            aws.ServiceURL = "https://<account-id>.r2.cloudflarestorage.com";
+            aws.DisablePayloadSigning = true; // only for providers without AWS SDK v4 streaming payload signing
+        });
+    });
+});
+```
+
+Keep `DisablePayloadSigning` off for providers that support default AWS SDK signing (including real S3).
+
+### Dynamic Background Worker Capability Markers (v10.5+)
+
+Dynamic background worker managers expose their capabilities via marker interfaces:
+
+- `ISupportsRuntimeRegistration` — worker can be registered at runtime.
+- `ISupportsCronScheduling` — worker supports cron expressions.
+
+Hangfire and Quartz managers implement both. The default in-memory manager supports runtime registration only and **rejects cron expressions**; TickerQ's dynamic manager exposes neither. If you build UI or integration logic on `IDynamicBackgroundWorkerManager`, check these markers before offering runtime registration or cron scheduling; use Hangfire or Quartz when runtime cron scheduling is required.
 
 ## Related
 

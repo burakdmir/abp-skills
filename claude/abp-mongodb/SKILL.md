@@ -1,11 +1,11 @@
 ---
 name: abp-mongodb
-description: "ABP Framework v10.4 MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
+description: "ABP Framework v10.x (10.4/10.5) MongoDB: AbpMongoDbContext, collection mapping, index, transaction, replica set, repository. Use when working with MongoDB, document databases, or MongoDB repositories in ABP."
 ---
 
 # ABP Framework — MongoDB
 
-ABP Framework v10.4 MongoDB integration guide. MongoDbContext, collection mapping, repository, indexes, transactions.
+ABP Framework v10.x (10.4/10.5) MongoDB integration guide. MongoDbContext, collection mapping, repository, indexes, transactions.
 
 ## Trigger
 
@@ -298,6 +298,10 @@ public class MyCustomMongoDbBulkOperationProvider : IMongoDbBulkOperationProvide
 7. **Extra Properties are natively supported in MongoDB** — Stored as a separate element instead of a JSON field
 
 ---
+
+## What's New in v10.5
+
+- **MongoDB.Driver upgraded to 3.9.0 (v10.5+).** If your solution pins MongoDB.Driver directly, align it with ABP's version and re-run integration tests that use the driver directly.
 
 ## Related
 

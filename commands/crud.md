@@ -1,12 +1,12 @@
 ---
-description: Generate an ABP CrudAppService (or ICrudAppService implementation) with DTOs and permissions for an existing aggregate, ABP v10.4 style.
+description: Generate an ABP CrudAppService (or ICrudAppService implementation) with DTOs and permissions for an existing aggregate, ABP v10.x style.
 ---
 
 # Generate a CRUD application service
 
 Aggregate / requirements: **$ARGUMENTS**
 
-For the given aggregate root, generate a complete CRUD application layer following the `abp-ddd`, `abp-api`, and `abp-object-mapping` skills. First locate the entity and confirm its key type and properties.
+For the given aggregate root, generate a complete CRUD application layer following the `abp-ddd`, `abp-api`, and `abp-object-mapping` skills. First locate the entity and confirm its key type and properties, and detect the solution's ABP version (`Volo.Abp.*` package version in `Directory.Packages.props` / `*.csproj`) so generated code only uses APIs available in that version.
 
 Produce:
 

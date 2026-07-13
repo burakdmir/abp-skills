@@ -1,11 +1,11 @@
 ---
 name: abp-deployment
-description: "ABP Framework v10.4 deployment quick reference: clustered/stateless, distributed cache (Redis), BLOB provider, distributed lock, SignalR backplane, DataProtection, ForwardedHeaders, SSL, OpenIddict prod certificates, Docker/Helm. Use when you need to deploy an ABP application to production."
+description: "ABP Framework v10.x (10.4/10.5) deployment quick reference: clustered/stateless, distributed cache (Redis), BLOB provider, distributed lock, SignalR backplane, DataProtection, ForwardedHeaders, SSL, OpenIddict prod certificates, Docker/Helm. Use when you need to deploy an ABP application to production."
 ---
 
 # ABP Framework — Deployment
 
-ABP v10.4 deployment. Standard .NET deployment + ABP-specific clustered/proxy/OpenIddict notes.
+ABP v10.x deployment. Standard .NET deployment + ABP-specific clustered/proxy/OpenIddict notes.
 
 ## Trigger
 
