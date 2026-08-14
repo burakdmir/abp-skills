@@ -3,14 +3,15 @@
 > Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.x (10.4–10.6), with dynamic per-solution version detection.
 
 <p align="center">
-  <a href="#available-skills"><strong>26 Skills</strong></a> ·
+  <a href="#skill-matrix"><strong>26 Skills</strong></a> ·
   <a href="#quick-start"><strong>Quick Start</strong></a> ·
-  <a href="#skill-matrix"><strong>Skill Matrix</strong></a> ·
+  <a href="CHANGELOG.md"><strong>Changelog</strong></a> ·
   <a href="#contributing"><strong>Contributing</strong></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/burakdmir/abp-skills/stargazers"><img src="https://img.shields.io/github/stars/burakdmir/abp-skills?style=for-the-badge&logo=github" alt="Stars"></a>
+  <a href="https://github.com/burakdmir/abp-skills/blob/main/CHANGELOG.md"><img src="https://img.shields.io/badge/Plugin-v1.2.0-blue.svg?style=for-the-badge" alt="Plugin v1.2.0"></a>
   <a href="https://github.com/burakdmir/abp-skills/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"></a>
   <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4--v10.6-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4–v10.6"></a>
   <a href="https://github.com/burakdmir/abp-skills/pulse"><img src="https://img.shields.io/github/last-commit/burakdmir/abp-skills/main?style=for-the-badge&logo=git&cacheSeconds=3600" alt="Last Commit"></a>
@@ -34,7 +35,7 @@ This repository contains **52 skill files** (26 Claude Code + 26 OpenCode) that 
 | | Claude Code | OpenCode |
 |---|---|---|
 | **Style** | Detailed, comprehensive | Compact, quick-reference |
-| **Lines** | ~210–850 per file | ~55–230 per file |
+| **Lines** | ~110–940 per file | ~50–220 per file |
 | **Best for** | Deep understanding, complex scenarios | Fast lookup, inline reference |
 | **Format** | Full explanations + patterns | Quick reference + snippets |
 
@@ -175,7 +176,7 @@ your-project/
 ## Stats
 
 - **52 SKILL.md files** (26 Claude + 26 OpenCode)
-- **~11,510 total lines** of skill content
+- **~11,500 total lines** of skill content
 - **ABP Framework v10.x (10.4–10.6)** (.NET 10) documentation based — cross-checked against the official `ai-rules`, `docs`, and the v10.5/v10.6 migration guides
 - **Dynamic version detection** — guidance adapts to the solution's actual ABP version; version-specific features marked `v10.5+` / `v10.6+`
 - **YAML frontmatter** on every skill for agent auto-activation
@@ -206,7 +207,7 @@ Open an issue using the [Skill Request template](.github/ISSUE_TEMPLATE/skill-re
 - [ABP Framework Official Docs](https://abp.io/docs/latest)
 - [ABP Community](https://community.abp.io/)
 - [ABP GitHub Repository](https://github.com/abpframework/abp)
-- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code/overview)
+- [Claude Code Docs](https://code.claude.com/docs)
 - [OpenCode Docs](https://opencode.ai)
 
 ---
