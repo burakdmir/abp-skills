@@ -1,11 +1,11 @@
 ---
 name: abp-ddd
-description: "ABP Framework v10.x (10.4/10.5) Domain Driven Design: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events (AddLocalEvent/AddDistributedEvent), specification, value object, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
+description: "ABP Framework v10.x (10.4–10.6) Domain Driven Design: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events (AddLocalEvent/AddDistributedEvent), specification, value object, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
 ---
 
 # ABP Framework — Domain Driven Design (DDD)
 
-A guide to applying DDD in ABP Framework v10.x (10.4/10.5). Entity, Aggregate Root, Repository, Domain Service, Application Service, and DTO design patterns.
+A guide to applying DDD in ABP Framework v10.x (10.4–10.6). Entity, Aggregate Root, Repository, Domain Service, Application Service, and DTO design patterns.
 
 ## Trigger
 
@@ -708,6 +708,46 @@ public class MyService : ITransientDependency, IUnitOfWorkEnabled
 8. **Use FullAuditedAggregateRoot for soft-delete** — `ISoftDelete` implementation is automatic
 9. **Use the CrudAppService base class** — reduces boilerplate for CRUD operations
 10. **Rely on UOW conventions** — manual UOW is only needed in special cases
+
+---
+
+## Concurrency Check
+
+ABP uses **optimistic concurrency control** via the `IHasConcurrencyStamp` interface (a single `ConcurrencyStamp` string property). ABP sets a unique value when the record is created and compares/regenerates it on every update — a mismatch throws `AbpDbConcurrencyException` (ABP shows a user-friendly error message if you don't handle it manually).
+
+Aggregate root base classes (`AggregateRoot`, `CreationAuditedAggregateRoot`, `AuditedAggregateRoot`, `FullAuditedAggregateRoot` and their `<TKey>` variants) already implement `IHasConcurrencyStamp` — implement it manually only on plain entities.
+
+Round-trip the stamp through the DTOs: implement `IHasConcurrencyStamp` on both the output DTO and the update DTO, then copy the input value onto the entity before updating:
+
+```csharp
+public class BookDto : EntityDto<Guid>, IHasConcurrencyStamp
+{
+    public string ConcurrencyStamp { get; set; }
+}
+
+public class UpdateBookDto : IHasConcurrencyStamp
+{
+    public string ConcurrencyStamp { get; set; }
+}
+
+public class BookAppService : ApplicationService, IBookAppService
+{
+    public virtual async Task<BookDto> UpdateAsync(Guid id, UpdateBookDto input)
+    {
+        var book = await BookRepository.GetAsync(id);
+
+        book.ConcurrencyStamp = input.ConcurrencyStamp;
+
+        // set other input values to the entity...
+        // use autoSave: true to get the latest ConcurrencyStamp
+        await BookRepository.UpdateAsync(book, autoSave: true);
+    }
+}
+```
+
+**Rules:**
+- In a unit of work, call `SaveChangesAsync` (or use `autoSave: true`) to get the newly generated `ConcurrencyStamp` after create/update
+- If the client sends a stale stamp, the update fails with `AbpDbConcurrencyException` — the user must reload the latest data
 
 ---
 

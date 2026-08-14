@@ -1,5 +1,6 @@
 ---
 description: Scaffold a complete ABP DDD entity end-to-end (domain → contracts → application service → EF Core mapping + migration → permissions → integration test) for ABP v10.x / .NET 10.
+argument-hint: <EntityName> [properties, module, details…]
 ---
 
 # Scaffold an ABP entity end-to-end

@@ -1,11 +1,11 @@
 ---
 name: abp-api
-description: "ABP Framework v10.x (10.4/10.5) API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
+description: "ABP Framework v10.x (10.4–10.6) API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
 ---
 
 # ABP Framework — API Development
 
-ABP Framework v10.x (10.4/10.5) API development. Auto API Controllers, Dynamic/Static C# Clients, Swagger, API Versioning.
+ABP Framework v10.x (10.4–10.6) API development. Auto API Controllers, Dynamic/Static C# Clients, Swagger, API Versioning.
 
 ## Trigger
 
@@ -106,6 +106,10 @@ public class BookAppService : ApplicationService, IBookAppService { }
 3. Prefer static proxies in production
 4. Add JWT auth in Swagger
 5. Ensure backward compatibility with API versioning
+
+## v10.6+
+
+- API definition exposes response `ContentTypes` + `IsRemoteStream`; Angular/jQuery upload proxies send `IRemoteStreamContent` DTOs as multipart `FormData` — regenerate proxies after upgrading.
 
 ## Related
 

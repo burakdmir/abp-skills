@@ -1,11 +1,11 @@
 ---
 name: abp-testing
-description: "ABP Framework v10.x (10.4/10.5) testing: integration tests, *TestBase classes (Domain/Application/EntityFrameworkCore), SQLite in-memory, Shouldly, NSubstitute, data seeding, CurrentUser/CurrentTenant.Change, AddAlwaysAllowAuthorization. Use when you need to write unit/integration tests in ABP."
+description: "ABP Framework v10.x (10.4–10.6) testing: integration tests, *TestBase classes (Domain/Application/EntityFrameworkCore), SQLite in-memory, Shouldly, NSubstitute, data seeding, CurrentUser/CurrentTenant.Change, AddAlwaysAllowAuthorization. Use when you need to write unit/integration tests in ABP."
 ---
 
 # ABP Framework — Testing
 
-ABP Framework v10.x (10.4/10.5) testing guide. ABP prefers **integration tests** over unit tests: they run with real services + a real (SQLite in-memory) database, and internal services are not mocked.
+ABP Framework v10.x (10.4–10.6) testing guide. ABP prefers **integration tests** over unit tests: they run with real services + a real (SQLite in-memory) database, and internal services are not mocked.
 
 ## Trigger
 

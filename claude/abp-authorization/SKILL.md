@@ -1,6 +1,6 @@
 ---
 name: abp-authorization
-description: "ABP Framework v10.x (10.4/10.5) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+description: "ABP Framework v10.x (10.4–10.6) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
 ---
 
 # ABP Authorization Skill
@@ -343,6 +343,58 @@ Configure<AbpOpenIddictAspNetCoreOptions>(options =>
 ```
 
 After enabling, re-test token issuance for the affected grant types and confirm the resulting scopes/resources match authorization expectations.
+
+## What's New in v10.6
+
+### Antiforgery User Id Claim Issuer Normalization (v10.6+, default on)
+
+ABP normalizes the user id claim issuer when generating and validating antiforgery tokens, and Razor Pages use ABP's antiforgery validation path. This fixes token mismatches when a token-authenticated SPA and cookie-authenticated MVC/Razor Pages share the same origin. Re-test mixed-auth flows after upgrading; opt out only if you intentionally rely on the issuer-specific identity:
+
+```csharp
+Configure<AbpAntiForgeryOptions>(options =>
+{
+    options.NormalizeUserIdClaimIssuer = false;
+});
+```
+
+### OpenIddict & Token Forwarding Fixes (v10.6+)
+
+- Interactive authentication cookies no longer carry a stale `client_id` after principal refresh (already-corrupted cookies self-heal) — fixes intermittent wrong `ClientId` values in audit logs.
+- `HttpContextAbpAccessTokenProvider` forwards the incoming access token for **any** authenticated request, including `client_credentials` — re-test service-to-service calls that relied on the configured identity-client fallback.
+
+## Dynamic Claims
+
+Claims in a token/cookie are frozen until re-authentication — a revoked role stays effective until re-login. The dynamic claims feature overrides the configured claim values with their latest values on each request. Disabled by default at the framework level, but enabled by default in startup templates since v8.0.
+
+Enable it and add the middleware to every application that performs authentication (including the auth server):
+
+```csharp
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+    {
+        options.IsDynamicClaimsEnabled = true;
+        // Tiered solution (separate UI app): point to the auth server
+        options.RemoteRefreshUrl = configuration["AuthServerUrl"] + options.RemoteRefreshUrl;
+    });
+}
+
+public override void OnApplicationInitialization(ApplicationInitializationContext context)
+{
+    //...
+    app.UseDynamicClaims(); // before UseAuthorization
+    app.UseAuthorization();
+}
+```
+
+**Contributors** (`IAbpDynamicClaimsPrincipalContributor`, pre-built):
+- `IdentityDynamicClaimsPrincipalContributor` — Identity module; generates the actual dynamic claims and writes them to the distributed cache (auth server side)
+- `RemoteDynamicClaimsPrincipalContributor` — tiered UI app; reads the distributed cache, falls back to an HTTP call to the auth server (`RemoteRefreshUrl` must be set)
+- `WebRemoteDynamicClaimsPrincipalContributor` — same idea for microservice apps; opt-in via `WebRemoteDynamicClaimsPrincipalContributorOptions.IsEnabled`
+
+Custom contributor: implement `IAbpDynamicClaimsPrincipalContributor` and register it in DI — `ContributeAsync` runs on every HTTP request, so cache inside it.
+
+**Key options** (`AbpClaimsPrincipalFactoryOptions`): `IsDynamicClaimsEnabled`, `RemoteRefreshUrl` (default `/api/account/dynamic-claims/refresh`), `IsRemoteRefreshEnabled` (the Identity module sets it to `false`, so remote contributors are not registered there), `DynamicClaims` (only listed claim types are overridden), `ClaimsMap` (auth-server↔client claim type mapping).
 
 ## Related Modules
 

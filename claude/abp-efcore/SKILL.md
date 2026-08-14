@@ -1,11 +1,11 @@
 ---
 name: abp-efcore
-description: "ABP Framework v10.x (10.4/10.5) Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
+description: "ABP Framework v10.x (10.4–10.6) Entity Framework Core: AbpDbContext, ConfigureByConvention, AddAbpDbContext, repository (EfCoreRepository), migration, PostgreSQL/MySQL/SQLite/Oracle. Use when working with EF Core, DbContext, migrations, or repository implementation in ABP."
 ---
 
 # ABP Framework — Entity Framework Core
 
-A guide to EF Core integration in ABP Framework v10.x (10.4/10.5). DbContext, repository, migration, eager/lazy loading, and advanced topics.
+A guide to EF Core integration in ABP Framework v10.x (10.4–10.6). DbContext, repository, migration, eager/lazy loading, and advanced topics.
 
 ## Trigger
 

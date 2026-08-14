@@ -1,5 +1,6 @@
 ---
 description: Review code or the current diff against ABP Framework v10.x best practices — layering, dependency rules, DDD, async, security, and deprecated APIs.
+argument-hint: [paths | glob] (empty = working diff)
 ---
 
 # ABP best-practices review

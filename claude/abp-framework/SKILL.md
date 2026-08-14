@@ -1,11 +1,11 @@
 ---
 name: abp-framework
-description: "ABP Framework v10.x (10.4/10.5) core guide: solution templates (app, app-nolayers, microservice), layered architecture, module system, base classes (ApplicationService/DomainService), Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
+description: "ABP Framework v10.x (10.4–10.6) core guide: solution templates (app, app-nolayers, microservice), layered architecture, module system, base classes (ApplicationService/DomainService), Clock/GuidGenerator/CurrentUser/LazyServiceProvider, .NET 10. Use when creating an ABP project, or when architecture or core conventions are needed."
 ---
 
 # ABP Framework — Core Skill
 
-Core development skill for ABP Framework v10.x (10.4/10.5). A guide to opinionated, DDD-based, modular ASP.NET Core application development.
+Core development skill for ABP Framework v10.x (10.4–10.6). A guide to opinionated, DDD-based, modular ASP.NET Core application development.
 
 ## Trigger
 
@@ -279,12 +279,12 @@ Configure<AbpMultiTenancyOptions>(options =>
 
 ## Version Detection & What's New
 
-This skill set covers **ABP 10.x** (10.4 and 10.5, both on .NET 10). Always detect the solution's actual ABP version before giving version-sensitive advice:
+This skill set covers **ABP 10.x** (10.4 through 10.6, all on .NET 10). Always detect the solution's actual ABP version before giving version-sensitive advice:
 
 1. `Directory.Packages.props` → `<PackageVersion Include="Volo.Abp.Core" Version="..." />` (central package management).
 2. `*.csproj` → `<PackageReference Include="Volo.Abp.*" Version="..." />`.
 3. `common.props` / custom `AbpVersion` MSBuild property.
-4. No solution present → assume the latest stable (**v10.5**).
+4. No solution present → assume the latest stable (**v10.6**).
 
 v10.5 (released 2026-06-30) has **no breaking changes** over v10.4; everything documented for 10.4 also applies to 10.5. New in v10.5 — only recommend these when the detected version is ≥ 10.5:
 
@@ -298,6 +298,20 @@ v10.5 (released 2026-06-30) has **no breaking changes** over v10.4; everything d
 | Blazorise 2.2.1, MongoDB.Driver 3.9.0, CodeMirror 6.0.2 | Dependencies | `abp-ui`, `abp-mongodb` |
 
 Migration guide: https://abp.io/docs/latest/release-info/migration-guides/abp-10-5
+
+v10.6 (released 2026-07-27) has **no breaking changes** for typical applications — the new runtime features are opt-in, and migration action is only needed for custom background job stores/workers and custom AI Management chunk repositories. New in v10.6 — only recommend these when the detected version is ≥ 10.6:
+
+| Change | Area | Skill |
+|--------|------|-------|
+| Background jobs: dedicated workers (`AddDedicatedWorker`), parallel execution (`MaxParallelJobExecutionCount`), successful-job retention (`StoreSuccessfulJobs` + EF `CompletionTime` column) | Background Jobs | `abp-infrastructure` |
+| API definition response `ContentTypes` + `IsRemoteStream`; upload proxies send multipart `FormData` | API / Proxies | `abp-api` |
+| Angular 22.0.x + locale-loading fallback | UI | `abp-ui` |
+| Antiforgery user-id claim issuer normalization (default on, `AbpAntiForgeryOptions.NormalizeUserIdClaimIssuer`) | Security | `abp-authorization` |
+| OpenIddict cookie `client_id` fix; access-token forwarding for authenticated client requests | Auth | `abp-authorization` |
+| `ThreadCurrentPrincipalAccessor` returns anonymous principal (never `null`) | Core | — |
+| MongoDB.Driver 3.10.0, Swashbuckle 10.2.3, Microsoft.Data.SqlClient 7.0.2 | Dependencies | `abp-mongodb`, `abp-api` |
+
+Migration guides: https://abp.io/docs/latest/release-info/migration-guides/abp-10-6 · Angular UI: https://abp.io/docs/latest/release-info/migration-guides/abp-10-6-angular-22
 
 ## Resources
 

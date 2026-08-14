@@ -1,6 +1,6 @@
 ---
 name: abp-authorization
-description: "ABP Framework v10.x (10.4/10.5) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
+description: "ABP Framework v10.x (10.4–10.6) authorization: defining permissions (PermissionDefinitionProvider), [Authorize], CheckPolicyAsync/IsGrantedAsync, CurrentUser, IPermissionManager, resource-based auth, multi-tenancy permissions. Use when you need permission, role or access checks in ABP."
 ---
 
 # ABP Authorization Skill
@@ -61,6 +61,17 @@ await _authService.IsGrantedAsync("PermissionName");
 
 - Identity token providers are single-active per user/purpose (`AbpDefaultTokenProvider`, 10-min default lifetime via `AbpDefaultTokenProviderOptions`/`AbpLinkUserTokenProviderOptions`). Re-test 2FA, password change, and link-user flows after upgrading.
 - OpenIddict default-scope fallback (opt-in): `AbpOpenIddictAspNetCoreOptions.UseDefaultScopesForClientCredentials/Password/TokenExchange = true`.
+
+## v10.6+
+
+- Antiforgery user-id claim issuer normalization is on by default (`AbpAntiForgeryOptions.NormalizeUserIdClaimIssuer`) — re-test mixed SPA + MVC flows.
+- `HttpContextAbpAccessTokenProvider` forwards the incoming access token for any authenticated request (incl. `client_credentials`).
+
+## Dynamic Claims
+
+- Overrides token/cookie claims with fresh values on each request (e.g. a revoked role takes effect without re-login). Enable: `AbpClaimsPrincipalFactoryOptions.IsDynamicClaimsEnabled = true` + `app.UseDynamicClaims()` before `UseAuthorization` (default-on in templates since v8.0).
+- Tiered UI app: also set `options.RemoteRefreshUrl = authServerUrl + options.RemoteRefreshUrl`.
+- Custom contributor: implement `IAbpDynamicClaimsPrincipalContributor` + register in DI (`ContributeAsync` runs every request — cache it). Built-ins: Identity (auth server), Remote (tiered UI), WebRemote (microservices, opt-in).
 
 ## Related
 

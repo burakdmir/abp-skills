@@ -1,11 +1,11 @@
 ---
 name: abp-ui
-description: "ABP Framework v10.x (10.4/10.5) UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
+description: "ABP Framework v10.x (10.4–10.6) UI: MVC/Razor Pages (AbpPageModel), Blazor (AbpComponentBase), Angular, React (--modern), theming (LeptonX), menu contributor, dynamic proxy. Use when developing frontend, UI, pages, or components in ABP."
 ---
 
 # ABP Framework — UI & Frontend
 
-ABP Framework v10.x (10.4/10.5) UI framework integrations. MVC, Blazor, Angular, React, theming.
+ABP Framework v10.x (10.4–10.6) UI framework integrations. MVC, Blazor, Angular, React, theming.
 
 ## Trigger
 
@@ -116,6 +116,10 @@ public static class BookStorePermissions
 ## v10.5+
 
 - Blazorise upgraded to 2.2.1; CMS Kit editor uses CodeMirror 6.0.2. Align direct pins and re-test custom Blazor components / editor pages.
+
+## v10.6+
+
+- Angular packages/templates target Angular 22.0.x (locale fallback added) — upgrade app deps together with ABP NPM packages, regenerate proxies; see the `abp-10-6-angular-22` guide.
 
 ## Related
 

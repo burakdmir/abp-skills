@@ -168,3 +168,8 @@ jobs:
           fi
           echo "✅ Claude Code plugin (abp-sensei) is valid"
           echo "## ✅ Plugin validation passed" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Official Claude Code plugin validator (--strict)
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate . --strict
