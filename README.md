@@ -1,9 +1,9 @@
 # ABP Framework Skills
 
-> Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.x (10.4/10.5), with dynamic per-solution version detection.
+> Comprehensive AI agent skill files for **Claude Code** and **OpenCode** covering ABP Framework v10.x (10.4–10.6), with dynamic per-solution version detection.
 
 <p align="center">
-  <a href="#available-skills"><strong>23 Skills</strong></a> ·
+  <a href="#available-skills"><strong>26 Skills</strong></a> ·
   <a href="#quick-start"><strong>Quick Start</strong></a> ·
   <a href="#skill-matrix"><strong>Skill Matrix</strong></a> ·
   <a href="#contributing"><strong>Contributing</strong></a>
@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/burakdmir/abp-skills/stargazers"><img src="https://img.shields.io/github/stars/burakdmir/abp-skills?style=for-the-badge&logo=github" alt="Stars"></a>
   <a href="https://github.com/burakdmir/abp-skills/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"></a>
-  <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4%20%2F%20v10.5-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4 / v10.5"></a>
+  <a href="https://abp.io/docs/latest"><img src="https://img.shields.io/badge/ABP-v10.4--v10.6-6b21a8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTUtMTAtNXpNMiAxN2wxMCA1IDEwLTVNMiAxMmwxMCA1IDEwLTUiLz48L3N2Zz4=" alt="ABP v10.4–v10.6"></a>
   <a href="https://github.com/burakdmir/abp-skills/pulse"><img src="https://img.shields.io/github/last-commit/burakdmir/abp-skills/main?style=for-the-badge&logo=git&cacheSeconds=3600" alt="Last Commit"></a>
 </p>
 
@@ -20,7 +20,7 @@
 
 ## What is This?
 
-This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.x** — 10.4 and 10.5, both on .NET 10. The agent detects the solution's actual ABP version (from `Volo.Abp.*` package versions) and adapts its guidance; v10.5-only features are marked `v10.5+` throughout. Each skill covers a specific ABP topic with:
+This repository contains **52 skill files** (26 Claude Code + 26 OpenCode) that teach AI coding agents how to work effectively with **ABP Framework v10.x** — 10.4 through 10.6, all on .NET 10. The agent detects the solution's actual ABP version (from `Volo.Abp.*` package versions) and adapts its guidance; version-specific features are marked `v10.5+` / `v10.6+` throughout. Each skill covers a specific ABP topic with:
 
 - **YAML frontmatter** — `name` + `description` for agent auto-activation (Claude Code / OpenCode skill format)
 - **Trigger keywords** — when the AI should activate the skill
@@ -44,7 +44,7 @@ This repository contains **46 skill files** (23 Claude Code + 23 OpenCode) that 
 
 The `claude/` skills are also packaged as a first-class **Claude Code plugin** named `abp-sensei`, distributed through this repo's plugin marketplace. Installing it gives you, in one step:
 
-- **23 ABP skills** that auto-activate by topic (DDD, EF Core, multi-tenancy, microservices, …)
+- **26 ABP skills** that auto-activate by topic (DDD, EF Core, multi-tenancy, microservices, …)
 - An **`abp-expert` subagent** — a senior ABP v10.x architect that detects and targets your solution's ABP version (`/agents` → `abp-sensei:abp-expert`)
 - **Slash commands** (`/abp-sensei:<command>`):
   | Command | What it does |
@@ -52,7 +52,7 @@ The `claude/` skills are also packaged as a first-class **Claude Code plugin** n
   | `new-entity` | Scaffold a full DDD entity end-to-end (domain → migration → service → permission → test) |
   | `crud` | Generate a `CrudAppService` + DTOs + permissions for an aggregate |
   | `review` | Review your diff against ABP best practices & dependency rules |
-  | `upgrade-audit` | Audit a solution against the latest stable ABP (v10.5) / .NET 10 — or any target version you pass |
+  | `upgrade-audit` | Audit a solution against the latest stable ABP (v10.6) / .NET 10 — or any target version you pass |
   | `explain` | Explain any ABP concept with a minimal idiomatic example |
 
 ### Install
@@ -78,6 +78,8 @@ New versions ship on every push to `main` — the marketplace tracks this repo d
 ```
 
 If anything changed, Claude Code prompts you to run `/reload-plugins`.
+
+See [CHANGELOG.md](CHANGELOG.md) for what each version ships.
 
 **Automatic (opt-in):** to have Claude Code refresh `abp-skills` and update the installed plugin at every startup, set `autoUpdate` for this marketplace in your `settings.json`:
 
@@ -164,15 +166,18 @@ your-project/
 | 21 | **Development Flow** | [SKILL.md](claude/abp-development-flow/SKILL.md) | [SKILL.md](opencode/abp-development-flow/SKILL.md) | End-to-end entity flow: domain → migration → contracts → service → permission → test |
 | 22 | **Dependency Rules** | [SKILL.md](claude/abp-dependency-rules/SKILL.md) | [SKILL.md](opencode/abp-dependency-rules/SKILL.md) | Layer dependency direction, project reference matrix, architecture anti-patterns |
 | 23 | **Deployment** | [SKILL.md](claude/abp-deployment/SKILL.md) | [SKILL.md](opencode/abp-deployment/SKILL.md) | Clustered/stateless, distributed cache/lock, forwarded headers, SSL, OpenIddict prod, Docker/Helm |
+| 24 | **AI Integration** | [SKILL.md](claude/abp-ai/SKILL.md) | [SKILL.md](opencode/abp-ai/SKILL.md) | Microsoft.Extensions.AI, Semantic Kernel, Agent Framework, AI Management (Pro), RAG/indexing |
+| 25 | **Modules** | [SKILL.md](claude/abp-modules/SKILL.md) | [SKILL.md](opencode/abp-modules/SKILL.md) | Pre-built modules (Identity, CMS Kit, SaaS, Payment, File/Language Mgmt…), free vs Pro, add-module |
+| 26 | **Dapr** | [SKILL.md](claude/abp-dapr/SKILL.md) | [SKILL.md](opencode/abp-dapr/SKILL.md) | Dapr packages, service invocation proxies, Dapr event bus, pub/sub, distributed lock |
 
 ---
 
 ## Stats
 
-- **46 SKILL.md files** (23 Claude + 23 OpenCode)
-- **~10,090 total lines** of skill content
-- **ABP Framework v10.x (10.4/10.5)** (.NET 10) documentation based — cross-checked against the official `ai-rules`, `docs`, and the v10.5 migration guide
-- **Dynamic version detection** — guidance adapts to the solution's actual ABP version; v10.5-only features marked `v10.5+`
+- **52 SKILL.md files** (26 Claude + 26 OpenCode)
+- **~11,510 total lines** of skill content
+- **ABP Framework v10.x (10.4–10.6)** (.NET 10) documentation based — cross-checked against the official `ai-rules`, `docs`, and the v10.5/v10.6 migration guides
+- **Dynamic version detection** — guidance adapts to the solution's actual ABP version; version-specific features marked `v10.5+` / `v10.6+`
 - **YAML frontmatter** on every skill for agent auto-activation
 - **All examples** production-ready
 

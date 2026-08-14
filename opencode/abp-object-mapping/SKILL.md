@@ -1,6 +1,6 @@
 ---
 name: abp-object-mapping
-description: "ABP Framework v10.x (10.4/10.5) object mapping quick reference: IObjectMapper, Mapperly (default since v10.4), AutoMapper profile/attribute, entity↔DTO. Use when you need object mapping in ABP."
+description: "ABP Framework v10.x (10.4–10.6) object mapping quick reference: IObjectMapper, Mapperly (default since v10.4), AutoMapper profile/attribute, entity↔DTO. Use when you need object mapping in ABP."
 ---
 
 # ABP Framework — Object Mapping

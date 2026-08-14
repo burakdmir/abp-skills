@@ -1,6 +1,6 @@
 ---
 name: abp-audit-logging
-description: "ABP Framework v10.x (10.4/10.5) audit logging: AbpAuditingOptions, entity history, IAuditingStore, audit log storage and filtering. Use when configuring audit trails, audit logs, or entity history in ABP."
+description: "ABP Framework v10.x (10.4–10.6) audit logging: AbpAuditingOptions, entity history, IAuditingStore, audit log storage and filtering. Use when configuring audit trails, audit logs, or entity history in ABP."
 ---
 
 # ABP Audit Logging Skill

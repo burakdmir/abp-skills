@@ -1,6 +1,6 @@
 ---
 name: abp-testing
-description: "ABP Framework v10.x (10.4/10.5) testing quick reference: integration tests, *TestBase, SQLite in-memory, Shouldly, NSubstitute, data seeding, CurrentUser/CurrentTenant.Change. Use when you need to write tests in ABP."
+description: "ABP Framework v10.x (10.4–10.6) testing quick reference: integration tests, *TestBase, SQLite in-memory, Shouldly, NSubstitute, data seeding, CurrentUser/CurrentTenant.Change. Use when you need to write tests in ABP."
 ---
 
 # ABP Framework — Testing

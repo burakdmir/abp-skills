@@ -1,11 +1,11 @@
 ---
 name: abp-modularity
-description: "ABP Framework v10.x (10.4/10.5) modularity: AbpModule, [DependsOn], module lifecycle, plugin modules, modular monolith. Use when creating a module, defining module dependencies, or building a modular architecture in ABP."
+description: "ABP Framework v10.x (10.4–10.6) modularity: AbpModule, [DependsOn], module lifecycle, plugin modules, modular monolith. Use when creating a module, defining module dependencies, or building a modular architecture in ABP."
 ---
 
 # ABP Framework — Modularity
 
-A guide to modular application development in ABP Framework v10.x (10.4/10.5). The module system, dependency management, plugin modules, and best practices.
+A guide to modular application development in ABP Framework v10.x (10.4–10.6). The module system, dependency management, plugin modules, and best practices.
 
 ## Trigger
 

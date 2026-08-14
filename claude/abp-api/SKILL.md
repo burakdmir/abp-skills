@@ -1,11 +1,11 @@
 ---
 name: abp-api
-description: "ABP Framework v10.x (10.4/10.5) API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
+description: "ABP Framework v10.x (10.4–10.6) API development: Auto API Controllers, dynamic and static C#/JS client proxies, Swagger, API versioning, Integration Services. Use when you need a REST API, controller, dynamic proxy or client generation in ABP."
 ---
 
 # ABP Framework — API Development
 
-Guide to ABP Framework v10.x (10.4/10.5) API development. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
+Guide to ABP Framework v10.x (10.4–10.6) API development. Auto API Controllers, Dynamic C# Clients, Static C# Clients, Swagger, API Versioning, Integration Services.
 
 ## Trigger
 
@@ -358,6 +358,12 @@ With the **IIntegrationService** marker interface, ABP automatically calls these
 6. **Communicate between modules with integration services** — Direct calls instead of HTTP
 7. **Control API exposure with the RemoteService attribute** — Close off unnecessary endpoints
 8. **Set the root path per module** — `/api/my-module` instead of `/api/app`
+
+## What's New in v10.6
+
+- API definitions expose response `ContentTypes` and `IsRemoteStream`; `RestService` unwraps ABP error envelopes more consistently for text/blob responses.
+- Generated Angular and jQuery proxies send upload DTOs containing `IRemoteStreamContent` as multipart `FormData` (Angular upload signatures may collapse to `FormData`). Keep upload DTOs in `FormBodyBindingIgnoredTypes`, regenerate proxies after upgrading, and update clients that assumed the original DTO signature.
+- Swashbuckle.AspNetCore upgraded to 10.2.3 — re-test customized Swagger configuration.
 
 ---
 

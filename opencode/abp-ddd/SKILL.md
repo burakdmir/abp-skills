@@ -1,11 +1,11 @@
 ---
 name: abp-ddd
-description: "ABP Framework v10.x (10.4/10.5) DDD quick reference: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events, specification, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
+description: "ABP Framework v10.x (10.4–10.6) DDD quick reference: Entity, AggregateRoot, repository, domain service, application service, DTO, domain events, specification, UOW. Use when designing the domain layer, entities, aggregates, or repositories in ABP."
 ---
 
 # ABP Framework — Domain Driven Design (DDD)
 
-ABP Framework v10.x (10.4/10.5) DDD quick reference. Entity, Aggregate Root, Repository, Domain/Application Service, DTO.
+ABP Framework v10.x (10.4–10.6) DDD quick reference. Entity, Aggregate Root, Repository, Domain/Application Service, DTO.
 
 ## Trigger
 
@@ -207,6 +207,11 @@ var title = user.GetProperty<string>("Title");
 4. `IGuidGenerator.Create()` sequential GUID, `Clock` for time
 5. Soft-delete → `FullAuditedAggregateRoot`
 6. Reduce boilerplate with CrudAppService, rely on UOW conventions
+
+## Concurrency Check
+
+- Optimistic: `IHasConcurrencyStamp.ConcurrencyStamp` — set on create, compared on update; mismatch throws `AbpDbConcurrencyException`. Aggregate root base classes already implement it.
+- Round-trip the stamp: output + update DTOs implement `IHasConcurrencyStamp`; in `UpdateAsync` set `entity.ConcurrencyStamp = input.ConcurrencyStamp`, then update with `autoSave: true` to get the new stamp.
 
 ## Related
 

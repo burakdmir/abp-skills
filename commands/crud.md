@@ -1,5 +1,6 @@
 ---
 description: Generate an ABP CrudAppService (or ICrudAppService implementation) with DTOs and permissions for an existing aggregate, ABP v10.x style.
+argument-hint: <Aggregate> [requirements…]
 ---
 
 # Generate a CRUD application service

@@ -1,11 +1,11 @@
 ---
 name: abp-infrastructure
-description: "ABP Framework v10.x (10.4/10.5) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+description: "ABP Framework v10.x (10.4–10.6) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
 ---
 
 # ABP Framework — Infrastructure
 
-Guide to ABP Framework v10.x (10.4/10.5) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
+Guide to ABP Framework v10.x (10.4–10.6) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking, Audit Logging, Current User.
 
 ## Trigger
 
@@ -876,6 +876,57 @@ Dynamic background worker managers expose their capabilities via marker interfac
 - `ISupportsCronScheduling` — worker supports cron expressions.
 
 Hangfire and Quartz managers implement both. The default in-memory manager supports runtime registration only and **rejects cron expressions**; TickerQ's dynamic manager exposes neither. If you build UI or integration logic on `IDynamicBackgroundWorkerManager`, check these markers before offering runtime registration or cron scheduling; use Hangfire or Quartz when runtime cron scheduling is required.
+
+## What's New in v10.6
+
+### Background Jobs: Dedicated Workers, Parallel Execution, Retention (v10.6+)
+
+Opt-in runtime extensions — all disabled by default:
+
+```csharp
+Configure<AbpBackgroundJobWorkerOptions>(options =>
+{
+    options.StoreSuccessfulJobs = true;                        // keep completed jobs
+    options.SuccessfulJobRetentionTime = TimeSpan.FromDays(7);
+});
+```
+
+- Dedicated workers per job argument type via `AddDedicatedWorker(...)`; parallel execution via `MaxParallelJobExecutionCount`.
+- The EF Core store adds a `CompletionTime` column to background job records — add/review the migration when enabling retention.
+- Custom `IBackgroundJobStore` / `IBackgroundJobWorker` implementations must implement the new interface members to compile on 10.6.
+- In clustered deployments, configure these options identically on all instances and use a real distributed lock provider.
+
+## Cancellation Token Provider
+
+ABP automates cancellation token usage wherever possible — in ASP.NET Core it obtains the token from `HttpContext.RequestAborted` and uses it in database queries and other cancellable places automatically. Inject `ICancellationTokenProvider` only to add cancellation support to your own logic or to pass a token to non-ABP APIs, without threading a `CancellationToken` parameter through every method:
+
+```csharp
+public class MyService : ITransientDependency
+{
+    private readonly ICancellationTokenProvider _cancellationTokenProvider;
+
+    public MyService(ICancellationTokenProvider cancellationTokenProvider)
+    {
+        _cancellationTokenProvider = cancellationTokenProvider;
+    }
+
+    public async Task DoItAsync()
+    {
+        while (!_cancellationTokenProvider.Token.IsCancellationRequested)
+        {
+            // ...
+        }
+    }
+}
+
+// In methods that accept an optional CancellationToken parameter:
+// use the given token, or fall back to the provider's token if it is None/default
+var token = _cancellationTokenProvider.FallbackToProvider(cancellationToken);
+```
+
+Built-in providers: `HttpContextCancellationTokenProvider` (default in ASP.NET Core, sourced from `HttpContext.RequestAborted`) and `NullCancellationTokenProvider` (always `CancellationToken.None`, used when no other provider applies). Custom provider: implement `ICancellationTokenProvider` (the `Token` property) and register it in DI.
+
+---
 
 ## Related
 

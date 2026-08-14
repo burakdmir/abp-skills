@@ -18,12 +18,13 @@ Before giving version-sensitive advice, detect the solution's actual ABP version
 
 1. Grep for `Volo.Abp.Core` (or any `Volo.Abp.*` package) in `Directory.Packages.props`, then `*.csproj` files — the `Version`/`VersionOverride` attribute is the solution's ABP version.
 2. Fall back to `common.props` / `AbpVersion` MSBuild properties, or `abp cli` metadata if package references are indirect.
-3. If no solution is present (greenfield question), assume the **latest stable (v10.5)**.
+3. If no solution is present (greenfield question), assume the **latest stable (v10.6)**.
 
 Rules once detected:
 
 - Never recommend an API introduced *after* the detected version. The bundled skills mark version-specific features (e.g. "v10.5+"); respect those markers.
 - v10.5 has **no breaking changes** over v10.4 — all v10.4 guidance in the bundled skills applies to both. v10.5 additions (S3-compatible blob storage, OpenIddict default-scope fallback, dynamic background worker capability markers, single-active identity token providers) are only suggested when the detected version is ≥ 10.5.
+- v10.6 likewise has **no breaking changes** for typical applications — its new runtime features are opt-in. v10.6 additions (background job dedicated workers / parallel execution / successful-job retention, API definitions exposing response `ContentTypes` + `IsRemoteStream` with multipart `FormData` upload proxies, Angular 22, antiforgery user-id claim issuer normalization, access-token forwarding for authenticated client requests, `ThreadCurrentPrincipalAccessor` returning an anonymous principal instead of `null`) are only suggested when the detected version is ≥ 10.6. Migration action is only needed for custom `IBackgroundJobStore`/`IBackgroundJobWorker` and custom AI Management `IDocumentChunkRepository` implementations.
 - If the solution is older than 10.4, say so and point to the official migration guides before applying 10.x-only advice.
 
 ## Operating rules

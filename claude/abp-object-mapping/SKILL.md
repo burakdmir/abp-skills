@@ -1,11 +1,11 @@
 ---
 name: abp-object-mapping
-description: "ABP Framework v10.x (10.4/10.5) object mapping: IObjectMapper, Mapperly (default since v10.4, MapperBase), AutoMapper profiles, entity↔DTO conversion, AutoMap attributes. Use when you need object mapping or DTO mapping in ABP."
+description: "ABP Framework v10.x (10.4–10.6) object mapping: IObjectMapper, Mapperly (default since v10.4, MapperBase), AutoMapper profiles, entity↔DTO conversion, AutoMap attributes. Use when you need object mapping or DTO mapping in ABP."
 ---
 
 # ABP Framework — Object Mapping
 
-ABP Framework v10.x (10.4/10.5) object mapping guide. Entity↔DTO conversion via the `IObjectMapper` abstraction. Since v10.4, **Mapperly** (compile-time, source-generated) is the default provider; **AutoMapper** is also supported. Stick with whichever one the solution already uses.
+ABP Framework v10.x (10.4–10.6) object mapping guide. Entity↔DTO conversion via the `IObjectMapper` abstraction. Since v10.4, **Mapperly** (compile-time, source-generated) is the default provider; **AutoMapper** is also supported. Stick with whichever one the solution already uses.
 
 ## Trigger
 

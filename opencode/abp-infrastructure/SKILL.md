@@ -1,11 +1,11 @@
 ---
 name: abp-infrastructure
-description: "ABP Framework v10.x (10.4/10.5) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
+description: "ABP Framework v10.x (10.4–10.6) infrastructure: Distributed Event Bus, Background Jobs/Workers, Caching (Redis), BLOB Storing, Emailing, SignalR, IClock, Distributed Locking, Entity Cache. Use when you need an event bus, background job, cache, blob or email in ABP."
 ---
 
 # ABP Framework — Infrastructure
 
-ABP Framework v10.x (10.4/10.5) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
+ABP Framework v10.x (10.4–10.6) infrastructure components. Event Bus, Background Jobs, Caching, BLOB Storing, Emailing, Data Filtering, Data Seeding, Settings, Features, Virtual File System, Entity Cache, Distributed Locking.
 
 ## Trigger
 
@@ -206,6 +206,15 @@ if (handle != null) { /* critical operation */ }
 
 - AWS blob provider supports S3-compatible services (R2, MinIO, B2, Wasabi): `aws.ServiceURL = "https://<account-id>.r2.cloudflarestorage.com"; aws.DisablePayloadSigning = true;`
 - Dynamic background worker capability markers: check `ISupportsRuntimeRegistration` / `ISupportsCronScheduling` on the manager; in-memory manager rejects cron — use Hangfire/Quartz for runtime cron scheduling.
+
+## v10.6+
+
+- Background jobs (opt-in): `StoreSuccessfulJobs` + `SuccessfulJobRetentionTime`, dedicated workers (`AddDedicatedWorker`), parallel execution (`MaxParallelJobExecutionCount`); EF store adds a `CompletionTime` column. Custom job store/worker implementations must add the new interface members.
+
+## Cancellation Token Provider
+
+- ABP wires cancellation automatically (ASP.NET Core: `HttpContext.RequestAborted` flows into DB queries). For your own logic, inject `ICancellationTokenProvider` and use `.Token` instead of passing a `CancellationToken` through every method.
+- `_cancellationTokenProvider.FallbackToProvider(cancellationToken)` — uses the given token, falls back to the provider's token when it is None/default. Built-ins: `HttpContextCancellationTokenProvider` (default), `NullCancellationTokenProvider`.
 
 ## Related
 

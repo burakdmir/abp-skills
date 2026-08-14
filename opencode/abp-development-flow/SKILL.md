@@ -1,6 +1,6 @@
 ---
 name: abp-development-flow
-description: "ABP Framework v10.x (10.4/10.5) development flow quick reference: adding an entity end-to-end (Domain→Shared→repo→EF config→migration→Contracts/DTO→mapping→app service→localization→permission→test). Use when you need the flow for adding a new feature in ABP."
+description: "ABP Framework v10.x (10.4–10.6) development flow quick reference: adding an entity end-to-end (Domain→Shared→repo→EF config→migration→Contracts/DTO→mapping→app service→localization→permission→test). Use when you need the flow for adding a new feature in ABP."
 ---
 
 # ABP Framework — Development Flow

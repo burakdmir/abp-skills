@@ -1,6 +1,6 @@
 # Empowering AI Agents with ABP Framework: A Comprehensive Skill Collection
 
-> How I built 23 AI agent skills covering every aspect of ABP Framework v10.x (10.4/10.5) — and why it matters for the future of .NET development.
+> How I built 23 AI agent skills covering every aspect of ABP Framework v10.x (10.4–10.6) — and why it matters for the future of .NET development.
 
 🔗 **GitHub:** [github.com/burakdmir/abp-skills](https://github.com/burakdmir/abp-skills)
 
@@ -25,7 +25,7 @@ The result? Code that compiles but doesn't follow ABP best practices — and req
 
 AI agents support **skills** — structured knowledge files that teach them specific frameworks, patterns, and conventions. When a skill is active, the AI's responses are grounded in real framework documentation instead of generic patterns.
 
-I built **abp-skills** — a collection of 46 skill files (23 topics × 2 AI tools) covering every major aspect of ABP Framework v10.x (10.4/10.5).
+I built **abp-skills** — a collection of 46 skill files (23 topics × 2 AI tools) covering every major aspect of ABP Framework v10.x (10.4–10.6).
 
 **GitHub Repository:** [github.com/burakdmir/abp-skills](https://github.com/burakdmir/abp-skills)
 

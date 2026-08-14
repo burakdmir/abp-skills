@@ -1,11 +1,11 @@
 ---
 name: abp-development-flow
-description: "ABP Framework v10.x (10.4/10.5) development flow: adding a new entity end-to-end (Domain → Domain.Shared → repository → EF Core config → migration → Contracts/DTO → object mapping → app service → localization → permission → test). Use when you need the flow for adding a new feature in ABP."
+description: "ABP Framework v10.x (10.4–10.6) development flow: adding a new entity end-to-end (Domain → Domain.Shared → repository → EF Core config → migration → Contracts/DTO → object mapping → app service → localization → permission → test). Use when you need the flow for adding a new feature in ABP."
 ---
 
 # ABP Framework — Development Flow
 
-The flow for adding a new entity/feature **end-to-end** in ABP Framework v10.x (10.4/10.5) (layered template). Proceed across layers in the correct order.
+The flow for adding a new entity/feature **end-to-end** in ABP Framework v10.x (10.4–10.6) (layered template). Proceed across layers in the correct order.
 
 ## Trigger
 
